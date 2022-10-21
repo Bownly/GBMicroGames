@@ -5,7 +5,7 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
-#include "../database/mgInstructionData.h"
+#include "../structs/Microgame.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -23,7 +23,7 @@ extern UINT8 currentScore;
 extern UINT8 mgDifficulty;
 extern UINT8 mgSpeed;
 extern UINT8 mgStatus;
-extern UINT8 mgCurrentMG;
+extern Microgame mgCurrentMG;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -33,9 +33,9 @@ extern UINT8 animFrame;
 void phaseInitMicrogameManager();
 void phaseMicrogameManagerLoop();
 
-/* HELPER METHODS */
-
 /* INPUT METHODS */
+
+/* HELPER METHODS */
 
 /* DISPLAY METHODS */
 
@@ -80,7 +80,7 @@ void phaseInitMicrogameManager()
     substate = SUB_LOOP;
 
 
-        // TEMP STUFF TODO Delete me
+        // TEMP STUFF TODO: delete me
         unsigned char scoreString[] = "SCORE:";
         printLine(7U, 8U, scoreString, FALSE);
 
@@ -101,18 +101,18 @@ void phaseMicrogameManagerLoop()
     else if (animTick == 60U)
     {
         k = 0U;
-        while (mgInstructionDex[mgCurrentMG][k] != 0U)
+        while (mgCurrentMG.instructionsPtr[k] != 0U)
             ++k;
 
         l = (20U - k) >> 1U;
         // When done, show new instructions
         drawWindow(l-1U, 7U, k+1U, 2U);
-        printLine(l, 8U, mgInstructionDex[mgCurrentMG], FALSE);
+        printLine(l, 8U, mgCurrentMG.instructionsPtr, FALSE);
     }
     else if (animTick == 120U)
     {
         // Start new microgame
-        setBlankBkg();
+        fadeout();
         gamestate = STATE_MICROGAME;
         substate = SUB_INIT;
         mgStatus = PLAYING;

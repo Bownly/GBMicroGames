@@ -9,7 +9,7 @@
 BANKREF(sprArrow)
 
 const palette_color_t sprArrow_palettes[4] = {
-	RGB8(251, 242, 54), RGB8(132, 126, 135), RGB8(34, 32, 52), RGB8(8, 2, 0)
+	RGB8(251, 242, 54), RGB8(132, 126, 135), RGB8(34, 32, 52), RGB8(98, 2, 0)
 };
 
 const uint8_t sprArrow_tiles[48] = {

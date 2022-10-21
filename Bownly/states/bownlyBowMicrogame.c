@@ -9,8 +9,8 @@
 
 #include "../res/tiles/bowBkgTiles.h"
 #include "../res/sprites/sprArrow.h"
-#include "../res/sprites/sprBow.h"
-#include "../res/sprites/sprTarget.h"
+#include "../res/sprites/bownlySprBow.h"
+#include "../res/sprites/bownlySprTarget.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -49,7 +49,7 @@ ARROWSTATE arrowstate;
 #define SPRID_TARGET 15U
 
 #define SPRTILE_BOW 0x00U
-#define SPRTILE_ARROW SPRTILE_BOW + sprBow_TILE_COUNT
+#define SPRTILE_ARROW SPRTILE_BOW + bownlySprBow_TILE_COUNT
 #define SPRTILE_TARGET SPRTILE_ARROW + sprArrow_TILE_COUNT
 
 #define BKGTILE_GRASS 0x60U
@@ -58,16 +58,16 @@ ARROWSTATE arrowstate;
 void phaseBowInit();
 void phaseBowLoop();
 
-/* HELPER METHODS */
-void spawnTarget();
-
 /* INPUT METHODS */
 void inputsShoot();
+
+/* HELPER METHODS */
+void spawnTarget();
 
 /* DISPLAY METHODS */
 
 
-void bownlyBowStateMain()
+void bownlyBowMicrogameMain()
 {
     curJoypad = joypad();
 
@@ -101,14 +101,14 @@ void phaseBowInit()
     arrowY = 49U;
     targetX = 24U;
     targetY = 80U;
-    bowSpeed = 2U;
-    arrowSpeed = 4U;
-    targetSpeed = -1;
+    bowSpeed = 2U + mgSpeed;
+    arrowSpeed = 4U + mgSpeed;
+    targetSpeed = -1 - mgSpeed;
     targetsLeft = 1U;
     bowFrame = 1U;
     arrowstate = NOCKED;
     
-    // Setting the background
+    // Setting up the background
     set_bkg_data(BKGTILE_GRASS, 6U, bowBkgTiles);
     for (i = 0U; i != 20U; ++i)
     {
@@ -116,14 +116,15 @@ void phaseBowInit()
         set_bkg_tile_xy(i, 17U, BKGTILE_GRASS + 1U);
     }
 
-    // Setting the sprites
-    set_sprite_data(SPRTILE_BOW, sprBow_TILE_COUNT, sprBow_tiles);
+    // Setting up the sprites
+    set_sprite_data(SPRTILE_BOW, bownlySprBow_TILE_COUNT, bownlySprBow_tiles);
     set_sprite_data(SPRTILE_ARROW, sprArrow_TILE_COUNT, sprArrow_tiles);
-    set_sprite_data(SPRTILE_TARGET, sprTarget_TILE_COUNT, sprTarget_tiles);
+    set_sprite_data(SPRTILE_TARGET, bownlySprTarget_TILE_COUNT, bownlySprTarget_tiles);
 
     spawnTarget();
-    move_metasprite(sprArrow_metasprites[0U], SPRTILE_BOW + sprBow_TILE_COUNT, SPRID_ARROW, arrowX, arrowY);
-    move_metasprite(sprTarget_metasprites[0U], SPRTILE_TARGET, SPRID_TARGET, targetX, targetY);
+    move_metasprite(bownlySprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, bowX, bowY);
+    move_metasprite(sprArrow_metasprites[0U], SPRTILE_BOW + bownlySprBow_TILE_COUNT, SPRID_ARROW, arrowX, arrowY);
+    move_metasprite(bownlySprTarget_metasprites[0U], SPRTILE_TARGET, SPRID_TARGET, targetX, targetY);
 
     // Initializing stuff based on difficulty level
     if (mgDifficulty == 2U)
@@ -169,7 +170,7 @@ void phaseBowLoop()
                 targetY += targetSpeed;
             }
 
-            if (arrowX == 34U)
+            if (arrowX == 30U)
             {
                 if (arrowY <= targetY + 15U && arrowY >= targetY - 15U)
                     arrowstate = HIT;
@@ -204,7 +205,6 @@ void phaseBowLoop()
                 else // Spawn next target otherwise
                 {
                     spawnTarget();
-                    // hide_metasprite(sprArrow_metasprites[0U], SPRID_ARROW);
                     arrowstate = NOCKED;
                     bowFrame = 1U;
                     arrowX = bowX;
@@ -221,12 +221,12 @@ void phaseBowLoop()
 
     // Replace arrow with bow
     if (mgDifficulty == 2U && targetsLeft == 1U)
-        move_metasprite(sprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, arrowX, arrowY);
+        move_metasprite(bownlySprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, arrowX, arrowY);
     else
-        move_metasprite(sprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, bowX, bowY);
+        move_metasprite(bownlySprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, bowX, bowY);
 
     move_metasprite(sprArrow_metasprites[0U], SPRTILE_ARROW, SPRID_ARROW, arrowX, arrowY);
-    move_metasprite(sprTarget_metasprites[0U], SPRTILE_TARGET, SPRID_TARGET, targetX, targetY);
+    move_metasprite(bownlySprTarget_metasprites[0U], SPRTILE_TARGET, SPRID_TARGET, targetX, targetY);
 }
 
 

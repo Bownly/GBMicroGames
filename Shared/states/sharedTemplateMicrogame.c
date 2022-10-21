@@ -28,9 +28,9 @@ extern UINT8 animFrame;
 void phaseTemplateInit();
 void phaseTemplateLoop();
 
-/* HELPER METHODS */
-
 /* INPUT METHODS */
+
+/* HELPER METHODS */
 
 /* DISPLAY METHODS */
 
@@ -71,6 +71,12 @@ void phaseTemplateInit()
     }
     else if (mgDifficulty == 1U)
     {
+        printLine(5,5,"A GAME JAM", FALSE);
+        printLine(2,7,"WHERE WE ALL WORK", FALSE);
+        printLine(2,9,"ON THE SAME GAME!", FALSE);
+    }
+    else if (mgDifficulty == 2U)
+    {
         printLine(2,5,"JOIN THIS FIRST", FALSE);
         printLine(4,7,"OF ITS KIND", FALSE);
         printLine(3,9,"COLLABORATION!", FALSE);
@@ -82,7 +88,7 @@ void phaseTemplateInit()
 
 void phaseTemplateLoop()
 {
-    if (++animTick == 90U)  // 1.5s pause
+    if (++animTick == 150U)  // 2.5s pause
     {
         mgStatus = WON;
     }

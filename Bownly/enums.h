@@ -7,6 +7,13 @@ typedef enum {
     HIT
 } ARROWSTATE;
 
+typedef enum {
+    IDLE,
+    WALKING,
+    AIRBORNE
+} PASTELSTATE;
+
 extern ARROWSTATE arrowstate;
+extern PASTELSTATE pastelstate;
  
 #endif

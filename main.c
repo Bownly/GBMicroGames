@@ -6,11 +6,15 @@
 #include "Shared/fade.h"
 #include "Shared/ram.h"
 #include "Shared/songPlayer.h"
-#include "Shared/database/mgBankData.h"
 
+#include "Shared/database/microgameData.h"
+#include "Shared/structs/Microgame.h"
 #include "Shared/states/microgameManagerState.h"
-#include "Bownly/states/bownlyBowState.h"
 #include "Shared/states/sharedTemplateMicrogame.h"
+
+#include "Bownly/states/bownlyBowMicrogame.h"
+#include "Bownly/states/bownlyPastelMicrogame.h"
+#include "Bownly/states/bownlyMP5Microgame.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char fontTiles[];
@@ -36,13 +40,15 @@ UINT8 currentScore = 0U;
 UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
-UINT8 mgCurrentMG;
+Microgame mgCurrentMG;
 
 UINT8 animFrame = 0U;
 UINT8 animTick = 0U;
 
 
 void initRAM(UBYTE);
+void setNewMG(MICROGAME);
+
 
 void vbl_update() {
 	++vbl_count;
@@ -71,7 +77,8 @@ void main()
 
     gamestate = STATE_MICROGAME_MANAGER;
     // gamestate = STATE_MICROGAME;
-    mgCurrentMG = MG_BOWNLY_BOW;  // Edit this line with your MG's enum for testing purposes
+    setNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
+
     substate = SUB_INIT;
 
     while(1U)
@@ -98,20 +105,44 @@ void main()
                         substate = SUB_INIT;
                         fadeout();
 
-                        // // TEST stuff
-                        // if (mgDifficulty != 2U)
-                        //      ++mgDifficulty;
+                        // TEST stuff
+                        mgDifficulty = (currentScore >> 1U) % 3U;
+                        mgSpeed = (currentScore / 3U) % 3U;
+                        // setNewMG(currentScore % 3U);
+                        // mgDifficulty = (currentScore / 3U) % 3U;
+
+                        switch (currentScore)
+                        {
+                            default:
+                            case 1U:
+                            case 3U:
+                            case 5U:
+                                setNewMG(MG_TEMPLATE);
+                                break;
+                            case 2U:
+                                setNewMG(MG_BOWNLY_PASTEL);
+                                break;
+                            case 4U:
+                                setNewMG(MG_BOWNLY_MAGIPANELS5);
+                                break;
+                        }
 
                         break;
                     case LOST:
                         // Lose a heart, etc.
                         break;
                     default:
-                        SWITCH_ROM_MBC1(mgBankDex[mgCurrentMG]);
-                        switch (mgCurrentMG)
+                        SWITCH_ROM_MBC1(mgCurrentMG.bankId);
+                        switch (mgCurrentMG.id)
                         {
                             case MG_BOWNLY_BOW:
-                                bownlyBowStateMain();
+                                bownlyBowMicrogameMain();
+                                break;
+                            case MG_BOWNLY_PASTEL:
+                                bownlyPastelMicrogameMain();
+                                break;
+                            case MG_BOWNLY_MAGIPANELS5:
+                                bownlyMP5MicrogameMain();
                                 break;
                             case MG_TEMPLATE:
                                 sharedTemplateMicrogameMain();
@@ -129,7 +160,6 @@ void main()
         songPlayerUpdate();
     }
 }
-
 
 void initRAM(UBYTE force_clear)
 {
@@ -162,4 +192,13 @@ void initRAM(UBYTE force_clear)
     }
 
     DISABLE_RAM_MBC1;
+}
+
+void setNewMG(MICROGAME newMicrogame)
+{
+    mgCurrentMG.id = newMicrogame;
+    mgCurrentMG.bankId = microgameDex[newMicrogame].bankId;
+    mgCurrentMG.namePtr = microgameDex[newMicrogame].namePtr;
+    mgCurrentMG.bylinePtr = microgameDex[newMicrogame].bylinePtr;
+    mgCurrentMG.instructionsPtr = microgameDex[newMicrogame].instructionsPtr;
 }

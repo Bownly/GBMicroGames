@@ -10,6 +10,8 @@ typedef enum {
 
 typedef enum {
     MG_BOWNLY_BOW,
+    MG_BOWNLY_MAGIPANELS5,
+    MG_BOWNLY_PASTEL,
     MG_TEMPLATE
 } MICROGAME;
 
