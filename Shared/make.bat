@@ -17,6 +17,7 @@ C:\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -DUSE_SFR_FOR_REG -c -o Shared/o/gbt_player.o 
 C:\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -DUSE_SFR_FOR_REG -c -o Shared/o/gbt_player_bank1.o Shared/gbt_player_bank1.s
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo0 -c -o Shared/o/microgameManagerState.o Shared/states/microgameManagerState.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Shared/o/titleState.o Shared/states/titleState.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Shared/o/sharedTemplateMicrogame.o Shared/states/sharedTemplateMicrogame.c
 
 c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Shared/o/ram.o Shared/ram.c

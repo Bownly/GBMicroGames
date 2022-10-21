@@ -11,6 +11,7 @@
 #include "Shared/structs/Microgame.h"
 #include "Shared/states/microgameManagerState.h"
 #include "Shared/states/sharedTemplateMicrogame.h"
+#include "Shared/states/titleState.h"
 
 #include "Bownly/states/bownlyBowMicrogame.h"
 #include "Bownly/states/bownlyPastelMicrogame.h"
@@ -75,7 +76,7 @@ void main()
     HIDE_WIN;
     SHOW_SPRITES;
 
-    gamestate = STATE_MICROGAME_MANAGER;
+    gamestate = STATE_TITLE;
     // gamestate = STATE_MICROGAME;
     setNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
 
@@ -90,6 +91,8 @@ void main()
         switch(gamestate)
         {
             case STATE_TITLE:
+                SWITCH_ROM_MBC1(1U);
+                titleStateMain();
                 break;
             case STATE_MAIN_MENU:
                 break;

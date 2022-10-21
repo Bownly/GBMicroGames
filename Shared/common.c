@@ -8,10 +8,7 @@ extern UINT8 r;
 
 UINT8 getRandUint(UINT8 modulo)
 {
-    r = 201U;
-    while (r >= 200U) {
-        r = rand() % modulo;
-    }
+    r = rand() % modulo;
     return r;
 }
 

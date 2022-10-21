@@ -8,7 +8,7 @@
 #include "../enums.h"
 
 #include "../res/tiles/bowBkgTiles.h"
-#include "../res/sprites/sprArrow.h"
+#include "../res/sprites/bownlySprArrow.h"
 #include "../res/sprites/bownlySprBow.h"
 #include "../res/sprites/bownlySprTarget.h"
 
@@ -50,7 +50,7 @@ ARROWSTATE arrowstate;
 
 #define SPRTILE_BOW 0x00U
 #define SPRTILE_ARROW SPRTILE_BOW + bownlySprBow_TILE_COUNT
-#define SPRTILE_TARGET SPRTILE_ARROW + sprArrow_TILE_COUNT
+#define SPRTILE_TARGET SPRTILE_ARROW + bownlySprArrow_TILE_COUNT
 
 #define BKGTILE_GRASS 0x60U
 
@@ -118,12 +118,12 @@ void phaseBowInit()
 
     // Setting up the sprites
     set_sprite_data(SPRTILE_BOW, bownlySprBow_TILE_COUNT, bownlySprBow_tiles);
-    set_sprite_data(SPRTILE_ARROW, sprArrow_TILE_COUNT, sprArrow_tiles);
+    set_sprite_data(SPRTILE_ARROW, bownlySprArrow_TILE_COUNT, bownlySprArrow_tiles);
     set_sprite_data(SPRTILE_TARGET, bownlySprTarget_TILE_COUNT, bownlySprTarget_tiles);
 
     spawnTarget();
     move_metasprite(bownlySprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, bowX, bowY);
-    move_metasprite(sprArrow_metasprites[0U], SPRTILE_BOW + bownlySprBow_TILE_COUNT, SPRID_ARROW, arrowX, arrowY);
+    move_metasprite(bownlySprArrow_metasprites[0U], SPRTILE_BOW + bownlySprBow_TILE_COUNT, SPRID_ARROW, arrowX, arrowY);
     move_metasprite(bownlySprTarget_metasprites[0U], SPRTILE_TARGET, SPRID_TARGET, targetX, targetY);
 
     // Initializing stuff based on difficulty level
@@ -225,7 +225,7 @@ void phaseBowLoop()
     else
         move_metasprite(bownlySprBow_metasprites[bowFrame], SPRTILE_BOW, SPRID_BOW, bowX, bowY);
 
-    move_metasprite(sprArrow_metasprites[0U], SPRTILE_ARROW, SPRID_ARROW, arrowX, arrowY);
+    move_metasprite(bownlySprArrow_metasprites[0U], SPRTILE_ARROW, SPRID_ARROW, arrowX, arrowY);
     move_metasprite(bownlySprTarget_metasprites[0U], SPRTILE_TARGET, SPRID_TARGET, targetX, targetY);
 }
 

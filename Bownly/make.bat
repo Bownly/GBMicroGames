@@ -14,7 +14,7 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyPastelBkg2Map.o Bownly/res/ma
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyPastelBkg3Map.o Bownly/res/maps/bownlyPastelBkg3Map.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyPastelTreeMap.o Bownly/res/maps/bownlyPastelTreeMap.c
 
-C:\gbdk\bin\png2asset Bownly/res/sprites/sprArrow.png -spr8x8 -sw 32 -sh 8 -b 2
+C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprArrow.png -spr8x8 -sw 32 -sh 8 -b 2
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprBow.png -spr8x8 -sw 24 -sh 32 -b 2
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprTarget.png -spr8x8 -sw 24 -sh 32 -b 2
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprPastel.png -spr8x8 -sw 32 -sh 32 -b 2 -py 0

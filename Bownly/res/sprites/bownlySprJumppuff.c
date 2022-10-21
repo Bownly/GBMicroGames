@@ -9,7 +9,7 @@
 BANKREF(bownlySprJumppuff)
 
 const palette_color_t bownlySprJumppuff_palettes[4] = {
-	RGB8(255, 255, 255), RGB8(128, 128, 128), RGB8(80, 1, 96), RGB8(117, 1, 0)
+	RGB8(255, 255, 255), RGB8(128, 128, 128), RGB8(80, 1, 115), RGB8(210, 1, 0)
 };
 
 const uint8_t bownlySprJumppuff_tiles[128] = {
