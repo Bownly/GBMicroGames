@@ -4,7 +4,8 @@ del Shared\o\*.asm
 del Shared\o\*.sym
 
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/borderTiles.o Shared/res/tiles/borderTiles.c
-C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/fonttiles.o Shared/res/tiles/fontTiles.c
+C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/fontTiles.o Shared/res/tiles/fontTiles.c
+C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/timerTiles.o Shared/res/tiles/timerTiles.c
 
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/common.o Shared/common.c
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/fade.o Shared/fade.c
@@ -23,19 +24,16 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Shared/o/sharedTemplateMicrogame.o Shared/st
 c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Shared/o/ram.o Shared/ram.c
 
 @REM Engine MVP TODO:
-@REM Should probably move mgdex to a different bank
-@REM Bomb countdown timer thing
-@REM Logic to lose game when timer expires
+@REM Should maybe move mgdex to a different bank
 @REM Pad out time between mgStatus = WON and transition away from microgame
 @REM Pad out time between mgStatus = LOST and transition away from microgame
-@REM Move the game manager outside of the main switch statement
-@REM    ...and move all that game manager stuff there into game manager
 @REM Music
 @REM Audio in general
-@REM Beautify transition screen
+@REM Beautify lobby screen
 @REM    Score increment animation
 @REM    Lives/losing lives animation
 @REM    Speed up/difficulty up animations
+
 
 @REM During/post gamejam TODO broadstrokes:
 @REM Title screen

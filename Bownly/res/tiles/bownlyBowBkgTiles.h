@@ -1,6 +1,6 @@
 /*
 
- BOWBKGTILES.H
+ BOWNLYBOWBKGTILES.H
 
  Include File.
 
@@ -22,14 +22,14 @@
 
 */
 
-#ifndef __bowBkgTiles_h_INCLUDE
-#define __bowBkgTiles_h_INCLUDE
+#ifndef __bownlyBowBkgTiles_h_INCLUDE
+#define __bownlyBowBkgTiles_h_INCLUDE
 
 /* Bank of tiles. */
-#define bowBkgTilesBank 0
+#define bownlyBowBkgTilesBank 0
 /* Start of tile array. */
-extern const unsigned char bowBkgTiles[];
+extern const unsigned char bownlyBowBkgTiles[];
 
 #endif
 
-/* End of BOWBKGTILES.H */
+/* End of BOWNLYBOWBKGTILES.H */

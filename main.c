@@ -59,14 +59,15 @@ void main()
     add_VBL(vbl_update);
     set_interrupts(TIM_IFLAG | VBL_IFLAG);
 
-    set_bkg_data(0xF7U, 8U, borderTiles);
+    set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0U, 46U, fontTiles);
 
     setBlankBkg();
     DISPLAY_ON;
-    SHOW_BKG;
-    HIDE_WIN;
     SHOW_SPRITES;
+    SHOW_BKG;
+    SHOW_WIN;
+    move_win(160U,144U);
 
     gamestate = STATE_TITLE;
     substate = SUB_INIT;

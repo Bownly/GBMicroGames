@@ -22,7 +22,9 @@ Link to the jam page on Itch: \<link goes here\>
 ## Things to keep in mind:
 - Preface as many files and variables with your username as possible to avoid multiple definition errors.
 - Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's explicitly what *Shared/states/sharedTemplateMicrogame.c* is there for.
-- Don't write any data to the last row of sprites/background tiles (0xF0-0xFF).
+- Don't write any data to the following sprites/background tiles: 0xFC-0xFF.
+- Also, don't touch sprite id #39.
+- Similarly, don't use the window layer. Like the above two items, it's reserved for the countdown timer visuals.
 - Keep all of your work inside of your assigned bank(s), and don't forget that you can fit multiple microgames in a single bank. If you need another bank, let me know and I'll find one for you (if available).
 - Try to keep controls consistent and easily intuited by someone playing your microgame for the first time. And don't use the Start button. That's reserved by the engine for pausing.
 - If the player times out, the engine will consider it a loss, so not all microgames need to have an explicit *LOST* status.

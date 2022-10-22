@@ -9,6 +9,9 @@
 #include "../structs/Microgame.h"
 
 #include "../states/sharedTemplateMicrogame.h"
+#include "../res/tiles/borderTiles.h"
+#include "../res/tiles/fontTiles.h"
+#include "../res/tiles/timerTiles.h"
 #include "../../Bownly/states/bownlyBowMicrogame.h"
 #include "../../Bownly/states/bownlyPastelMicrogame.h"
 #include "../../Bownly/states/bownlyMP5Microgame.h"
@@ -33,8 +36,11 @@ extern Microgame mgCurrentMG;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
+UINT8 mgVar;
 UINT8 currentLives;
 UINT8 currentScore;
+UINT16 timeRemaining;  // 160px * 16 (big number)
+UINT8 timerTickSpeed;
 
 
 /* SUBSTATE METHODS */
@@ -48,6 +54,8 @@ void phaseMicrogameManagerLoop();
 void loadNewMG(MICROGAME);
 
 /* DISPLAY METHODS */
+void drawTimer();
+void updateTimer();
 
 
 /******************************** PUBLIC METHODS *********************************/
@@ -75,6 +83,11 @@ void microgameManagerStateMain()
 
 void microgameManagerGameLoop()
 {
+    updateTimer();
+
+    if (timeRemaining <= timerTickSpeed)
+        mgStatus = LOST;
+
     switch (mgStatus)
     {
         case LOST:
@@ -111,7 +124,7 @@ void microgameManagerGameLoop()
                     break;
             }
             break;
-        default:
+        default:  // AKA, we're actually playing the game
             SWITCH_ROM_MBC1(mgCurrentMG.bankId);
             switch (mgCurrentMG.id)
             {
@@ -143,32 +156,37 @@ void phaseInitMicrogameManager()
     // Initializations
     currentLives = 4U;
     currentScore = 0U;
+    mgDifficulty = 0U;
+    mgSpeed = 0U;
 
     loadNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
+
 void phaseInitMicrogameLobby()
 {
     // Initializations
+    HIDE_WIN;
     animTick = 0U;
     mgStatus = PLAYING;
+    timeRemaining = 2560U;  // 2560 = 160px * 16
+    timerTickSpeed = timeRemaining / mgCurrentMG.duration / 60U;
 
     // Reload graphics
-    
-    setBlankBkg();
-    // Set themed bkg
-    // Update score val
-    
-    // Select new microgame
-    // mgCurrentMG = MG_BOWNLY_BOW;
+    set_bkg_data(0U, 46U, fontTiles);
+    set_bkg_data(0xF0U, 8U, borderTiles);
+    set_bkg_data(0xFCU, 3U, timerTiles);
 
+    setBlankBkg();
+    
+    // Set themed bkg
+    
     substate = SUB_LOOP;
 
-
-        // TEMP STUFF TODO: delete me
-        printLine(6U, 8U, "SCORE:", FALSE);
-        printLine(6U, 9U, "LIVES:", FALSE);
+    // TEMP STUFF TODO: delete me
+    printLine(6U, 8U, "SCORE:", FALSE);
+    printLine(6U, 9U, "LIVES:", FALSE);
 
     fadein();
 }
@@ -200,13 +218,15 @@ void phaseMicrogameManagerLoop()
 
         l = (20U - k) >> 1U;
         // When done, show new instructions
-        drawWindow(l-1U, 7U, k+1U, 2U);
+        drawPopupWindow(l-1U, 7U, k+1U, 2U);
         printLine(l, 8U, mgCurrentMG.instructionsPtr, FALSE);
     }
     else if (animTick == 120U)
     {
         // Start new microgame
         fadeout();
+        SHOW_WIN;
+        drawTimer();
         gamestate = STATE_MICROGAME;
         substate = SUB_INIT;
         mgStatus = PLAYING;
@@ -226,7 +246,23 @@ void loadNewMG(MICROGAME newMicrogame)
     mgCurrentMG.namePtr = microgameDex[newMicrogame].namePtr;
     mgCurrentMG.bylinePtr = microgameDex[newMicrogame].bylinePtr;
     mgCurrentMG.instructionsPtr = microgameDex[newMicrogame].instructionsPtr;
+    mgCurrentMG.duration = microgameDex[newMicrogame].duration;
 }
 
 
 /******************************** DISPLAY METHODS ********************************/
+void drawTimer()
+{
+    set_win_tile_xy(0U, 0U, 0xFCU);  // Left end
+    for (mgVar = 1U; mgVar != 21U; ++mgVar)
+        set_win_tile_xy(mgVar, 0U, 0xFDU);  // Body
+    set_sprite_tile(39U, 0xFEU);  // Right end
+    move_sprite(39U, 160U, 152U);  // Right end
+    move_win(0U, 136U);
+}
+
+void updateTimer()
+{
+    timeRemaining -= timerTickSpeed;
+    move_win((160U - (timeRemaining >> 4U)), 136U);
+}

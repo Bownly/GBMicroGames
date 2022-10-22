@@ -7,7 +7,7 @@
 #include "../../Shared/fade.h"
 #include "../enums.h"
 
-#include "../res/tiles/bowBkgTiles.h"
+#include "../res/tiles/bownlyBowBkgTiles.h"
 #include "../res/sprites/bownlySprArrow.h"
 #include "../res/sprites/bownlySprBow.h"
 #include "../res/sprites/bownlySprTarget.h"
@@ -109,7 +109,7 @@ void phaseBowInit()
     arrowstate = NOCKED;
     
     // Setting up the background
-    set_bkg_data(BKGTILE_GRASS, 6U, bowBkgTiles);
+    set_bkg_data(BKGTILE_GRASS, 6U, bownlyBowBkgTiles);
     for (i = 0U; i != 20U; ++i)
     {
         set_bkg_tile_xy(i, 16U, BKGTILE_GRASS);
