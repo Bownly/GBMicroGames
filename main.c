@@ -38,6 +38,7 @@ UINT8 r;  // Used for randomization stuff
 UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
 UINT8 currentScore = 0U;
+UINT8 currentLives = 4U;
 UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
@@ -102,6 +103,13 @@ void main()
             case STATE_MICROGAME:
                 switch (mgStatus)
                 {
+                    case LOST:
+                        if (--currentLives == 0U)
+                        {
+                            gamestate = STATE_TITLE;
+                            substate = SUB_INIT;
+                            break;
+                        }
                     case WON:
                         ++currentScore;
                         gamestate = STATE_MICROGAME_MANAGER;
@@ -109,7 +117,7 @@ void main()
                         fadeout();
 
                         // TEST stuff
-                        mgDifficulty = (currentScore >> 1U) % 3U;
+                        mgDifficulty = currentScore % 3U;
                         mgSpeed = (currentScore / 3U) % 3U;
                         // setNewMG(currentScore % 3U);
                         // mgDifficulty = (currentScore / 3U) % 3U;
@@ -130,9 +138,6 @@ void main()
                                 break;
                         }
 
-                        break;
-                    case LOST:
-                        // Lose a heart, etc.
                         break;
                     default:
                         SWITCH_ROM_MBC1(mgCurrentMG.bankId);

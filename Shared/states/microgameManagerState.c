@@ -20,6 +20,7 @@ extern UINT8 r;  // Used for randomization stuff
 extern UINT8 gamestate;
 extern UINT8 substate;
 extern UINT8 currentScore;
+extern UINT8 currentLives;
 extern UINT8 mgDifficulty;
 extern UINT8 mgSpeed;
 extern UINT8 mgStatus;
@@ -66,7 +67,7 @@ void phaseInitMicrogameManager()
 {
     // Initializations
     animTick = 0U;
-    mgStatus = 0U;
+    mgStatus = PLAYING;
 
     // Reload graphics
     
@@ -81,8 +82,8 @@ void phaseInitMicrogameManager()
 
 
         // TEMP STUFF TODO: delete me
-        unsigned char scoreString[] = "SCORE:";
-        printLine(7U, 8U, scoreString, FALSE);
+        printLine(6U, 8U, "SCORE:", FALSE);
+        printLine(6U, 9U, "LIVES:", FALSE);
 
     fadein();
 }
@@ -94,12 +95,20 @@ void phaseMicrogameManagerLoop()
     // Animate score increase visuals
     if (animTick < 60U)
     {
-        set_bkg_tile_xy(8, 9, currentScore/100U);
-        set_bkg_tile_xy(9, 9, (currentScore/10U)%10U);
-        set_bkg_tile_xy(10, 9, currentScore%10U);
+        set_bkg_tile_xy(12U, 8U, currentScore/100U);
+        set_bkg_tile_xy(13U, 8U, (currentScore/10U)%10U);
+        set_bkg_tile_xy(14U, 8U, currentScore%10U);
+        set_bkg_tile_xy(12U, 9U, currentLives);
     }
     else if (animTick == 60U)
     {
+        // Erase score and lives text
+        for (i = 6U; i != 15U; ++i)
+        {
+            set_bkg_tile_xy(i, 8U, 0xFFU);
+            set_bkg_tile_xy(i, 9U, 0xFFU);
+        }
+
         k = 0U;
         while (mgCurrentMG.instructionsPtr[k] != 0U)
             ++k;

@@ -1,29 +1,12 @@
 #include <gb/gb.h>
-// #include "songPlayer.h"
 
 UINT8 isFadedOut;
-// UINT8 shouldStartMusic;
 
 UINT8 getIsFadedOut()
 {
     return isFadedOut;
 }
 
-// UINT8 getShouldStartMusic()
-// {
-//     if (shouldStartMusic != 1)
-//     {
-//         shouldStartMusic = 1;
-//         return 0;
-//     }
-//     else
-//         return 1;
-// }
-
-// void setShouldStartMusic(UINT8 val)
-// {
-//     shouldStartMusic = val;
-// }
 
 void performantdelay(UINT8 numloops)
 {

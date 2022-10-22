@@ -28,6 +28,8 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Shared/o/ram.o Shared/ram.c
 @REM Logic to lose game when timer expires
 @REM Pad out time between mgStatus = WON and transition away from microgame
 @REM Pad out time between mgStatus = LOST and transition away from microgame
+@REM Move the game manager outside of the main switch statement
+@REM    ...and move all that game manager stuff there into game manager
 @REM Music
 @REM Audio in general
 @REM Beautify transition screen
