@@ -7,7 +7,7 @@ Link to the jam page on Itch: \<link goes here\>
 2. Make a folder in your project's root directory with your Itch name as the folder name.
 3. Add a value for your microgame to the *MICROGAME* enum in *enums.h*. The name should follow the naming convention of *MG_YOURNAME_MICROGAMENAME*
 4. Navigate to *Shared/database/microgameData.c*. In there, add an entry for your microgame.
-5. In *main.c*, add an #include line for your main c file
+5. In *main.c*, add an #include line for your main c file.
 6. Still in *main.c*, add a *case* for your microgame that calls your main function to the switch statement around line ~150. Just follow the pattern of the other cases. Note that your main function will be called every frame, and will be the only entry point to your microgame's code.
 7. In *make.bat*, add a call to your personal *make* file, and add your files to the line at the end that builds the rom.
 
@@ -20,6 +20,7 @@ Link to the jam page on Itch: \<link goes here\>
 
 
 ## Things to keep in mind:
+- Preface as many files and variables with your username as possible to avoid multiple definition errors.
 - Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's explicitly what *Shared/states/sharedTemplateMicrogame.c* is there for.
 - Don't write any data to the last row of sprites/background tiles (0xF0-0xFF).
 - Keep all of your work inside of your assigned bank(s), and don't forget that you can fit multiple microgames in a single bank. If you need another bank, let me know and I'll find one for you (if available).
@@ -35,4 +36,4 @@ Link to the jam page on Itch: \<link goes here\>
 In terms of subject matter, let's keep it E rated, evergreen, and noncontroversial. Topics to avoid: religion, economics, philosophies, politics, identity politics, non-cartoon violence, sexual content, drug references, irl/current events, memes, swear words, etc. If you're in doubt, ask yourself if it'd be included in the original WarioWare. If you're still in doubt, run the idea by me. I'll even veto a completed game if I have to, but I obviously don't want to.
 
 ## Legal
-I'm not a lawyer, but you won't lose any IP rights or anything for whatever you contribute. I want your stuff to remain yours. And don't include anything from anyone else's IPs, obviously. However, you are encouraged to include content from your own existing IPs. I'm a big sucker for cross-overs and self-references, so please include content from your previous projects (so long as everything's compliant with the content guidelines, of course).
+I'm not a lawyer, but you won't lose any IP rights or anything for whatever you contribute. I want your stuff to remain yours. And don't include any content from anyone else's IPs, obviously. However, you are encouraged to include content from your own existing IPs. I'm a big sucker for cross-overs and self-references, so please include content from your previous projects (so long as everything's compliant with the content guidelines, of course).
