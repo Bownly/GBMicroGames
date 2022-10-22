@@ -7,8 +7,8 @@ Link to the jam page on Itch: \<link goes here\>
 2. Make a folder in your project's root directory with your Itch name as the folder name.
 3. Add a value for your microgame to the *MICROGAME* enum in *enums.h*. The name should follow the naming convention of *MG_YOURNAME_MICROGAMENAME*
 4. Navigate to *Shared/database/microgameData.c*. In there, add an entry for your microgame.
-5. In *main.c*, add an #include line for your main c file.
-6. Still in *main.c*, add a *case* for your microgame that calls your main function to the switch statement around line ~150. Just follow the pattern of the other cases. Note that your main function will be called every frame, and will be the only entry point to your microgame's code.
+5. In *Shared/microgameManagerState.c*, add an #include line for your main c file.
+6. Still in *Shared/microgameManagerState.c*, find the switch statement inside *microgameManagerGameLoop()*, and add a *case* for your microgame's enum that calls your main function. Just follow the pattern of the other cases. Note that your main function will be called every frame, and will be the only entry point to your microgame's code.
 7. In *make.bat*, add a call to your personal *make* file, and add your files to the line at the end that builds the rom.
 
 

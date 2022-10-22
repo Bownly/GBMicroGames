@@ -17,7 +17,8 @@ typedef enum {
 
 typedef enum {
     SUB_INIT,
-    SUB_LOOP
+    SUB_LOOP,
+    MGM_INIT_LOBBY  // The transition screen between microgames
 } SUBSTATE;
 
 typedef enum {

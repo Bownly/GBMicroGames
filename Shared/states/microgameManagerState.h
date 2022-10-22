@@ -4,6 +4,7 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-void microgameManagerStateMain();
+void microgameManagerStateMain();  // Handles mostly lobby stuff
+void microgameManagerGameLoop();  // Handles the microgame logic like checking if WON, etc
 
 #endif

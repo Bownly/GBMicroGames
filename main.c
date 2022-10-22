@@ -7,15 +7,9 @@
 #include "Shared/ram.h"
 #include "Shared/songPlayer.h"
 
-#include "Shared/database/microgameData.h"
 #include "Shared/structs/Microgame.h"
 #include "Shared/states/microgameManagerState.h"
-#include "Shared/states/sharedTemplateMicrogame.h"
 #include "Shared/states/titleState.h"
-
-#include "Bownly/states/bownlyBowMicrogame.h"
-#include "Bownly/states/bownlyPastelMicrogame.h"
-#include "Bownly/states/bownlyMP5Microgame.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char fontTiles[];
@@ -37,8 +31,6 @@ UINT8 r;  // Used for randomization stuff
 
 UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
-UINT8 currentScore = 0U;
-UINT8 currentLives = 4U;
 UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
@@ -49,7 +41,6 @@ UINT8 animTick = 0U;
 
 
 void initRAM(UBYTE);
-void setNewMG(MICROGAME);
 
 
 void vbl_update() {
@@ -78,9 +69,6 @@ void main()
     SHOW_SPRITES;
 
     gamestate = STATE_TITLE;
-    // gamestate = STATE_MICROGAME;
-    setNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
-
     substate = SUB_INIT;
 
     while(1U)
@@ -101,73 +89,15 @@ void main()
                 microgameManagerStateMain();
                 break;
             case STATE_MICROGAME:
-                switch (mgStatus)
-                {
-                    case LOST:
-                        if (--currentLives == 0U)
-                        {
-                            gamestate = STATE_TITLE;
-                            substate = SUB_INIT;
-                            break;
-                        }
-                    case WON:
-                        ++currentScore;
-                        gamestate = STATE_MICROGAME_MANAGER;
-                        substate = SUB_INIT;
-                        fadeout();
-
-                        // TEST stuff
-                        mgDifficulty = currentScore % 3U;
-                        mgSpeed = (currentScore / 3U) % 3U;
-                        // setNewMG(currentScore % 3U);
-                        // mgDifficulty = (currentScore / 3U) % 3U;
-
-                        switch (currentScore)
-                        {
-                            default:
-                            case 1U:
-                            case 3U:
-                            case 5U:
-                                setNewMG(MG_TEMPLATE);
-                                break;
-                            case 2U:
-                                setNewMG(MG_BOWNLY_PASTEL);
-                                break;
-                            case 4U:
-                                setNewMG(MG_BOWNLY_MAGIPANELS5);
-                                break;
-                        }
-
-                        break;
-                    default:
-                        SWITCH_ROM_MBC1(mgCurrentMG.bankId);
-                        switch (mgCurrentMG.id)
-                        {
-                            case MG_BOWNLY_BOW:
-                                bownlyBowMicrogameMain();
-                                break;
-                            case MG_BOWNLY_PASTEL:
-                                bownlyPastelMicrogameMain();
-                                break;
-                            case MG_BOWNLY_MAGIPANELS5:
-                                bownlyMP5MicrogameMain();
-                                break;
-                            case MG_TEMPLATE:
-                                sharedTemplateMicrogameMain();
-                                break;
-                            default:
-                                SWITCH_ROM_MBC1(2U);
-                                sharedTemplateMicrogameMain();
-                                break;
-                        }
-                        break;
-                }
+                microgameManagerGameLoop();
                 break;
         }
+    
         // Music stuff
         songPlayerUpdate();
     }
 }
+
 
 void initRAM(UBYTE force_clear)
 {
@@ -202,11 +132,3 @@ void initRAM(UBYTE force_clear)
     DISABLE_RAM_MBC1;
 }
 
-void setNewMG(MICROGAME newMicrogame)
-{
-    mgCurrentMG.id = newMicrogame;
-    mgCurrentMG.bankId = microgameDex[newMicrogame].bankId;
-    mgCurrentMG.namePtr = microgameDex[newMicrogame].namePtr;
-    mgCurrentMG.bylinePtr = microgameDex[newMicrogame].bylinePtr;
-    mgCurrentMG.instructionsPtr = microgameDex[newMicrogame].instructionsPtr;
-}
