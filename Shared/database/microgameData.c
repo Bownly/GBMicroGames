@@ -10,9 +10,9 @@ const Microgame microgameDex[100U] =
         .id = (game), \
         .bankId = (_bankId), \
         .duration = (_duration), \
-        .namePtr = (_name), \
-        .bylinePtr = (_author), \
-        .instructionsPtr = (_instructions) \
+        .namePtr = (name), \
+        .bylinePtr = (author), \
+        .instructionsPtr = (instructions) \
     },
 #include "microgameList.h"
 #undef MICROGAME
