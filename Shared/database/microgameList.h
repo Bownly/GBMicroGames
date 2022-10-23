@@ -1,6 +1,20 @@
+/* @brief New games can be added to the GB ROM by adding new entries to this list.
+ *
+ *        The macro looks like this:
+ *        MICROGAME(gameId, gameMainFunction, bankId, duration, name, author, instructions)
+ * 
+ * @param gameId           The ID the game is associated with
+ * @param gameMainFunction The function that will be called to run the game
+ * @param bankId           Which bank ID the game code is located in
+ * @param duration         How long the game takes until finish
+ * @param name             Display name of the game
+ * @param author           Author of the game
+ * @param instructions     Instructions for the game
+ */
+
 #ifdef MICROGAME
-MICROGAME(MG_BOWNLY_BOW, bownlyBowMicrogameMain, 2U, 4U, "SHOOT", "SHOOT", "SHOOT")
-MICROGAME(MG_BOWNLY_MAGIPANELS5, bownlyMP5MicrogameMain, 2U, 4U, "INCREASE TO 5", "INCREASE TO 5", "INCREASE TO 5")
-MICROGAME(MG_BOWNLY_PASTEL, bownlyPastelMicrogameMain, 2U, 4U, "COLLECT HEARTS!", "COLLECT HEARTS!", "COLLECT HEARTS!")
+MICROGAME(MG_BOWNLY_BOW, bownlyBowMicrogameMain, 2U, 4U, "BOW", "BOWNLY", "SHOOT")
+MICROGAME(MG_BOWNLY_MAGIPANELS5, bownlyMP5MicrogameMain, 2U, 4U, "MAGIC PANELS 5", "BOWNLY", "INCREASE TO 5")
+MICROGAME(MG_BOWNLY_PASTEL, bownlyPastelMicrogameMain, 2U, 4U, "PASTEL", "BOWNLY", "COLLECT HEARTS!")
 MICROGAME(MG_TEMPLATE, sharedTemplateMicrogameMain, 2U, 5U, "MAKE A GAME!", "MAKE A GAME!", "MAKE A GAME!")
 #endif
