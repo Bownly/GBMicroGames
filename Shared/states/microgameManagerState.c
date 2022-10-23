@@ -5,16 +5,17 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+#include "../songPlayer.h"
 #include "../database/microgameData.h"
 #include "../structs/Microgame.h"
 
-#include "../states/sharedTemplateMicrogame.h"
 #include "../res/tiles/borderTiles.h"
 #include "../res/tiles/fontTiles.h"
 #include "../res/tiles/timerTiles.h"
 #include "../../Bownly/states/bownlyBowMicrogame.h"
 #include "../../Bownly/states/bownlyPastelMicrogame.h"
 #include "../../Bownly/states/bownlyMP5Microgame.h"
+#include "../../Template/states/templateFaceMicrogame.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -108,21 +109,7 @@ void microgameManagerGameLoop()
             mgSpeed = (currentScore / 3U) % 3U;
             // loadNewMG(currentScore % 3U);
             // mgDifficulty = (currentScore / 3U) % 3U;
-            switch (currentScore)
-            {
-                default:
-                case 1U:
-                case 3U:
-                case 5U:
-                    loadNewMG(MG_TEMPLATE);
-                    break;
-                case 2U:
-                    loadNewMG(MG_BOWNLY_PASTEL);
-                    break;
-                case 4U:
-                    loadNewMG(MG_BOWNLY_MAGIPANELS5);
-                    break;
-            }
+
             break;
         default:  // AKA, we're actually playing the game
             SWITCH_ROM_MBC1(mgCurrentMG.bankId);
@@ -137,12 +124,11 @@ void microgameManagerGameLoop()
                 case MG_BOWNLY_MAGIPANELS5:
                     bownlyMP5MicrogameMain();
                     break;
-                case MG_TEMPLATE:
-                    sharedTemplateMicrogameMain();
+                case MG_TEMPLATE_FACE:
+                    templateFaceMicrogameMain();
                     break;
                 default:
-                    SWITCH_ROM_MBC1(2U);
-                    sharedTemplateMicrogameMain();
+                    templateFaceMicrogameMain();
                     break;
             }
             break;
@@ -159,20 +145,23 @@ void phaseInitMicrogameManager()
     mgDifficulty = 0U;
     mgSpeed = 0U;
 
-    loadNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG(MG_TEMPLATE_FACE);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
 
 void phaseInitMicrogameLobby()
 {
+    
     // Initializations
-    HIDE_WIN;
     animTick = 0U;
     mgStatus = PLAYING;
     timeRemaining = 2560U;  // 2560 = 160px * 16
     timerTickSpeed = timeRemaining / mgCurrentMG.duration / 60U;
 
+    HIDE_WIN;
+    stopSong();
+    
     // Reload graphics
     set_bkg_data(0U, 46U, fontTiles);
     set_bkg_data(0xF0U, 8U, borderTiles);
@@ -189,6 +178,7 @@ void phaseInitMicrogameLobby()
     printLine(6U, 9U, "LIVES:", FALSE);
 
     fadein();
+
 }
 
 void phaseMicrogameManagerLoop()

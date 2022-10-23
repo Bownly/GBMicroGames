@@ -4,6 +4,7 @@
 #include "../../Shared/common.h"
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
+#include "../../Shared/songPlayer.h"
 
 #include "../res/tiles/bownlyMP5DiceTiles.h"
 #include "../res/tiles/bownlyMP5StageTiles.h"
@@ -127,6 +128,9 @@ void phaseMagipanels5Init()
 
     fadein();
     substate = SUB_LOOP;
+
+    playSong(0U, 2U);
+
 }
 
 void phaseMagipanels5Loop()

@@ -19,21 +19,21 @@ C:\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -DUSE_SFR_FOR_REG -c -o Shared/o/gbt_player_ba
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo0 -c -o Shared/o/microgameManagerState.o Shared/states/microgameManagerState.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Shared/o/titleState.o Shared/states/titleState.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Shared/o/sharedTemplateMicrogame.o Shared/states/sharedTemplateMicrogame.c
 
 c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Shared/o/ram.o Shared/ram.c
 
-@REM Engine MVP TODO:
+@REM Pre-jam TODO:
 @REM Should maybe move mgdex to a different bank
 @REM Pad out time between mgStatus = WON and transition away from microgame
 @REM Pad out time between mgStatus = LOST and transition away from microgame
-@REM Music
-@REM Audio in general
+@REM Integrate mgSpeed into the countdown timer (oops, I forgot to do this)
+@REM Should figure out where to put songPlayer. Shared? Each individual's directory?
 @REM Beautify lobby screen
 @REM    Score increment animation
 @REM    Lives/losing lives animation
 @REM    Speed up/difficulty up animations
-
+@REM Add "so you don't know how to code?" section
+@REM Add a "new to gbdk?" section
 
 @REM During/post gamejam TODO broadstrokes:
 @REM Title screen
