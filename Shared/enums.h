@@ -9,10 +9,9 @@ typedef enum {
 } GAMESTATE;
 
 typedef enum {
-    MG_BOWNLY_BOW,
-    MG_BOWNLY_MAGIPANELS5,
-    MG_BOWNLY_PASTEL,
-    MG_TEMPLATE
+#define MICROGAME(game, a, b, c, d, e, f) game,
+#include "database/microgameList.h"
+#undef MICROGAME
 } MICROGAME;
 
 typedef enum {
