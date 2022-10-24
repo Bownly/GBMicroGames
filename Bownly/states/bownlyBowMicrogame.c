@@ -5,7 +5,9 @@
 #include "../../Shared/common.h"
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
+#include "../../Shared/songPlayer.h"
 #include "../enums.h"
+
 
 #include "../res/tiles/bownlyBowBkgTiles.h"
 #include "../res/sprites/bownlySprArrow.h"
@@ -173,7 +175,10 @@ void phaseBowLoop()
             if (arrowX == 30U)
             {
                 if (arrowY <= targetY + 15U && arrowY >= targetY - 15U)
+                {
+                    playCollisionSfx();
                     arrowstate = HIT;
+                }
                 else
                 {
                     arrowX -= 1;
@@ -235,6 +240,7 @@ void inputsShoot()
 {
     if (curJoypad & J_A && !(prevJoypad & J_A))
     {
+        playMoveSfx();
         arrowstate = FLYING;
         bowFrame = 0U;
     }
