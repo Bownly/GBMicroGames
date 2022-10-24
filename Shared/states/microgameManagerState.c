@@ -128,18 +128,13 @@ void microgameManagerGameLoop()
             SWITCH_ROM_MBC1(mgCurrentMG.bankId);
             switch (mgCurrentMG.id)
             {
-                case MG_BOWNLY_BOW:
-                    bownlyBowMicrogameMain();
-                    break;
-                case MG_BOWNLY_PASTEL:
-                    bownlyPastelMicrogameMain();
-                    break;
-                case MG_BOWNLY_MAGIPANELS5:
-                    bownlyMP5MicrogameMain();
-                    break;
-                case MG_TEMPLATE:
-                    sharedTemplateMicrogameMain();
-                    break;
+                #define MICROGAME(game, gameFunction, a, b, c, d, e) \
+                    case game: \
+                        gameFunction(); \
+                        break;
+                #include "../database/microgameList.h"
+                #undef MICROGAME
+
                 default:
                     SWITCH_ROM_MBC1(2U);
                     sharedTemplateMicrogameMain();
