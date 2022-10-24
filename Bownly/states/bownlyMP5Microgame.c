@@ -32,19 +32,19 @@ extern UINT8 mgStatus;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-UINT8 buttonHoldTick;
-UINT8 screenShakeTick;
-UINT8 flipAnimTick;
+static UINT8 buttonHoldTick;
+static UINT8 screenShakeTick;
+static UINT8 flipAnimTick;
 #define FLIP_DURATION 21U
 
 #define prestonXOffset 32U
 #define prestonYOffset 32U
-UINT8 prestonXIndex;
-UINT8 prestonYIndex;
-UINT8 prestonIsHorz;
+static UINT8 prestonXIndex;
+static UINT8 prestonYIndex;
+static UINT8 prestonIsHorz;
 
-BownlyPanel gridPanels[25U];
-UINT8 remaining5s;
+static BownlyPanel gridPanels[25U];
+static UINT8 remaining5s;
 #define panelsXOrigin 5U
 #define panelsYOrigin 4U
 
@@ -253,7 +253,7 @@ void initGrid()
     // Setting up active panels
     i = getRandUint(5U);
     j = getRandUint(5U);
-    setupPanel(i*5U+j, i, j, 0U);
+    setupPanel(i*5U+j, i, j, getRandUint(2U));
 
     if (mgDifficulty != 0U)  // AKA, if 1 or 2
     {
@@ -262,13 +262,13 @@ void initGrid()
         {
             if (++i == 5U)
                 i = 0U;
-            setupPanel(i*5U+j, i, j, 0U);
+            setupPanel(i*5U+j, i, j, getRandUint(2U));
         }
         else  // Vert
         {
             if (++j == 5U)
                 j = 0U;
-            setupPanel(i*5U+j, i, j, 0U);
+            setupPanel(i*5U+j, i, j, getRandUint(2U));
         }
     }
     if (mgDifficulty == 2U)
@@ -277,13 +277,13 @@ void initGrid()
         {
             if (++i == 5U)
                 i = 0U;
-            setupPanel(i*5U+j, i, j, 0U);
+            setupPanel(i*5U+j, i, j, getRandUint(2U));
         }
         else  // Vert
         {
             if (++j == 5U)
                 j = 0U;
-            setupPanel(i*5U+j, i, j, 0U);
+            setupPanel(i*5U+j, i, j, getRandUint(2U));
         }
     }
 }

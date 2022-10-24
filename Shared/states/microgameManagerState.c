@@ -148,7 +148,6 @@ void phaseInitMicrogameManager()
 
 void phaseInitMicrogameLobby()
 {
-    
     // Initializations
     animTick = 0U;
     mgStatus = PLAYING;

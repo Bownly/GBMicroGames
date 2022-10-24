@@ -4,24 +4,21 @@ Link to the jam page on Itch: \<link goes here\>
 
 ## Setup - how to
 1. Clone the repo and make a branch off of master.
-2. Make a folder in your project's root directory with your Itch name as the folder name.
-3. Add a value for your microgame to the *MICROGAME* enum in *enums.h*. The name should follow the naming convention of *MG_YOURNAME_MICROGAMENAME*
-4. Navigate to *Shared/database/microgameData.c*. In there, add an entry for your microgame.
-5. In *Shared/microgameManagerState.c*, add an #include line for your main c file.
-6. Still in *Shared/microgameManagerState.c*, find the switch statement inside *microgameManagerGameLoop()*, and add a *case* for your microgame's enum that calls your main function. Just follow the pattern of the other cases. Note that your main function will be called every frame, and will be the only entry point to your microgame's code.
-7. In *make.bat*, add a call to your personal *make* file, and add your files to the line at the end that builds the rom.
+2. Make a folder in your project's root directory with your Itch name as the folder name. (If you want, you can make a copy of the Template folder and work off of that as a base.)
+3. Add a line for your microgame inside *Shared/database/microgameList.h*. The proper format should be pretty self explanatory.
+4. In *Shared/microgameManagerState.c*, add an #include line for your main file's header file. 
+5. In *make.bat*, add a call to your personal *make* file, and add your files to the line at the end that builds the rom.
 
 
 ## Integrating your microgame with the engine:
-- As mentioned above, every microgame will have a single main function that will be called every frame. For this function, please stick to the naming convention of *yournameGamenameMicrogameMain()*. (e.g. *bownlyBowMicrogameMain()* for a microgame called Bow made by Bownly)
+- Every microgame will have a single main function that will be called every frame. For this function, please stick to the naming convention of *yournameGamenameMicrogameMain()*. (e.g. *bownlyBowMicrogameMain()* for a microgame called Bow made by Bownly)
 - Each microgame will have 3 different difficulties (values: 0, 1, 2). You can get the current difficulty by reading the global variable, *mgDifficulty*. This is a readonly variable that the engine will write to before your microgame begins. Its value will remain unchanged for the duration of your microgame, so don't worry about having to make a local copy or anything. It's up to you to determine how to manifest the different levels of difficulty within the context of your microgame.
 - Each microgame will have 3 different levels of speed (values: 0, 1, 2). The variable for this is *mgSpeed*. The above explanation for *mgDifficulty* also applies for mgSpeed.
 - When the player has completed your microgame, set *mgStatus* to *WON* (don't forget to include *Shared/enums.h*). Similarly, set mgStatus to *LOST* if the player has lost your microgame.
 
-
 ## Things to keep in mind:
-- Preface as many files and variables with your username as possible to avoid multiple definition errors.
-- Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's explicitly what *Shared/states/sharedTemplateMicrogame.c* is there for.
+- Preface as many files and variables with your username as possible to avoid multiple definition errors. And/or make your variables static when appropriate, for similar reasons.
+- Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's explicitly what the entire Template folder is there for.
 - Don't write any data to the following sprites/background tiles: 0xFC-0xFF.
 - Also, don't touch sprite id #39.
 - Similarly, don't use the window layer. Like the above two items, it's reserved for the countdown timer visuals.

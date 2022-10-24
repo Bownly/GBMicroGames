@@ -38,8 +38,6 @@ extern UINT8 animFrame;
 
 static UINT8 facesGrid[4U][5U];
 static UINT8 sadCount;  // The number of currently sad faces
-static UINT8 buttonHoldTick;  // How long a dpad button has been held down for
-static UINT8 buttonHoldThreshold;  // How long a dpad button has to be held down for to auto scroll
 
 #define SPRTILE_CURSOR 0x00U  // The location in the sprite tile memory where the cursor sprite tiles will be written to
 #define BKGTILE_FACES 0x40U  // The location in the bkg tile memory where the face tiles will be written to
@@ -89,8 +87,13 @@ void phaseFaceInit()
     animTick = 0U;
     m = 0U;  // Used as the X index for the cursor, uses faces as the unit of measurement
     n = 0U;  // Used as the Y index for the cursor, uses faces as the unit of measurement
+
+    // Integrate mgDifficulty into the game
     sadCount = mgDifficulty + 2U;  // Range of 2, 3 or 4
-    buttonHoldThreshold = 12U - mgSpeed;
+    // This particular microgame doesn't impement mgSpeed. Not all microgames necessarily need to.
+    // (But every microgame DOES need to account for all 3 levels of mgDifficulty.)
+    // The timer moves faster with each level of mgSpeed by default, so even microgames like this one will speed up.
+    // If you want to see an example of mgSpeed integration, check out the Bownly/Bow microgame.
 
     // Load graphics
     set_bkg_data(BKGTILE_FACES, 8U, templateFaceTiles);
@@ -144,54 +147,34 @@ void phaseFaceLoop()
 /******************************** INPUT METHODS *********************************/
 void inputsFace()
 {
-    if (!curJoypad & (J_UP | J_DOWN | J_LEFT | J_RIGHT))
+    if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
-        buttonHoldTick = 0U;
+        // Decrement m by 1, and wrap it around to the far right if it dips below 0
+        if (m-- == 0U)
+            m = 4U;
+        updateCursorLocation();
     }
-
-    if(curJoypad & J_LEFT)
+    else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
-        ++buttonHoldTick;
-        if (!(prevJoypad & J_LEFT) || (buttonHoldTick % buttonHoldThreshold == 0U))
-        {
-            // Decrement m by 1, and wrap it around to the far right if it dips below 0
-            if (m-- == 0U)
-                m = 4U;
-            updateCursorLocation();
-        }
+        // Increment m by 1, and wrap it around to the far left if it exceeds 4
+        if (++m == 5U)
+            m = 0U;
+        updateCursorLocation();
     }
-    else if(curJoypad & J_RIGHT)
+    
+    if (curJoypad & J_UP && !(prevJoypad & J_UP))
     {
-        ++buttonHoldTick;
-        if (!(prevJoypad & J_RIGHT) || (buttonHoldTick % buttonHoldThreshold == 0U))
-        {
-            // Increment m by 1, and wrap it around to the far left if it exceeds 4
-            if (++m == 5U)
-                m = 0U;
-            updateCursorLocation();
-        }
+        // Decrement n by 1, and wrap it around to the bottom if it dips below 0
+        if (n-- == 0U)
+            n = 3U;
+        updateCursorLocation();
     }
-    else if(curJoypad & J_UP)
+    else if (curJoypad & J_DOWN && !(prevJoypad & J_DOWN))
     {
-        ++buttonHoldTick;
-        if (!(prevJoypad & J_UP) || (buttonHoldTick % buttonHoldThreshold == 0U))
-        {
-            // Decrement n by 1, and wrap it around to the bottom if it dips below 0
-            if (n-- == 0U)
-                n = 3U;
-            updateCursorLocation();
-        }
-    }
-    else if(curJoypad & J_DOWN)
-    {
-        ++buttonHoldTick;
-        if (!(prevJoypad & J_DOWN) || (buttonHoldTick % buttonHoldThreshold == 0U))
-        {
-            // Increment n by 1, and wrap it around to the top if it exceeds 3
-            if (++n == 4U)
-                n = 0U;
-            updateCursorLocation();
-        }
+        // Increment n by 1, and wrap it around to the top if it exceeds 3
+        if (++n == 4U)
+            n = 0U;
+        updateCursorLocation();
     }
 
     if (curJoypad & J_A && !(prevJoypad & J_A))
