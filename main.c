@@ -54,7 +54,7 @@ void main()
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0U, 46U, fontTiles);
 
-    setBlankBkg();
+    init_bkg(0xFFU);
     DISPLAY_ON;
     SHOW_SPRITES;
     SHOW_BKG;

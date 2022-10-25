@@ -6,7 +6,7 @@ extern UINT8 i;
 extern UINT8 j;
 extern UINT8 r;
 
-UINT8 getRandUint(UINT8 modulo)
+UINT8 getRandUint8(UINT8 modulo)
 {
     r = rand() % modulo;
     return r;
@@ -74,27 +74,5 @@ void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line, UINT8 printToWin
         set_bkg_tiles(xCoord, yCoord, size, 1U, tempLinePtr-size);
     else
         set_win_tiles(xCoord, yCoord, size, 1U, tempLinePtr-size);
-}
-
-void setBlankBkg()
-{
-    for (i = 0U; i != 21U; i++)
-    {
-        for (j = 0U; j != 18U; j++)
-        {
-            set_bkg_tile_xy(i, j, 0xFF);
-        }
-    }
-}
-
-void setBlankWin()
-{
-    for (i = 0U; i != 21U; i++)
-    {
-        for (j = 0U; j != 18U; j++)
-        {
-            set_win_tile_xy(i, j, 0xFF);
-        }
-    }
 }
 

@@ -86,7 +86,7 @@ void templateFaceMicrogameMain()
 void phaseFaceInit()
 {
     // Initializations
-    setBlankBkg();
+    init_bkg(0xFFU);
     animTick = 0U;
     m = 0U;  // Used as the X index for the cursor, uses faces as the unit of measurement
     n = 0U;  // Used as the Y index for the cursor, uses faces as the unit of measurement
@@ -121,8 +121,8 @@ void phaseFaceInit()
     k = 0U;
     while (k != sadCount)
     {
-        i = getRandUint(5U);  // Number of columns
-        j = getRandUint(4U);  // Number of rows
+        i = getRandUint8(5U);  // Number of columns
+        j = getRandUint8(4U);  // Number of rows
 
         // Checking the randomly selected face to ensure that it isn't already a sad face
         if (facesGrid[j][i] == HAPPY)
@@ -144,8 +144,11 @@ void phaseFaceLoop()
 {
     ++animTick;
 
-    inputsFace();
-    animateCursor();  
+    if (mgStatus == PLAYING)
+    {
+        inputsFace();
+        animateCursor();  
+    }
 }
 
 /******************************** INPUT METHODS *********************************/
@@ -232,7 +235,7 @@ void updateCursorLocation()
     // facesXAnchor's unit of measurement is tiles, sprites operate on the unit of pixels
     // The "<< 3U" is there to convert from tiles to pixels
     // The "+ 13U" and "+ 9U" are to center the cursor over the faces
-    i = ((facesXAnchor + (m * 3U)) << 3U) + 13U;
+    i = ((facesXAnchor + (m * 3U)) << 3U) + 12U;
     j = ((facesYAnchor + (n * 3U)) << 3U) + 9U;
 
     move_sprite(0U, i, j);

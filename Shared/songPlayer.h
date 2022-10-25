@@ -6,9 +6,4 @@
 void playSong(const hUGESong_t *);
 void stopSong();
 
-void playCollisionSfx();
-void playHurtSfx();
-void playMoveSfx();
-void playUnlockSfx();
-
 #endif

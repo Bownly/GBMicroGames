@@ -60,13 +60,10 @@ void titleStateMain()
 void phaseTitleInit()
 {
     // Initializations
-    setBlankBkg();
+    init_bkg(0xFFU);
     animTick = 0U;
-
-    for (j = 0U; j != 19U; ++j)
-        set_bkg_tile_xy(-1, j, 0xFFU);
-    move_bkg(-4, 0U);  // For centering the text
-
+  
+    scroll_bkg(-4, 0U);  // For centering the text
 
     printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
     printLine(4U, 4U, "TOTALLY NOT", FALSE);

@@ -37,11 +37,13 @@ extern Microgame mgCurrentMG;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-UINT8 mgVar;
 UINT8 currentLives;
 UINT8 currentScore;
-UINT16 timeRemaining;  // 160px * 16 (big number)
-UINT8 timerTickSpeed;
+UINT16 mgTimeRemaining;  // 160px * 16 (big number)
+UINT8 mgTimerTickSpeed;
+
+UINT8 transitionTimer;
+#define TRANSITION_DURATION 60U
 
 
 /* SUBSTATE METHODS */
@@ -52,7 +54,9 @@ void phaseMicrogameManagerLoop();
 /* INPUT METHODS */
 
 /* HELPER METHODS */
+void callMicrogameFunction();
 void loadNewMG(MICROGAME);
+void startMG();
 
 /* DISPLAY METHODS */
 void drawTimer();
@@ -84,49 +88,51 @@ void microgameManagerStateMain()
 
 void microgameManagerGameLoop()
 {
-    updateTimer();
-
-    if (timeRemaining <= timerTickSpeed)
-        mgStatus = LOST;
+    if (mgStatus == PLAYING)
+    {
+        updateTimer();
+        if (mgTimeRemaining <= mgTimerTickSpeed)
+        {
+            mgStatus = LOST;
+            // Add an explosion animation or something maybe
+        }
+    }
 
     switch (mgStatus)
     {
         case LOST:
-            if (--currentLives == 0U)
+            ++transitionTimer;
+            if (transitionTimer == TRANSITION_DURATION)
             {
-                gamestate = STATE_TITLE;
-                substate = SUB_INIT;
-                break;
+                if (--currentLives == 0U)
+                {
+                    gamestate = STATE_TITLE;
+                    substate = SUB_INIT;
+                    break;
+                }
+                else
+                    --transitionTimer;
             }
         case WON:
-            ++currentScore;
-            gamestate = STATE_MICROGAME_MANAGER;
-            substate = MGM_INIT_LOBBY;
-            fadeout();
+            ++transitionTimer;
+            if (transitionTimer == TRANSITION_DURATION)
+            {
+                ++currentScore;
+                gamestate = STATE_MICROGAME_MANAGER;
+                substate = MGM_INIT_LOBBY;
+                fadeout();
 
-            // TEST stuff
-            mgDifficulty = currentScore % 3U;
-            mgSpeed = (currentScore / 3U) % 3U;
-            loadNewMG(getRandUint(4U));
-            // mgDifficulty = (currentScore / 3U) % 3U;
-
+                // TEST stuff
+                mgDifficulty = currentScore % 3U;
+                mgSpeed = (currentScore / 3U) % 3U;
+                loadNewMG(getRandUint8(4U));
+                // mgDifficulty = (currentScore / 3U) % 3U;
+            }
+            else
+                callMicrogameFunction();
             break;
         default:  // AKA, we're actually playing the game
-            SWITCH_ROM_MBC1(mgCurrentMG.bankId);
-            switch (mgCurrentMG.id)
-            {
-                #define MICROGAME(game, gameFunction, a, b, c, d, e) \
-                    case game: \
-                        gameFunction(); \
-                        break;
-                #include "../database/microgameList.h"
-                #undef MICROGAME
-
-                default:
-                    SWITCH_ROM_MBC1(1U);
-                    templateFaceMicrogameMain();
-                    break;
-            }
+            callMicrogameFunction();
             break;
     }
 }
@@ -151,8 +157,8 @@ void phaseInitMicrogameLobby()
     // Initializations
     animTick = 0U;
     mgStatus = PLAYING;
-    timeRemaining = 2560U;  // 2560 = 160px * 16
-    timerTickSpeed = timeRemaining / mgCurrentMG.duration / 60U;
+    mgTimeRemaining = 2560U;  // 2560 = 160px * 16
+    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / 60U;
 
     HIDE_WIN;
 
@@ -165,7 +171,7 @@ void phaseInitMicrogameLobby()
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0xFCU, 3U, timerTiles);
 
-    setBlankBkg();
+    init_bkg(0xFFU);
     
     // Set themed bkg
     
@@ -210,14 +216,7 @@ void phaseMicrogameManagerLoop()
     }
     else if (animTick == 120U)
     {
-        // Start new microgame
-        fadeout();
-        stopSong();
-        SHOW_WIN;
-        drawTimer();
-        gamestate = STATE_MICROGAME;
-        substate = SUB_INIT;
-        mgStatus = PLAYING;
+        startMG();
     }
 
 }
@@ -227,6 +226,25 @@ void phaseMicrogameManagerLoop()
 
 
 /******************************** HELPER METHODS *********************************/
+void callMicrogameFunction()
+{
+    SWITCH_ROM_MBC1(mgCurrentMG.bankId);
+    switch (mgCurrentMG.id)
+    {
+        #define MICROGAME(game, gameFunction, a, b, c, d, e) \
+            case game: \
+                gameFunction(); \
+                break;
+        #include "../database/microgameList.h"
+        #undef MICROGAME
+
+        default:
+            SWITCH_ROM_MBC1(1U);
+            templateFaceMicrogameMain();
+            break;
+    }
+}
+
 void loadNewMG(MICROGAME newMicrogame)
 {
     mgCurrentMG.id = newMicrogame;
@@ -237,13 +255,25 @@ void loadNewMG(MICROGAME newMicrogame)
     mgCurrentMG.duration = microgameDex[newMicrogame].duration;
 }
 
+void startMG()
+{
+    fadeout();
+    stopSong();
+    SHOW_WIN;
+    drawTimer();
+    transitionTimer = 0U;
+    gamestate = STATE_MICROGAME;
+    substate = SUB_INIT;
+    mgStatus = PLAYING;
+}
+
 
 /******************************** DISPLAY METHODS ********************************/
 void drawTimer()
 {
     set_win_tile_xy(0U, 0U, 0xFCU);  // Left end
-    for (mgVar = 1U; mgVar != 21U; ++mgVar)
-        set_win_tile_xy(mgVar, 0U, 0xFDU);  // Body
+    for (i = 1U; i != 21U; ++i)
+        set_win_tile_xy(i, 0U, 0xFDU);  // Body
     set_sprite_tile(39U, 0xFEU);  // Right end
     move_sprite(39U, 160U, 152U);  // Right end
     move_win(0U, 136U);
@@ -251,6 +281,6 @@ void drawTimer()
 
 void updateTimer()
 {
-    timeRemaining -= timerTickSpeed;
-    move_win((160U - (timeRemaining >> 4U)), 136U);
+    mgTimeRemaining -= mgTimerTickSpeed;
+    move_win((160U - (mgTimeRemaining >> 4U)), 136U);
 }
