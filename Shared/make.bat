@@ -14,9 +14,6 @@ C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/songPlayer.o Shared/songPlayer.c
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/microgameData.o Shared/database/microgameData.c
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/microgameData.o Shared/database/microgameData.c
 
-C:\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -DUSE_SFR_FOR_REG -c -o Shared/o/gbt_player.o Shared/gbt_player.s
-C:\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -DUSE_SFR_FOR_REG -c -o Shared/o/gbt_player_bank1.o Shared/gbt_player_bank1.s
-
 C:\gbdk\bin\lcc -Wa-l -Wf-bo0 -c -o Shared/o/microgameManagerState.o Shared/states/microgameManagerState.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Shared/o/titleState.o Shared/states/titleState.c
 
@@ -24,18 +21,14 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Shared/o/ram.o Shared/ram.c
 
 @REM Pre-jam TODO:
 @REM Should maybe move mgdex to a different bank
-@REM Pad out time between mgStatus = WON and transition away from microgame
-@REM Pad out time between mgStatus = LOST and transition away from microgame
 @REM Integrate mgSpeed into the countdown timer (oops, I forgot to do this)
-@REM Should figure out where to put songPlayer. Shared? Each individual's directory?
+
+@REM During/post gamejam TODO broadstrokes:
 @REM Beautify lobby screen
 @REM    Score increment animation
 @REM    Lives/losing lives animation
 @REM    Speed up/difficulty up animations
-@REM Add "so you don't know how to code?" section
-@REM Add a "new to gbdk?" section
-
-@REM During/post gamejam TODO broadstrokes:
+@REM    Transition animation between microgames
 @REM Title screen
 @REM Saving/loading
 @REM "Overworld map" thingy where you can select MG groups

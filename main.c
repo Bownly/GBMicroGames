@@ -5,7 +5,6 @@
 #include "Shared/enums.h"
 #include "Shared/fade.h"
 #include "Shared/ram.h"
-#include "Shared/songPlayer.h"
 
 #include "Shared/structs/Microgame.h"
 #include "Shared/states/microgameManagerState.h"
@@ -42,11 +41,6 @@ UINT8 animTick = 0U;
 
 void initRAM(UBYTE);
 
-
-void vbl_update() {
-	++vbl_count;
-}
-
 void main()
 {
  	initRAM(0U);
@@ -55,14 +49,12 @@ void main()
     NR52_REG = 0x80; // is 1000 0000 in binary and turns on sound
     NR50_REG = 0x77; // sets the volume for both left and right channel just set to max 0x77
     NR51_REG = 0xFF; // is 1111 1111 in binary, select which chanels we want to use in this case all of them. One bit for the L one bit for the R of all four channels
-	vbl_count = 0U;
-    add_VBL(vbl_update);
     set_interrupts(TIM_IFLAG | VBL_IFLAG);
-
+ 
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0U, 46U, fontTiles);
 
-    setBlankBkg();
+    init_bkg(0xFFU);
     DISPLAY_ON;
     SHOW_SPRITES;
     SHOW_BKG;
@@ -74,9 +66,7 @@ void main()
 
     while(1U)
     {
-        if(!vbl_count)
-            wait_vbl_done();
-        vbl_count = 0U;
+        wait_vbl_done();
 
         switch(gamestate)
         {
@@ -93,9 +83,6 @@ void main()
                 microgameManagerGameLoop();
                 break;
         }
-    
-        // Music stuff
-        songPlayerUpdate();
     }
 }
 

@@ -4,8 +4,8 @@
 #include "../../Shared/common.h"
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
-#include "../../Shared/songPlayer.h"
 
+#include "../sfx.h"
 #include "../res/tiles/bownlyMP5DiceTiles.h"
 #include "../res/tiles/bownlyMP5StageTiles.h"
 #include "../res/maps/bownlyMP5StageColMap.h"
@@ -98,7 +98,7 @@ void bownlyMP5MicrogameMain()
 void phaseMagipanels5Init()
 {
     // Initializations
-    setBlankBkg();
+    init_bkg(0xFFU);
     animTick = 0U;
     flipAnimTick = 0U;
 
@@ -128,8 +128,6 @@ void phaseMagipanels5Init()
 
     fadein();
     substate = SUB_LOOP;
-
-    playSong(0U, 2U);
 
 }
 
@@ -173,6 +171,7 @@ void inputsMP5()
                 else
                     --prestonXIndex;
                 prestonYIndex = 0U;
+                playMoveSfx();
             }
         }
         else if(curJoypad & J_RIGHT)
@@ -183,6 +182,7 @@ void inputsMP5()
                 prestonIsHorz = TRUE;
                 prestonXIndex = (prestonXIndex) % 5U + 1U;
                 prestonYIndex = 0U;
+                playMoveSfx();
             }
         }
         else if(curJoypad & J_UP)
@@ -196,6 +196,7 @@ void inputsMP5()
                 else
                     --prestonYIndex;
                 prestonXIndex = 0U;
+                playMoveSfx();
             }
         }
         else if(curJoypad & J_DOWN)
@@ -206,6 +207,7 @@ void inputsMP5()
                 prestonIsHorz = FALSE;
                 prestonYIndex = (prestonYIndex) % 5U + 1U;
                 prestonXIndex = 0U;
+                playMoveSfx();
             }
         }
 
@@ -214,6 +216,7 @@ void inputsMP5()
         {
             if (curJoypad & J_A && !(prevJoypad & J_A) && flipAnimTick == 0U)
             {
+                playCollisionSfx();
                 flipAnimTick = 1U;
 
                 // Increment panels
@@ -251,24 +254,24 @@ void initGrid()
     }
 
     // Setting up active panels
-    i = getRandUint(5U);
-    j = getRandUint(5U);
-    setupPanel(i*5U+j, i, j, getRandUint(2U));
+    i = getRandUint8(5U);
+    j = getRandUint8(5U);
+    setupPanel(i*5U+j, i, j, getRandUint8(2U));
 
     if (mgDifficulty != 0U)  // AKA, if 1 or 2
     {
-        k = getRandUint(2U);  // Horz or vert
+        k = getRandUint8(2U);  // Horz or vert
         if (k == 0U)  // Horz
         {
             if (++i == 5U)
                 i = 0U;
-            setupPanel(i*5U+j, i, j, getRandUint(2U));
+            setupPanel(i*5U+j, i, j, getRandUint8(2U));
         }
         else  // Vert
         {
             if (++j == 5U)
                 j = 0U;
-            setupPanel(i*5U+j, i, j, getRandUint(2U));
+            setupPanel(i*5U+j, i, j, getRandUint8(2U));
         }
     }
     if (mgDifficulty == 2U)
@@ -277,13 +280,13 @@ void initGrid()
         {
             if (++i == 5U)
                 i = 0U;
-            setupPanel(i*5U+j, i, j, getRandUint(2U));
+            setupPanel(i*5U+j, i, j, getRandUint8(2U));
         }
         else  // Vert
         {
             if (++j == 5U)
                 j = 0U;
-            setupPanel(i*5U+j, i, j, getRandUint(2U));
+            setupPanel(i*5U+j, i, j, getRandUint8(2U));
         }
     }
 }
@@ -303,7 +306,7 @@ void incrementPanel(BownlyPanel* panel)
 
             mgStatus = LOST;
             // playerHurt();
-            // playHurtSfx();
+            playHurtSfx();
             // if (mpPlayer.curHp != 0U)
             //     --mpPlayer.curHp;
 

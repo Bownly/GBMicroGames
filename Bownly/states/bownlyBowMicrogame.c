@@ -6,9 +6,9 @@
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
 #include "../../Shared/songPlayer.h"
+
 #include "../enums.h"
-
-
+#include "../sfx.h"
 #include "../res/tiles/bownlyBowBkgTiles.h"
 #include "../res/sprites/bownlySprArrow.h"
 #include "../res/sprites/bownlySprBow.h"
@@ -33,17 +33,17 @@ extern UINT8 mgStatus;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-UINT8 bowX;
-UINT8 bowY;
-UINT8 arrowX;
-UINT8 arrowY;
-UINT8 targetX;
-UINT8 targetY;
-INT8 bowSpeed;
-UINT8 arrowSpeed;
-INT8 targetSpeed;
-UINT8 targetsLeft;
-UINT8 bowFrame;
+static UINT8 bowX;
+static UINT8 bowY;
+static UINT8 arrowX;
+static UINT8 arrowY;
+static UINT8 targetX;
+static UINT8 targetY;
+static INT8 bowSpeed;
+static UINT8 arrowSpeed;
+static INT8 targetSpeed;
+static UINT8 targetsLeft;
+static UINT8 bowFrame;
 ARROWSTATE arrowstate;
 
 #define SPRID_BOW 0U
@@ -94,7 +94,7 @@ void bownlyBowMicrogameMain()
 void phaseBowInit()
 {
     // Initializations
-    setBlankBkg();
+    init_bkg(0xFFU);
     animTick = 0U;
 
     bowX = 150U;
@@ -105,7 +105,7 @@ void phaseBowInit()
     targetY = 80U;
     bowSpeed = 2U + mgSpeed;
     arrowSpeed = 4U + mgSpeed;
-    targetSpeed = -1 - mgSpeed;
+    targetSpeed = -1;
     targetsLeft = 1U;
     bowFrame = 1U;
     arrowstate = NOCKED;
@@ -251,7 +251,7 @@ void inputsShoot()
 void spawnTarget()
 {
     targetX = 24U;
-    targetY = getRandUint(90U);  // Range of 40-130
+    targetY = getRandUint8(90U);  // Range of 40-130
     targetY += 40U;
 }
 
