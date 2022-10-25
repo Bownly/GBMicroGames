@@ -1,10 +1,11 @@
 #ifndef SONG_PLAYER_H
 #define SONG_PLAYER_H
 
-void playSong(UINT8, UINT8);
+#include "../hUGETracker/hUGEDriver.h"
+
+void playSong(const hUGESong_t *);
 void stopSong();
-void pauseSong(UINT8 newState);
-void songPlayerUpdate();
+
 void playCollisionSfx();
 void playHurtSfx();
 void playMoveSfx();

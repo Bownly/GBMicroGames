@@ -8,10 +8,10 @@
 #include "../songPlayer.h"
 #include "../database/microgameData.h"
 #include "../structs/Microgame.h"
-
 #include "../res/tiles/borderTiles.h"
 #include "../res/tiles/fontTiles.h"
 #include "../res/tiles/timerTiles.h"
+
 #include "../../Bownly/states/bownlyBowMicrogame.h"
 #include "../../Bownly/states/bownlyPastelMicrogame.h"
 #include "../../Bownly/states/bownlyMP5Microgame.h"
@@ -105,9 +105,9 @@ void microgameManagerGameLoop()
             fadeout();
 
             // TEST stuff
-            mgDifficulty = (currentScore / 2U) % 3U;
+            mgDifficulty = currentScore % 3U;
             mgSpeed = (currentScore / 3U) % 3U;
-            // loadNewMG(currentScore % 3U);
+            loadNewMG(getRandUint(4U));
             // mgDifficulty = (currentScore / 3U) % 3U;
 
             break;
@@ -155,8 +155,11 @@ void phaseInitMicrogameLobby()
     timerTickSpeed = timeRemaining / mgCurrentMG.duration / 60U;
 
     HIDE_WIN;
+
+    // Temp stuff to mute audio and stop playing song
+    // TODO: replace with a call to play lobby music
     stopSong();
-    
+
     // Reload graphics
     set_bkg_data(0U, 46U, fontTiles);
     set_bkg_data(0xF0U, 8U, borderTiles);
@@ -173,7 +176,6 @@ void phaseInitMicrogameLobby()
     printLine(6U, 9U, "LIVES:", FALSE);
 
     fadein();
-
 }
 
 void phaseMicrogameManagerLoop()
@@ -210,6 +212,7 @@ void phaseMicrogameManagerLoop()
     {
         // Start new microgame
         fadeout();
+        stopSong();
         SHOW_WIN;
         drawTimer();
         gamestate = STATE_MICROGAME;

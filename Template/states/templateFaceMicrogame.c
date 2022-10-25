@@ -11,12 +11,15 @@
 #include "../../Shared/common.h"
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
+#include "../../Shared/songPlayer.h"
 
 #include "../enums.h"
 #include "../res/tiles/templateCursorTiles.h"
 #include "../res/tiles/templateFaceTiles.h"
 #include "../res/maps/templateFace1Map.h"
 #include "../res/maps/templateFace2Map.h"
+
+extern const hUGESong_t songblah;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -131,6 +134,7 @@ void phaseFaceInit()
     }
 
     // Play music
+    playSong(&songblah);
 
     fadein();
     substate = SUB_LOOP;

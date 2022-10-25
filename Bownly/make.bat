@@ -1,8 +1,7 @@
-
-@REM mod2gbt Bownly/res/audio/TheWhite.mod twsong -c 2
-@REM del Bownly\res\audio\outputtwsong.c
-@REM rename output.c outputtwsong.c
-@REM move outputtwsong.c Bownly\res\audio
+del Bownly\o\*.o
+del Bownly\o\*.lst
+del Bownly\o\*.asm
+del Bownly\o\*.sym
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyBowBkgTiles.o Bownly/res/tiles/bownlyBowBkgTiles.c 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5DiceTiles.o Bownly/res/tiles/bownlyMP5DiceTiles.c
@@ -25,8 +24,6 @@ C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprTarget.png -spr8x8 -sw 24 -sh 
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprPastel.png -spr8x8 -sw 32 -sh 32 -b 2 -py 0
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprJumppuff.png -spr8x8 -sw 16 -b 2 -py 0
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprPreston.png -spr8x8 -sw 16 -sh 16 -b 2 -py 0 -px 0
-
-C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/twsong.o Bownly/res/audio/outputtwsong.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyBowMicrogame.o Bownly/states/bownlyBowMicrogame.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5Microgame.o Bownly/states/bownlyMP5Microgame.c
