@@ -1,50 +1,52 @@
 #include <gb/gb.h>
 #include "../hUGETracker/hUGEDriver.h"
 
+void playBleepSfx()
+{
+    NR10_REG = 0x34U;
+    NR11_REG = 0x70U;
+    NR12_REG = 0xF0U;
+    NR13_REG = 0xBAU;
+    NR14_REG = 0xC6U;
+}
+
 void playCollisionSfx()
 {
-    NR41_REG = 0x1F;
-    NR42_REG = 0xF1;
-    NR43_REG = 0x40;
-    NR44_REG = 0x87;
+    NR41_REG = 0x1FU;
+    NR42_REG = 0xF1U;
+    NR43_REG = 0x40U;
+    NR44_REG = 0x87U;
+}
+
+void playDingSfx()
+{
+    NR21_REG = 0x80U;
+    NR22_REG = 0x73U;
+    NR23_REG = 0x9FU;
+    NR24_REG = 0xC7U;
 }
 
 void playHurtSfx()
 {
-    NR41_REG = 0x03;
-    NR42_REG = 0xF0;
-    NR43_REG = 0x5F;
-    NR44_REG = 0xC0;
+    NR41_REG = 0x03U;
+    NR42_REG = 0xF0U;
+    NR43_REG = 0x5FU;
+    NR44_REG = 0xC0U;
 }
 
 void playMoveSfx()
 {
-    NR41_REG = 0x1F;
-    NR42_REG = 0xF1;
-    NR43_REG = 0x20;
-    NR44_REG = 0xC0;
+    NR41_REG = 0x1FU;
+    NR42_REG = 0xF1U;
+    NR43_REG = 0x20U;
+    NR44_REG = 0xC0U;
 }
 
 void playUnlockSfx()
 {
-    NR10_REG = 0x1E;
-    NR11_REG = 0x10;
-    NR12_REG = 0xF3;
-    NR13_REG = 0x00;
-    NR14_REG = 0x87;
-
-    NR21_REG = 0x00;
-    NR22_REG = 0x00;
-    NR23_REG = 0x00;
-    NR24_REG = 0x00;
-
-    NR31_REG = 0x00;
-    NR32_REG = 0x00;
-    NR33_REG = 0x00;
-    NR34_REG = 0x00;
-
-    NR41_REG = 0x00;
-    NR42_REG = 0x00;
-    NR43_REG = 0x00;
-    NR44_REG = 0x00;
+    NR10_REG = 0x1EU;
+    NR11_REG = 0x10U;
+    NR12_REG = 0xF3U;
+    NR13_REG = 0x00U;
+    NR14_REG = 0x87U;
 }

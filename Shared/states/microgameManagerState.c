@@ -17,6 +17,9 @@
 #include "../../Bownly/states/bownlyMP5Microgame.h"
 #include "../../Template/states/templateFaceMicrogame.h"
 
+extern const hUGESong_t finish7;
+
+
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
 extern UINT8 i;  // Used mostly for loops
@@ -37,6 +40,9 @@ extern Microgame mgCurrentMG;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
+UINT8 lobbyDurationJouhan = 90U;
+UINT8 lobbyDurationKahan = 90U;
+
 UINT8 currentLives;
 UINT8 currentScore;
 UINT16 mgTimeRemaining;  // 160px * 16 (big number)
@@ -48,8 +54,8 @@ UINT8 transitionTimer;
 
 /* SUBSTATE METHODS */
 void phaseInitMicrogameManager();
-void phaseInitMicrogameLobby();
-void phaseMicrogameManagerLoop();
+void phaseMicrogameManagerInitLobby();
+void phaseMicrogameManagerLobbyLoop();
 
 /* INPUT METHODS */
 
@@ -74,9 +80,9 @@ void microgameManagerStateMain()
             phaseInitMicrogameManager();
             break;
         case MGM_INIT_LOBBY:
-            phaseInitMicrogameLobby();
+            phaseMicrogameManagerInitLobby();
         case SUB_LOOP:
-            phaseMicrogameManagerLoop();
+            phaseMicrogameManagerLobbyLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -88,53 +94,41 @@ void microgameManagerStateMain()
 
 void microgameManagerGameLoop()
 {
-    if (mgStatus == PLAYING)
+    updateTimer();
+    if (mgTimeRemaining <= mgTimerTickSpeed)
     {
-        updateTimer();
-        if (mgTimeRemaining <= mgTimerTickSpeed)
-        {
+        if (mgStatus != WON)
             mgStatus = LOST;
-            // Add an explosion animation or something maybe
+
+        if (mgStatus == LOST)
+        {
+            --currentLives;
         }
-    }
 
-    switch (mgStatus)
-    {
-        case LOST:
-            ++transitionTimer;
-            if (transitionTimer == TRANSITION_DURATION)
-            {
-                if (--currentLives == 0U)
-                {
-                    gamestate = STATE_TITLE;
-                    substate = SUB_INIT;
-                    break;
-                }
-                else
-                    --transitionTimer;
-            }
-        case WON:
-            ++transitionTimer;
-            if (transitionTimer == TRANSITION_DURATION)
-            {
-                ++currentScore;
-                gamestate = STATE_MICROGAME_MANAGER;
-                substate = MGM_INIT_LOBBY;
-                fadeout();
+        if (currentLives == 0U)
+        {
+            gamestate = STATE_TITLE;
+            substate = SUB_INIT;
+        }
+        else
+        {
+            ++currentScore;
+            gamestate = STATE_MICROGAME_MANAGER;
+            substate = MGM_INIT_LOBBY;
+            fadeout();
 
-                // TEST stuff
-                mgDifficulty = currentScore % 3U;
-                mgSpeed = (currentScore / 3U) % 3U;
-                loadNewMG(getRandUint8(4U));
-                // mgDifficulty = (currentScore / 3U) % 3U;
-            }
-            else
-                callMicrogameFunction();
-            break;
-        default:  // AKA, we're actually playing the game
-            callMicrogameFunction();
-            break;
+            // TEST stuff
+            mgDifficulty = currentScore % 3U;
+            // mgSpeed = currentScore % 3U;
+            mgSpeed = (currentScore / 3U) % 3U;
+            // loadNewMG(getRandUint8(4U));
+            // mgDifficulty = (currentScore / 3U) % 3U;
+        }
+
+
     }
+    else
+        callMicrogameFunction();
 }
 
 
@@ -147,24 +141,23 @@ void phaseInitMicrogameManager()
     mgDifficulty = 0U;
     mgSpeed = 0U;
 
-    loadNewMG(MG_TEMPLATE_FACE);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG(MG_BOWNLY_PASTEL);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
 
-void phaseInitMicrogameLobby()
+void phaseMicrogameManagerInitLobby()
 {
     // Initializations
     animTick = 0U;
     mgStatus = PLAYING;
     mgTimeRemaining = 2560U;  // 2560 = 160px * 16
-    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / 60U;
+    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 
     HIDE_WIN;
 
-    // Temp stuff to mute audio and stop playing song
-    // TODO: replace with a call to play lobby music
-    stopSong();
+    // Play appropriate jingle(s)
+    playSong(&finish7);
 
     // Reload graphics
     set_bkg_data(0U, 46U, fontTiles);
@@ -184,19 +177,19 @@ void phaseInitMicrogameLobby()
     fadein();
 }
 
-void phaseMicrogameManagerLoop()
+void phaseMicrogameManagerLobbyLoop()
 {
     ++animTick;
 
     // Animate score increase visuals
-    if (animTick < 60U)
+    if (animTick < lobbyDurationJouhan)
     {
         set_bkg_tile_xy(12U, 8U, currentScore/100U);
         set_bkg_tile_xy(13U, 8U, (currentScore/10U)%10U);
         set_bkg_tile_xy(14U, 8U, currentScore%10U);
         set_bkg_tile_xy(12U, 9U, currentLives);
     }
-    else if (animTick == 60U)
+    else if (animTick == lobbyDurationJouhan)
     {
         // Erase score and lives text
         for (i = 6U; i != 15U; ++i)
@@ -214,7 +207,7 @@ void phaseMicrogameManagerLoop()
         drawPopupWindow(l-1U, 7U, k+1U, 2U);
         printLine(l, 8U, mgCurrentMG.instructionsPtr, FALSE);
     }
-    else if (animTick == 120U)
+    else if (animTick == (lobbyDurationJouhan + lobbyDurationKahan))
     {
         startMG();
     }

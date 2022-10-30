@@ -7,6 +7,7 @@
 
 #include "../sfx.h"
 #include "../res/tiles/bownlyMP5DiceTiles.h"
+#include "../res/tiles/bownlyMP5HeartTiles.h"
 #include "../res/tiles/bownlyMP5StageTiles.h"
 #include "../res/maps/bownlyMP5StageColMap.h"
 #include "../res/maps/bownlyMP5StageTopMap.h"
@@ -42,6 +43,7 @@ static UINT8 flipAnimTick;
 static UINT8 prestonXIndex;
 static UINT8 prestonYIndex;
 static UINT8 prestonIsHorz;
+static UINT8 prestonHP;
 
 static BownlyPanel gridPanels[25U];
 static UINT8 remaining5s;
@@ -49,7 +51,9 @@ static UINT8 remaining5s;
 #define panelsYOrigin 4U
 
 #define SPRID_PRESTON 0U
+#define SPRID_HEARTS 4U
 #define SPRTILE_PRESTON 0U
+#define SPRTILE_HEARTS 0x40U
 #define BKGTILE_STAGE 0x40U
 #define BKGTILE_DICE 0x50U
 
@@ -69,6 +73,7 @@ void setupPanel(UINT8, UINT8, UINT8, UINT8);
 /* DISPLAY METHODS */
 void animatePreston();
 void drawPanel(UINT8, UINT8, BownlyPanel*);
+void setupHearts();
 void tryShakeScreen();
 void updateFlippingPanels();
 
@@ -108,6 +113,7 @@ void phaseMagipanels5Init()
     prestonXIndex = 0U;
     prestonYIndex = 1U;
     prestonIsHorz = FALSE;
+    prestonHP = 1U;
 
     remaining5s = mgDifficulty + 1U;
 
@@ -122,6 +128,8 @@ void phaseMagipanels5Init()
         set_bkg_tile_xy(i, 17U, 0x4D);
     }
 
+    set_sprite_data(SPRTILE_HEARTS, 2U, bownlyMP5HeartTiles);
+    setupHearts();
     set_sprite_data(SPRTILE_PRESTON, bownlySprPreston_TILE_COUNT, bownlySprPreston_tiles);
 
     initGrid();
@@ -158,7 +166,7 @@ void inputsMP5()
         buttonHoldTick = 0U;
     }
 
-    if (screenShakeTick == 0U)
+    if (screenShakeTick == 0U && mgStatus != LOST)
     {
         if(curJoypad & J_LEFT)
         {
@@ -307,13 +315,7 @@ void incrementPanel(BownlyPanel* panel)
             mgStatus = LOST;
             // playerHurt();
             playHurtSfx();
-            // if (mpPlayer.curHp != 0U)
-            //     --mpPlayer.curHp;
-
-            // if (mpPlayer.curHp != mpPlayer.maxHp)
-            // {
-            //     set_sprite_tile(8U + (7U - mpPlayer.curHp), heartSprTileIndex + 1U);
-            // }
+            set_sprite_tile(SPRID_HEARTS + 6U, SPRTILE_HEARTS + 1U);
         }
         panel->panelValue = l;
 
@@ -388,6 +390,16 @@ void drawPanel(UINT8 xCoord, UINT8 yCoord, BownlyPanel* panel)
     }
 }
 
+void setupHearts()
+{
+    for (i = 0; i != 7; ++i)
+    {
+        set_sprite_tile(SPRID_HEARTS + i, SPRTILE_HEARTS + 1U);
+        move_sprite(SPRID_HEARTS + i, 136U, 47U + 12U * i);
+    }
+    set_sprite_tile(SPRID_HEARTS + 6U, SPRTILE_HEARTS);
+}
+
 void tryShakeScreen()
 {
     if (screenShakeTick != 0U)
@@ -433,7 +445,7 @@ void updateFlippingPanels()
         }
 
         // Pretty sloppy to put the win check here, but who's going to stop me?
-        if (remaining5s == 0U)
+        if (remaining5s == 0U && mgStatus != LOST)
             mgStatus = WON;
     }
     else

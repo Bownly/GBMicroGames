@@ -39,6 +39,7 @@ void drawPopupWindow(UINT8 xCoord, UINT8 yCoord, UINT8 xDim, UINT8 yDim)
     }
 }
 
+// Only works if you haven't written over the first ~40 tiles of bkg data
 void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line, UINT8 printToWindow)
 {
     unsigned char tempLine[18U];
