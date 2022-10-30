@@ -4,8 +4,10 @@
 #include "../../Shared/common.h"
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
-#include "../enums.h"
+#include "../../Shared/songPlayer.h"
 
+#include "../enums.h"
+#include "../sfx.h"
 #include "../res/maps/bownlyPastelBkg1Map.h"
 #include "../res/maps/bownlyPastelBkg2Map.h"
 #include "../res/maps/bownlyPastelBkg3Map.h"
@@ -15,6 +17,8 @@
 #include "../res/tiles/bownlyPastelBkgTiles.h"
 #include "../res/tiles/bownlyPastelHeartTiles.h"
 #include "../res/tiles/bownlyPastelTreeTiles.h"
+
+extern const hUGESong_t bownlyVictoryLapSong;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -113,7 +117,7 @@ void phasePastelInit()
     // Initializations
     animTick = 0U;
     pastelX = 336U;
-    pastelY = 248U;
+    pastelY = 320U;
     pastelXVel = 0U;
     pastelYVel = 0U;
     ySpeedJumping = 12U;
@@ -146,7 +150,7 @@ void phasePastelInit()
     set_sprite_data(SPRTILE_PASTEL, bownlySprPastel_TILE_COUNT, bownlySprPastel_tiles);
     set_sprite_data(SPRTILE_JUMPPUFF, bownlySprJumppuff_TILE_COUNT, bownlySprJumppuff_tiles);
     set_bkg_data(BKGID_HEART, 1U, &bownlyPastelHeartTiles[0U]);
-    set_bkg_data(0x70, 42U, bownlyPastelTreeTiles);
+    set_bkg_data(0x70U, 42U, bownlyPastelTreeTiles);
 
     switch (mgDifficulty)
     {
@@ -159,9 +163,9 @@ void phasePastelInit()
             set_bkg_tiles(0U, 3U, 6U, 10U, bownlyPastelTreeMap);
 
             // Hearts
-            set_bkg_tile_xy(6U, 10U, BKGID_HEART);
-            set_bkg_tile_xy(12U, 8U, BKGID_HEART);
-            set_bkg_tile_xy(17U, 11U, BKGID_HEART);
+            set_bkg_tile_xy(6U, 8U + getRandUint8(5U), BKGID_HEART);
+            set_bkg_tile_xy(12U, 6U + getRandUint8(6U), BKGID_HEART);
+            set_bkg_tile_xy(17U, 9U + getRandUint8(4U), BKGID_HEART);
             break;
         case 1U:
             // Map
@@ -171,10 +175,10 @@ void phasePastelInit()
             set_bkg_tiles(3U, 3U, 6U, 10U, bownlyPastelTreeMap);
 
             // Hearts
-            set_bkg_tile_xy(9U, 7U, BKGID_HEART);
-            set_bkg_tile_xy(1U, 11U, BKGID_HEART);
-            set_bkg_tile_xy(14U, 8U, BKGID_HEART);
-            set_bkg_tile_xy(18U, 12U, BKGID_HEART);
+            set_bkg_tile_xy(1U, 8U + getRandUint8(5U), BKGID_HEART);
+            set_bkg_tile_xy(9U, 5U + getRandUint8(4U), BKGID_HEART);
+            set_bkg_tile_xy(14U, 6U + getRandUint8(4U), BKGID_HEART);
+            set_bkg_tile_xy(18U, 9U + getRandUint8(4U), BKGID_HEART);
             break;
         case 2U:
             // Map
@@ -185,17 +189,18 @@ void phasePastelInit()
             set_bkg_tiles(17U, 2U, 6U, 10U, bownlyPastelTreeMap);
 
             // Hearts
-            set_bkg_tile_xy(1U, 1U, BKGID_HEART);
-            set_bkg_tile_xy(17U, 7U, BKGID_HEART);
-            set_bkg_tile_xy(6U, 1U, BKGID_HEART);
-            set_bkg_tile_xy(14U, 6U, BKGID_HEART);
-            set_bkg_tile_xy(9U, 4U, BKGID_HEART);
+            set_bkg_tile_xy(2U, 0U + getRandUint8(5U), BKGID_HEART);
+            set_bkg_tile_xy(6U, 1U + getRandUint8(5U), BKGID_HEART);
+            set_bkg_tile_xy(9U, 2U + getRandUint8(6U), BKGID_HEART);
+            set_bkg_tile_xy(14U, 3U + getRandUint8(6U), BKGID_HEART);
+            set_bkg_tile_xy(17U, 5U + getRandUint8(4U), BKGID_HEART);
             break;
     }
 
-    substate = SUB_LOOP;
+    playSong(&bownlyVictoryLapSong);
+
     fadein();
-    // OBP0_REG = 0xC6;  // Light grey as transparent  11000110
+    substate = SUB_LOOP;
 }
 
 void phasePastelLoop()
@@ -210,6 +215,7 @@ void phasePastelLoop()
         ++heartCount;
         if (heartCount == mgDifficulty + 3U)
             mgStatus = WON;
+        playDingSfx();
     }
     
     animatePastel();
@@ -284,6 +290,7 @@ void inputsPastel()
             jumppuffTimer = 0U;
             jumppuffX = pastelX >> 2U;
             jumppuffY = ((pastelY + PASTEL_BOTTOM_OFFSET + 4U) >> 2U) + 10U;
+            playBleepSfx();
         }
         else if (pastelstate == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
         {
