@@ -7,7 +7,7 @@ Link to the jam page on Itch: \<link goes here\>
 0. Reach out to me (@Bownly) either on Twitter or Itch and let me know that you want to participate. I'll assign a bank number to you.
 1. Clone the repo and make a branch off of master.
 2. Make a folder in the project's root directory with your Itch name as the folder name. (If you want, you can make a copy of the Template folder and work off of that as a base.)
-3. Add a line for your microgame inside *Shared/database/microgameList.h*. The proper format should be pretty self explanatory.
+3. Add a line for your microgame inside *Engine/database/microgameList.h*. The proper format should be pretty self explanatory.
 4. In *make.bat*, add a call to your personal *make* file, and add your files to the line at the end that builds the rom. Again, the proper format should be self explanatory.
 
 
@@ -23,8 +23,8 @@ Link to the jam page on Itch: \<link goes here\>
 - Every microgame will have a single main function that will be called every frame. For this function, please stick to the naming convention of *yournameGamenameMicrogameMain()*. (e.g. *bownlyBowMicrogameMain()* for a microgame called Bow made by Bownly)
 - Each microgame will have 3 different difficulties (values: 0, 1, 2). You can get the current difficulty by reading the global variable, *mgDifficulty*. Treat this as a readonly variable that the engine will write to before your microgame begins. Its value will remain unchanged for the duration of your microgame, so don't worry about having to make a local copy or anything. It's up to you to determine how to manifest the different levels of difficulty within the context of your microgame.
 - Each microgame will have 3 different levels of speed (values: 0, 1, 2). The variable for this is *mgSpeed*. The above explanation for *mgDifficulty* also applies for mgSpeed. Do note that not every microgame will have a way to integrate mgSpeed changes. Like a microgame where you just button mash the A button. In those situations, the speed up that the engine applies to the countdown timer is enough.
-- When the player has completed your microgame, set *mgStatus* to *WON* (don't forget to include *Shared/enums.h*). Similarly, set mgStatus to *LOST* if the player has lost your microgame.
-- For testing your microgame, head to *phaseInitMicrogameManager()* inside *Shared/microgameManagerState.c*. There you'll see a call to *loadNewMG()*. Pass in your microgame's enum instead. And then look inside *microgameManagerGameLoop()*. Comment out any call to *loadNewMG()* to ensure that the game manager never loads a different microgame. Feel free to play with the calculations for the values of *mgDifficulty* and *mgSpeed*. Just make sure to not commit any of those changes.
+- When the player has completed your microgame, set *mgStatus* to *WON* (don't forget to include *Engine/enums.h*). Similarly, set mgStatus to *LOST* if the player has lost your microgame.
+- For testing your microgame, head to *phaseInitMicrogameManager()* inside *Engine/microgameManagerState.c*. There you'll see a call to *loadNewMG()*. Pass in your microgame's enum instead. And then look inside *microgameManagerGameLoop()*. Comment out any call to *loadNewMG()* to ensure that the game manager never loads a different microgame. Feel free to play with the calculations for the values of *mgDifficulty* and *mgSpeed*. Just make sure to not commit any of those changes.
 
 
 ## Graphics guidelines
@@ -38,7 +38,7 @@ Link to the jam page on Itch: \<link goes here\>
 - This project uses hUGEDriver for music. If you're used to using .mod files with gbt_player, switching over will be simple. You can import your .mod files into hUGETracker and export them to GBDK .c format. I've noticed that the import doesn't always work properly, but copy/pasting the patterns from OpenMPT into hUGETracker worked for me when importing failed me.
 - Don't set the tempo anywhere in your tracks (using F05, etc). That'll mess up the game engine's dynamic song speed logic. Instead, set the Tempo value on the General tab of your song in hUGETracker. The engine will subtract the current value of *mgSpeed* (0-2) from your song's tempo value when it loads the song.
 - *hUGEDriver.h* is located inside */hUGETracker/*, so you'll want to change the hUGEDriver include line at the top of your song's exported GBDK .c file to point there instead.
-- In your microgame's code, you'll want to add an include to */Shared/songPlayer.h"*.
+- In your microgame's code, you'll want to add an include to */Engine/songPlayer.h"*.
 - When you want to load a new song, call *playSong()* from *songPlayer* instead of *hUGE_init()* from *hUGEDriver*.
 - Note that the engine will call *hUGE_dosound()*, so you don't need to worry about calling it inside your code.
 

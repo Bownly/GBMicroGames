@@ -1,9 +1,9 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "../../Shared/common.h"
-#include "../../Shared/enums.h"
-#include "../../Shared/fade.h"
+#include "../../Engine/common.h"
+#include "../../Engine/enums.h"
+#include "../../Engine/fade.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;

@@ -1,14 +1,14 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "Shared/common.h"
-#include "Shared/enums.h"
-#include "Shared/fade.h"
-#include "Shared/ram.h"
+#include "Engine/common.h"
+#include "Engine/enums.h"
+#include "Engine/fade.h"
+#include "Engine/ram.h"
 
-#include "Shared/structs/Microgame.h"
-#include "Shared/states/microgameManagerState.h"
-#include "Shared/states/titleState.h"
+#include "Engine/structs/Microgame.h"
+#include "Engine/states/microgameManagerState.h"
+#include "Engine/states/titleState.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char fontTiles[];

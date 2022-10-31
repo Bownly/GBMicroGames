@@ -8,10 +8,10 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "../../Shared/common.h"
-#include "../../Shared/enums.h"
-#include "../../Shared/fade.h"
-#include "../../Shared/songPlayer.h"
+#include "../../Engine/common.h"
+#include "../../Engine/enums.h"
+#include "../../Engine/fade.h"
+#include "../../Engine/songPlayer.h"
 
 #include "../enums.h"
 #include "../res/tiles/templateCursorTiles.h"
