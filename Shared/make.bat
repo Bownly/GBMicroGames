@@ -7,9 +7,9 @@ C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/borderTiles.o Shared/res/tiles/borderTiles.
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/fontTiles.o Shared/res/tiles/fontTiles.c
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/timerTiles.o Shared/res/tiles/timerTiles.c
 
-@REM C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/finish5.o Shared/res/audio/finish5.c
-@REM C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/finish6.o Shared/res/audio/finish6.c
-C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/finish7.o Shared/res/audio/finish7.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo1 -c -o Shared/o/premgJingle.o Shared/res/audio/premgJingle.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo1 -c -o Shared/o/lostJingle.o Shared/res/audio/lostJingle.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo1 -c -o Shared/o/wonJingle.o Shared/res/audio/wonJingle.c
 
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/common.o Shared/common.c
 C:\gbdk\bin\lcc -Wa-l -c -o Shared/o/fade.o Shared/fade.c
@@ -24,10 +24,6 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Shared/o/titleState.o Shared/states/titleSta
 
 c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Shared/o/ram.o Shared/ram.c
 
-@REM Pre-jam TODO:
-@REM Should maybe move mgdex to a different bank
-@REM Finish my current microgames
-@REM Add static to my microgames
 
 @REM During/post gamejam TODO broadstrokes:
 @REM Beautify lobby screen

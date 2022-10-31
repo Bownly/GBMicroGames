@@ -85,10 +85,11 @@ void fadeout()
         performantdelay(1U);
     }
 
-    // I'm sure there's a better way to remove sprites
+    // I'm sure there's a better way to remove/reset sprites
     for (i = 0U; i != 40U; i++)
     {
         move_sprite(i, 0U, 0U);
+        set_sprite_prop(i, 0b00000000U);
     }
 
     isFadedOut = 1U;

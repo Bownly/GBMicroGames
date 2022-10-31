@@ -7,7 +7,7 @@
  Info:
    Section       : 
    Bank          : 0
-   Map size      : 20 x 11
+   Map size      : 4 x 6
    Tile set      : C:\Projects\Gameboy\GBMicroGames\Bownly\res\raw tiles\bownlyPastelBkgTiles.gbr
    Plane count   : 1 plane (8 bits)
    Plane order   : Tiles are continues
@@ -20,8 +20,8 @@
 #ifndef __bownlyPastelBkg3Map_h_INCLUDE
 #define __bownlyPastelBkg3Map_h_INCLUDE
 
-#define bownlyPastelBkg3MapWidth 20
-#define bownlyPastelBkg3MapHeight 11
+#define bownlyPastelBkg3MapWidth 4
+#define bownlyPastelBkg3MapHeight 6
 #define bownlyPastelBkg3MapBank 0
 
 extern const unsigned char bownlyPastelBkg3Map[];
