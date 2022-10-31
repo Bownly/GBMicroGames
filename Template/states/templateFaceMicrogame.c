@@ -19,7 +19,7 @@
 #include "../res/maps/templateFace1Map.h"
 #include "../res/maps/templateFace2Map.h"
 
-extern const hUGESong_t songblah;
+extern const hUGESong_t templateTwilightDriveSong;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -48,17 +48,17 @@ static UINT8 sadCount;  // The number of currently sad faces
 #define facesYAnchor 3U  // The bkg tile index of the topmost face(s)
 
 /* SUBSTATE METHODS */
-void phaseFaceInit();
-void phaseFaceLoop();
+static void phaseFaceInit();
+static void phaseFaceLoop();
 
 /* INPUT METHODS */
-void inputsFace();
+static void inputsFace();
 
 /* HELPER METHODS */
 
 /* DISPLAY METHODS */
-void animateCursor();
-void updateCursorLocation();
+static void animateCursor();
+static void updateCursorLocation();
 
 
 void templateFaceMicrogameMain()
@@ -83,7 +83,7 @@ void templateFaceMicrogameMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseFaceInit()
+static void phaseFaceInit()
 {
     // Initializations
     init_bkg(0xFFU);
@@ -134,13 +134,13 @@ void phaseFaceInit()
     }
 
     // Play music
-    playSong(&songblah);
+    playSong(&templateTwilightDriveSong);
 
     fadein();
     substate = SUB_LOOP;
 }
 
-void phaseFaceLoop()
+static void phaseFaceLoop()
 {
     ++animTick;
 
@@ -152,7 +152,7 @@ void phaseFaceLoop()
 }
 
 /******************************** INPUT METHODS *********************************/
-void inputsFace()
+static void inputsFace()
 {
     if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
@@ -220,7 +220,7 @@ void inputsFace()
 
 
 /******************************** DISPLAY METHODS ********************************/
-void animateCursor()
+static void animateCursor()
 {
     animFrame = (animTick >> 4U) % 4U;
     if (animFrame == 3U)
@@ -230,7 +230,7 @@ void animateCursor()
     set_sprite_tile(0U, animFrame);
 }
 
-void updateCursorLocation()
+static void updateCursorLocation()
 {
     // facesXAnchor's unit of measurement is tiles, sprites operate on the unit of pixels
     // The "<< 3U" is there to convert from tiles to pixels

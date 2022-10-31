@@ -12,13 +12,11 @@
 #include "../res/tiles/fontTiles.h"
 #include "../res/tiles/timerTiles.h"
 
-#include "../../Bownly/states/bownlyBowMicrogame.h"
-#include "../../Bownly/states/bownlyPastelMicrogame.h"
-#include "../../Bownly/states/bownlyMP5Microgame.h"
 #include "../../Template/states/templateFaceMicrogame.h"
 
-extern const hUGESong_t finish7;
-
+extern const hUGESong_t premgJingle;
+extern const hUGESong_t wonJingle;
+extern const hUGESong_t lostJingle;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -40,8 +38,8 @@ extern Microgame mgCurrentMG;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-UINT8 lobbyDurationJouhan = 90U;
-UINT8 lobbyDurationKahan = 90U;
+UINT8 lobbyDurationStats = 90U;
+UINT8 lobbyDurationInstructions = 90U;
 
 UINT8 currentLives;
 UINT8 currentScore;
@@ -119,10 +117,10 @@ void microgameManagerGameLoop()
 
             // TEST stuff
             mgDifficulty = currentScore % 3U;
-            // mgSpeed = currentScore % 3U;
-            mgSpeed = (currentScore / 3U) % 3U;
-            // loadNewMG(getRandUint8(4U));
             // mgDifficulty = (currentScore / 3U) % 3U;
+            mgSpeed = (currentScore / 3U) % 3U;
+            // mgSpeed = currentScore % 3U;
+            loadNewMG(getRandUint8(4U));
         }
 
 
@@ -141,38 +139,56 @@ void phaseInitMicrogameManager()
     mgDifficulty = 0U;
     mgSpeed = 0U;
 
-    loadNewMG(MG_BOWNLY_PASTEL);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
 
 void phaseMicrogameManagerInitLobby()
 {
+    init_bkg(0xFFU);
+
+    // Play appropriate jingle(s)
+    stopSong();
+    SWITCH_ROM_MBC1(1U);
+    switch (mgStatus)
+    {
+        default:
+            break;
+        case WON:
+            printLine(6U, 4U, "NICE ONE!", FALSE);
+            playSong(&wonJingle);
+            break;
+        case LOST:
+            printLine(6U, 4U, "BUMMER!", FALSE);
+            playSong(&lostJingle);
+            break;
+    }
+
     // Initializations
     animTick = 0U;
     mgStatus = PLAYING;
     mgTimeRemaining = 2560U;  // 2560 = 160px * 16
     mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 
+    lobbyDurationStats = 100U - mgSpeed * 9U;
+    lobbyDurationInstructions = 95U - mgSpeed * 9U;
+    
     HIDE_WIN;
-
-    // Play appropriate jingle(s)
-    playSong(&finish7);
 
     // Reload graphics
     set_bkg_data(0U, 46U, fontTiles);
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0xFCU, 3U, timerTiles);
 
-    init_bkg(0xFFU);
-    
-    // Set themed bkg
     
     substate = SUB_LOOP;
 
     // TEMP STUFF TODO: delete me
-    printLine(6U, 8U, "SCORE:", FALSE);
-    printLine(6U, 9U, "LIVES:", FALSE);
+    printLine(6U, 7U, "SCORE:", FALSE);
+    printLine(6U, 8U, "LIVES:", FALSE);
+    printLine(6U, 9U, "SPEED:", FALSE);
+    printLine(1U, 10U, "DIFFICULTY:", FALSE);
 
     fadein();
 }
@@ -182,32 +198,36 @@ void phaseMicrogameManagerLobbyLoop()
     ++animTick;
 
     // Animate score increase visuals
-    if (animTick < lobbyDurationJouhan)
+    if (animTick < lobbyDurationStats)
     {
-        set_bkg_tile_xy(12U, 8U, currentScore/100U);
-        set_bkg_tile_xy(13U, 8U, (currentScore/10U)%10U);
-        set_bkg_tile_xy(14U, 8U, currentScore%10U);
-        set_bkg_tile_xy(12U, 9U, currentLives);
-    }
-    else if (animTick == lobbyDurationJouhan)
-    {
-        // Erase score and lives text
-        for (i = 6U; i != 15U; ++i)
-        {
-            set_bkg_tile_xy(i, 8U, 0xFFU);
-            set_bkg_tile_xy(i, 9U, 0xFFU);
-        }
+        set_bkg_tile_xy(12U, 7U, currentScore/100U);
+        set_bkg_tile_xy(13U, 7U, (currentScore/10U)%10U);
+        set_bkg_tile_xy(14U, 7U, currentScore%10U);
 
+        set_bkg_tile_xy(12U, 8U, currentLives);
+        set_bkg_tile_xy(12U, 8U, currentLives);
+        
+        set_bkg_tile_xy(12U, 9U, mgSpeed);
+        set_bkg_tile_xy(12U, 10U, mgDifficulty);
+
+    }
+    else if (animTick == lobbyDurationStats)
+    {
+        stopSong();
+        playSong(&premgJingle);
+
+        // Erase stats text
+        init_bkg(0xFFU);
+
+        // When done, show new instructions
         k = 0U;
         while (mgCurrentMG.instructionsPtr[k] != 0U)
             ++k;
-
         l = (20U - k) >> 1U;
-        // When done, show new instructions
         drawPopupWindow(l-1U, 7U, k+1U, 2U);
         printLine(l, 8U, mgCurrentMG.instructionsPtr, FALSE);
     }
-    else if (animTick == (lobbyDurationJouhan + lobbyDurationKahan))
+    else if (animTick == (lobbyDurationStats + lobbyDurationInstructions))
     {
         startMG();
     }

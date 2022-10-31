@@ -4,8 +4,9 @@ del Bownly\o\*.asm
 del Bownly\o\*.sym
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/sfx.o Bownly/sfx.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTwilightDriveSong.o Bownly/res/audio/bownlyTwilightDriveSong.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyVictoryLapSong.o Bownly/res/audio/bownlyVictoryLapSong.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTheWhiteSong.o Bownly/res/audio/bownlyTheWhiteSong.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTheWhite2Song.o Bownly/res/audio/bownlyTheWhite2Song.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyBowBkgTiles.o Bownly/res/tiles/bownlyBowBkgTiles.c 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5DiceTiles.o Bownly/res/tiles/bownlyMP5DiceTiles.c
@@ -33,15 +34,3 @@ C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprPreston.png -spr8x8 -sw 16 -sh
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyBowMicrogame.o Bownly/states/bownlyBowMicrogame.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5Microgame.o Bownly/states/bownlyMP5Microgame.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyPastelMicrogame.o Bownly/states/bownlyPastelMicrogame.c
-
-
-@REM Bow TODO:
-@REM Should probably clean up the graphics
-@REM Sfx
-@REM Music
-
-@REM Magipanels 5 TODO:
-@REM mgSpeed
-@REM WON = flip to rabbits; play sfx?
-
-

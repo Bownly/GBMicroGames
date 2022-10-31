@@ -4,6 +4,7 @@
 #include "../../Shared/common.h"
 #include "../../Shared/enums.h"
 #include "../../Shared/fade.h"
+#include "../../Shared/songPlayer.h"
 
 #include "../sfx.h"
 #include "../res/tiles/bownlyMP5DiceTiles.h"
@@ -14,6 +15,8 @@
 #include "../res/maps/bownlyMP5PanelMaps.h"
 #include "../res/sprites/bownlySprPreston.h"
 #include "../structs/BownlyPanel.h"
+
+extern const hUGESong_t bownlyTheWhiteSong;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -36,7 +39,7 @@ extern UINT8 animFrame;
 static UINT8 buttonHoldTick;
 static UINT8 screenShakeTick;
 static UINT8 flipAnimTick;
-#define FLIP_DURATION 21U
+static UINT8 flipDuration;
 
 #define prestonXOffset 32U
 #define prestonYOffset 32U
@@ -46,9 +49,10 @@ static UINT8 prestonIsHorz;
 static UINT8 prestonHP;
 
 static BownlyPanel gridPanels[25U];
-static UINT8 remaining5s;
 #define panelsXOrigin 5U
 #define panelsYOrigin 4U
+static UINT8 remaining5s;
+static UINT8 didWinFlip;
 
 #define SPRID_PRESTON 0U
 #define SPRID_HEARTS 4U
@@ -59,23 +63,23 @@ static UINT8 remaining5s;
 
 
 /* SUBSTATE METHODS */
-void phaseMagipanels5Init();
-void phaseMagipanels5Loop();
+static void phaseMagipanels5Init();
+static void phaseMagipanels5Loop();
 
 /* INPUT METHODS */
-void inputsMP5();
+static void inputsMP5();
 
 /* HELPER METHODS */
-void initGrid();
-void incrementPanel(BownlyPanel*);
-void setupPanel(UINT8, UINT8, UINT8, UINT8);
+static void initGrid();
+static void incrementPanel(BownlyPanel*);
+static void setupPanel(UINT8, UINT8, UINT8, UINT8);
 
 /* DISPLAY METHODS */
-void animatePreston();
-void drawPanel(UINT8, UINT8, BownlyPanel*);
-void setupHearts();
-void tryShakeScreen();
-void updateFlippingPanels();
+static void animatePreston();
+static void drawPanel(UINT8, UINT8, BownlyPanel*);
+static void setupHearts();
+static void tryShakeScreen();
+static void updateFlippingPanels();
 
 
 void bownlyMP5MicrogameMain()
@@ -100,7 +104,7 @@ void bownlyMP5MicrogameMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseMagipanels5Init()
+static void phaseMagipanels5Init()
 {
     // Initializations
     init_bkg(0xFFU);
@@ -115,7 +119,9 @@ void phaseMagipanels5Init()
     prestonIsHorz = FALSE;
     prestonHP = 1U;
 
+    didWinFlip = FALSE;
     remaining5s = mgDifficulty + 1U;
+    flipDuration = 21U - mgDifficulty - mgDifficulty;  // Looks dumb, but it's more space efficient
 
     set_bkg_data(BKGTILE_DICE, 36U, bownlyMP5DiceTiles);
     set_bkg_data(BKGTILE_STAGE, 14U, bownlyMP5StageTiles);
@@ -134,15 +140,17 @@ void phaseMagipanels5Init()
 
     initGrid();
 
+    playSong(&bownlyTheWhiteSong);
+
     fadein();
     substate = SUB_LOOP;
 
 }
 
-void phaseMagipanels5Loop()
+static void phaseMagipanels5Loop()
 {
     ++animTick;
-    if (flipAnimTick != 0U && flipAnimTick != FLIP_DURATION)
+    if (flipAnimTick != 0U && flipAnimTick != flipDuration)
         ++flipAnimTick;
     else
         flipAnimTick = 0U;
@@ -159,7 +167,7 @@ void phaseMagipanels5Loop()
 
 
 /******************************** INPUT METHODS *********************************/
-void inputsMP5()
+static void inputsMP5()
 {
     if (!curJoypad & (J_UP | J_DOWN | J_LEFT | J_RIGHT))
     {
@@ -250,7 +258,7 @@ void inputsMP5()
 
 
 /******************************** HELPER METHODS *********************************/
-void initGrid()
+static void initGrid()
 {
     for (i = 0U; i != 5U; ++i)
     {
@@ -299,7 +307,7 @@ void initGrid()
     }
 }
 
-void incrementPanel(BownlyPanel* panel)
+static void incrementPanel(BownlyPanel* panel)
 {
     if (panel->panelValue != 6U)
     {
@@ -324,7 +332,7 @@ void incrementPanel(BownlyPanel* panel)
     }
 }
 
-void setupPanel(UINT8 index, UINT8 x, UINT8 y, UINT8 val)
+static void setupPanel(UINT8 index, UINT8 x, UINT8 y, UINT8 val)
 {
     gridPanels[index].xIndex = x;
     gridPanels[index].yIndex = y;
@@ -342,7 +350,7 @@ void setupPanel(UINT8 index, UINT8 x, UINT8 y, UINT8 val)
 
 
 /******************************** DISPLAY METHODS ********************************/
-void animatePreston()
+static void animatePreston()
 {
     if (mgStatus == LOST)  // Hurt anims
         animFrame = 6U;
@@ -376,7 +384,7 @@ void animatePreston()
     move_metasprite(bownlySprPreston_metasprites[animFrame], SPRTILE_PRESTON, SPRID_PRESTON, i, j);
 }
 
-void drawPanel(UINT8 xCoord, UINT8 yCoord, BownlyPanel* panel)
+static void drawPanel(UINT8 xCoord, UINT8 yCoord, BownlyPanel* panel)
 {
     switch(panel->panelValue)
     {
@@ -390,7 +398,7 @@ void drawPanel(UINT8 xCoord, UINT8 yCoord, BownlyPanel* panel)
     }
 }
 
-void setupHearts()
+static void setupHearts()
 {
     for (i = 0; i != 7; ++i)
     {
@@ -400,7 +408,7 @@ void setupHearts()
     set_sprite_tile(SPRID_HEARTS + 6U, SPRTILE_HEARTS);
 }
 
-void tryShakeScreen()
+static void tryShakeScreen()
 {
     if (screenShakeTick != 0U)
     {
@@ -430,9 +438,9 @@ void tryShakeScreen()
     }
 }
 
-void updateFlippingPanels()
+static void updateFlippingPanels()
 {
-    if (flipAnimTick == FLIP_DURATION - 1U)
+    if (flipAnimTick == flipDuration - 1U)
     {
         for (i = 0; i != 25; ++i)
         {
@@ -446,7 +454,25 @@ void updateFlippingPanels()
 
         // Pretty sloppy to put the win check here, but who's going to stop me?
         if (remaining5s == 0U && mgStatus != LOST)
+        {
             mgStatus = WON;
+
+            // Restart flip for point panels
+            if (didWinFlip == FALSE)
+            {
+                playCollisionSfx();
+                didWinFlip = TRUE;
+                flipAnimTick = 1U;
+                for (i = 0U; i != 25U; ++i)
+                {
+                    gridPanels[i].panelValue = 5U;
+                    gridPanels[i].isFlipping = 1U;
+                }
+                for (i = 0U; i != 6U; ++i)
+                    set_sprite_tile(SPRID_HEARTS + i, SPRTILE_HEARTS);
+
+            }
+        }
     }
     else
     {

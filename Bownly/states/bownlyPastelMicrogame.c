@@ -38,24 +38,24 @@ extern UINT8 mgStatus;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-UINT16 x;
-UINT16 y;
-UINT16 pastelX;
-UINT16 pastelY;
-INT8 pastelXVel;
-INT8 pastelYVel;
-PASTELSTATE pastelstate;
-UINT8 heartCount = 0U;
-UINT8 pastelFlipX = FALSE;
-UINT8 xSpeedWalking;
-UINT8 xSpeedInAir;
-UINT8 ySpeedJumping;
-UINT8 jumpTimer;
-UINT8 JUMP_DURATION = 8U;
+static UINT16 x;
+static UINT16 y;
+static UINT16 pastelX;
+static UINT16 pastelY;
+static INT8 pastelXVel;
+static INT8 pastelYVel;
+static PASTELSTATE pastelState;
+static UINT8 heartCount = 0U;
+static UINT8 pastelFlipX = FALSE;
+static UINT8 xSpeedWalking;
+static UINT8 xSpeedInAir;
+static UINT8 ySpeedJumping;
+static UINT8 jumpTimer;
+static UINT8 JUMP_DURATION = 8U;
 
-UINT8 jumppuffX;
-UINT8 jumppuffY;
-UINT8 jumppuffTimer = 7U;
+static UINT8 jumppuffX;
+static UINT8 jumppuffY;
+static UINT8 jumppuffTimer = 7U;
 #define JUMPPUFF_DURATION 7U
 
 #define SPRID_PASTEL 0U
@@ -74,20 +74,20 @@ UINT8 jumppuffTimer = 7U;
 
 
 /* SUBSTATE METHODS */
-void phasePastelInit();
-void phasePastelLoop();
+static void phasePastelInit();
+static void phasePastelLoop();
 
 /* INPUT METHODS */
-void inputsPastel();
+static void inputsPastel();
 
 /* HELPER METHODS */
-void calcPhysics();
-UINT8 checkIsGrounded();
-UINT8 checkHeartCollision();
+static void calcPhysics();
+static UINT8 checkIsGrounded();
+static UINT8 checkHeartCollision();
 
 /* DISPLAY METHODS */
-void animateHearts();
-void animatePastel();
+static void animateHearts();
+static void animatePastel();
 
 
 void bownlyPastelMicrogameMain()
@@ -112,7 +112,7 @@ void bownlyPastelMicrogameMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phasePastelInit()
+static void phasePastelInit()
 {
     // Initializations
     animTick = 0U;
@@ -123,8 +123,8 @@ void phasePastelInit()
     ySpeedJumping = 12U;
     jumpTimer = 0U;
 
-    pastelstate = IDLE;
-    pastelstate = AIRBORNE;
+    pastelState = IDLE;
+    pastelState = AIRBORNE;
     pastelFlipX = FALSE;
     heartCount = 0U;
 
@@ -169,7 +169,8 @@ void phasePastelInit()
             break;
         case 1U:
             // Map
-            set_bkg_tiles(0U, 10U, 20U, 8U, bownlyPastelBkg2Map);
+            set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
+            set_bkg_tiles(12U, 10U, 5U, 6U, bownlyPastelBkg2Map);
 
             // Tree(s)
             set_bkg_tiles(3U, 3U, 6U, 10U, bownlyPastelTreeMap);
@@ -181,12 +182,16 @@ void phasePastelInit()
             set_bkg_tile_xy(18U, 9U + getRandUint8(4U), BKGID_HEART);
             break;
         case 2U:
+            // Partially occluded tree
+            set_bkg_tiles(16U, 3U, 6U, 10U, bownlyPastelTreeMap);
+
             // Map
-            set_bkg_tiles(0U, 6U, 20U, 11U, bownlyPastelBkg3Map);
+            set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
+            set_bkg_tiles(12U, 10U, 5U, 6U, bownlyPastelBkg2Map);
+            set_bkg_tiles(4U, 7U, 4U, 6U, bownlyPastelBkg3Map);
 
             // Tree(s)
-            set_bkg_tiles(30U, 2U, 6U, 10U, bownlyPastelTreeMap);
-            set_bkg_tiles(17U, 2U, 6U, 10U, bownlyPastelTreeMap);
+            set_bkg_tiles(30U, 3U, 6U, 10U, bownlyPastelTreeMap);
 
             // Hearts
             set_bkg_tile_xy(2U, 0U + getRandUint8(5U), BKGID_HEART);
@@ -203,7 +208,7 @@ void phasePastelInit()
     substate = SUB_LOOP;
 }
 
-void phasePastelLoop()
+static void phasePastelLoop()
 {
     hide_metasprite(bownlySprPastel_metasprites[animFrame % 16U], SPRTILE_PASTEL);
     ++animTick;
@@ -233,18 +238,18 @@ void phasePastelLoop()
 
 
 /******************************** INPUT METHODS *********************************/
-void inputsPastel()
+static void inputsPastel()
 {
     // Movement
     if (curJoypad & J_LEFT)
     {
         if (pastelX != LEFT_BOUND)
         {
-            switch (pastelstate)
+            switch (pastelState)
             {
                 case IDLE:
                 case WALKING:
-                    pastelstate = WALKING;
+                    pastelState = WALKING;
                     pastelXVel = -xSpeedWalking;
                     break;
                 case AIRBORNE:
@@ -258,11 +263,11 @@ void inputsPastel()
     {
         if (pastelX != RIGHT_BOUND)
         {
-            switch (pastelstate)
+            switch (pastelState)
             {
                 case IDLE:
                 case WALKING:
-                    pastelstate = WALKING;
+                    pastelState = WALKING;
                     pastelXVel = xSpeedWalking;
                     break;
                 case AIRBORNE:
@@ -274,31 +279,31 @@ void inputsPastel()
     }
     else if (!(curJoypad & J_RIGHT) && !(curJoypad & J_RIGHT))
     {
-        if (pastelstate == WALKING)
-            pastelstate = IDLE;
+        if (pastelState == WALKING)
+            pastelState = IDLE;
         pastelXVel = 0;
     }
 
     // Jumping
     if (curJoypad & J_A)
     {
-        if ((pastelstate == IDLE || pastelstate == WALKING) && !(prevJoypad & J_A))  // Start jump
+        if ((pastelState == IDLE || pastelState == WALKING) && !(prevJoypad & J_A))  // Start jump
         {
             ++jumpTimer;
             pastelYVel = -ySpeedJumping;
-            pastelstate = AIRBORNE;
+            pastelState = AIRBORNE;
             jumppuffTimer = 0U;
             jumppuffX = pastelX >> 2U;
             jumppuffY = ((pastelY + PASTEL_BOTTOM_OFFSET + 4U) >> 2U) + 10U;
             playBleepSfx();
         }
-        else if (pastelstate == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
+        else if (pastelState == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
         {
             ++jumpTimer;
             pastelYVel = -ySpeedJumping;
         }
     }
-    else if (pastelstate == AIRBORNE)
+    else if (pastelState == AIRBORNE)
     {
         jumpTimer = JUMP_DURATION;
     }
@@ -306,7 +311,7 @@ void inputsPastel()
 
 
 /******************************** HELPER METHODS *********************************/
-void calcPhysics()
+static void calcPhysics()
 {
     // Hypothetical coords that include velocity changes
     x = pastelX + pastelXVel;
@@ -371,7 +376,7 @@ void calcPhysics()
     x = pastelX;
     pastelLeftBound = (x - 32U - (PASTEL_LEFT_OFFSET >> 1U)) >> 5U;
     pastelRightBound = (x - 32U + (PASTEL_RIGHT_OFFSET >> 1U)) >> 5U;
-    if (pastelstate == AIRBORNE)
+    if (pastelState == AIRBORNE)
     {
         // Check for floor collisions
         collided = TRUE;
@@ -393,13 +398,13 @@ void calcPhysics()
         }
         if (collided == TRUE)
         {
-            pastelstate = IDLE;
+            pastelState = IDLE;
             jumpTimer = 0U;
             pastelXVel = 0U;
             pastelY = ((pastelBottomBound << 5U) - PASTEL_BOTTOM_OFFSET - 12U);
         }
     }
-    else if (pastelstate == WALKING)
+    else if (pastelState == WALKING)
     {
         // Apply gravity if needed
         l = get_bkg_tile_xy(pastelRightBound, pastelBottomBound + 1U);
@@ -410,14 +415,14 @@ void calcPhysics()
             l >>= 4U;
             if (l != 4U && l != 5U)  // Left foot can move down
             {
-                pastelstate = AIRBORNE;
+                pastelState = AIRBORNE;
                 pastelYVel = 0;
             }
         }
     }
 }
 
-UINT8 checkHeartCollision()
+static UINT8 checkHeartCollision()
 {
     y = (pastelY >> 5U) - 1U;  // Her top tiles
     INT8 pastelLeftBound = (pastelX - 32U - PASTEL_LEFT_OFFSET) >> 5U;
@@ -443,14 +448,14 @@ UINT8 checkHeartCollision()
 
 
 /******************************** DISPLAY METHODS ********************************/
-void animateHearts()
+static void animateHearts()
 {
     set_bkg_data(BKGID_HEART, 1U, &bownlyPastelHeartTiles[((animTick >> 3U) % 2U) << 4U]);
 }
 
-void animatePastel()
+static void animatePastel()
 {
-    switch (pastelstate)
+    switch (pastelState)
     {
         case IDLE:
         default:

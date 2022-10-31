@@ -14,6 +14,8 @@
 #include "../res/sprites/bownlySprBow.h"
 #include "../res/sprites/bownlySprTarget.h"
 
+extern const hUGESong_t bownlyTheWhite2Song;
+
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
 extern UINT8 i;  // Used mostly for loops
@@ -44,7 +46,7 @@ static UINT8 arrowSpeed;
 static INT8 targetSpeed;
 static UINT8 targetsLeft;
 static UINT8 bowFrame;
-ARROWSTATE arrowstate;
+static ARROWSTATE arrowState;
 
 #define SPRID_BOW 0U
 #define SPRID_ARROW 10U
@@ -57,14 +59,14 @@ ARROWSTATE arrowstate;
 #define BKGTILE_GRASS 0x60U
 
 /* SUBSTATE METHODS */
-void phaseBowInit();
-void phaseBowLoop();
+static void phaseBowInit();
+static void phaseBowLoop();
 
 /* INPUT METHODS */
-void inputsShoot();
+static void inputsShoot();
 
 /* HELPER METHODS */
-void spawnTarget();
+static void spawnTarget();
 
 /* DISPLAY METHODS */
 
@@ -91,7 +93,7 @@ void bownlyBowMicrogameMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseBowInit()
+static void phaseBowInit()
 {
     // Initializations
     init_bkg(0xFFU);
@@ -108,7 +110,7 @@ void phaseBowInit()
     targetSpeed = -1;
     targetsLeft = 1U;
     bowFrame = 1U;
-    arrowstate = NOCKED;
+    arrowState = NOCKED;
     
     // Setting up the background
     set_bkg_data(BKGTILE_GRASS, 6U, bownlyBowBkgTiles);
@@ -136,19 +138,21 @@ void phaseBowInit()
 
     substate = SUB_LOOP;
 
+    playSong(&bownlyTheWhite2Song);
+
     fadein();
     // fadein() sets the sprites to a palette that I don't want to use here
     OBP0_REG = 0xE4;  // 11 10 01 00
 }
 
-void phaseBowLoop()
+static void phaseBowLoop()
 {
     ++animTick;
     if (bowY >= 130U || bowY <= 40U)
         bowSpeed *= -1;
     bowY += bowSpeed;
 
-    switch (arrowstate)
+    switch (arrowState)
     {
         case NOCKED:
             inputsShoot();
@@ -177,7 +181,7 @@ void phaseBowLoop()
                 if (arrowY <= targetY + 15U && arrowY >= targetY - 15U)
                 {
                     playCollisionSfx();
-                    arrowstate = HIT;
+                    arrowState = HIT;
                 }
                 else
                 {
@@ -187,7 +191,7 @@ void phaseBowLoop()
             }
             else if (arrowX >= 200U)
             {
-                arrowstate = NOCKED;
+                arrowState = NOCKED;
                 bowFrame = 1U;
                 arrowX = bowX;
                 arrowY = bowY;
@@ -210,7 +214,7 @@ void phaseBowLoop()
                 else // Spawn next target otherwise
                 {
                     spawnTarget();
-                    arrowstate = NOCKED;
+                    arrowState = NOCKED;
                     bowFrame = 1U;
                     arrowX = bowX;
                     arrowY = bowY;
@@ -236,19 +240,19 @@ void phaseBowLoop()
 
 
 /******************************** INPUT METHODS *********************************/
-void inputsShoot()
+static void inputsShoot()
 {
     if (curJoypad & J_A && !(prevJoypad & J_A))
     {
         playMoveSfx();
-        arrowstate = FLYING;
+        arrowState = FLYING;
         bowFrame = 0U;
     }
 }
 
 
 /******************************** HELPER METHODS *********************************/
-void spawnTarget()
+static void spawnTarget()
 {
     targetX = 24U;
     targetY = getRandUint8(90U);  // Range of 40-130
