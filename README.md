@@ -1,6 +1,6 @@
 # GBMicroGames (Working title)
 This is the repository for whatever this Gameboy microgames jam project ends up getting named.
-Link to the jam page on Itch: \<link goes here\>
+Link to the jam page on Itch: [https://itch.io/jam/gb-microgames-jam](https://itch.io/jam/gb-microgames-jam)
 
 
 ## Setup - How To
@@ -30,12 +30,12 @@ Link to the jam page on Itch: \<link goes here\>
 ## Graphics guidelines
 - Don't write any data to the following background tiles: 0x00-0x2F, 0xF0-0xFF.
 - Also, don't touch sprite #39.
-- Similarly, don't use the window layer. Like the above two items, it's reserved for the countdown timer visuals.
-- Keep the black color of *OBP_0* black. Otherwise, it'll mess up the countdown timer bar visuals. If you don't know what that means, then you probably don't need to worry about it.
+- Keep the black color of *OBP_0* black. If you don't know what that means, then you probably don't need to worry about it.
+- Similarly, don't use the window layer. Like the above items, it's reserved for the countdown timer visuals.
 
 
 ## Audio guidelines
-- This project uses hUGEDriver for music. If you're used to using .mod files with gbt_player, switching over will be simple. You can import your .mod files into hUGETracker and export them to GBDK .c format. I've noticed that the import doesn't always work properly, but copy/pasting the patterns from OpenMPT into hUGETracker worked for me when importing failed me.
+- This project uses hUGEDriver for music. If you're used to using .mod files with gbt_player, switching over will be simple. You can import your .mod files into hUGETracker and export them to GBDK .c format. I've noticed that the import doesn't always work properly, but copy/pasting the patterns from OpenMPT into hUGETracker worked for me whenever importing didn't.
 - Don't set the tempo anywhere in your tracks (using F05, etc). That'll mess up the game engine's dynamic song speed logic. Instead, set the Tempo value on the General tab of your song in hUGETracker. The engine will subtract the current value of *mgSpeed* (0-2) from your song's tempo value when it loads the song.
 - *hUGEDriver.h* is located inside */hUGETracker/*, so you'll want to change the hUGEDriver include line at the top of your song's exported GBDK .c file to point there instead.
 - In your microgame's code, you'll want to add an include to */Engine/songPlayer.h"*.
@@ -43,7 +43,7 @@ Link to the jam page on Itch: \<link goes here\>
 - Note that the engine will call *hUGE_dosound()*, so you don't need to worry about calling it inside your code.
 
 
-## Things to keep in mind
+## Misc guidelines and tips
 - Look for *actual template cart art.png* inside */Template/cart art*. For each microgame you make, include an edit of that pic. Don't worry about putting it into the rom or anything. I'll do all of that during the post-jam compilation steps. The only restrictions are that you keep the outline intact, and don't touch the two rows of white pixels towards the top.
 - Preface as many files and variables as possible with your username to avoid multiple definition errors. And/or make your variables static when appropriate, for similar reasons.
 - Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's exactly what the entire Template folder is there for.
