@@ -71,7 +71,7 @@ void main()
         switch(gamestate)
         {
             case STATE_TITLE:
-                SWITCH_ROM_MBC1(1U);
+                SWITCH_ROM(1U);
                 titleStateMain();
                 break;
             case STATE_MAIN_MENU:

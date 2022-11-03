@@ -150,7 +150,7 @@ void phaseMicrogameManagerInitLobby()
 
     // Play appropriate jingle(s)
     stopSong();
-    SWITCH_ROM_MBC1(1U);
+    SWITCH_ROM(1U);
     switch (mgStatus)
     {
         default:
@@ -241,7 +241,7 @@ void phaseMicrogameManagerLobbyLoop()
 /******************************** HELPER METHODS *********************************/
 void callMicrogameFunction()
 {
-    SWITCH_ROM_MBC1(mgCurrentMG.bankId);
+    SWITCH_ROM(mgCurrentMG.bankId);
     switch (mgCurrentMG.id)
     {
         #define MICROGAME(game, gameFunction, a, b, c, d, e) \
@@ -252,7 +252,7 @@ void callMicrogameFunction()
         #undef MICROGAME
 
         default:
-            SWITCH_ROM_MBC1(1U);
+            SWITCH_ROM(1U);
             templateFaceMicrogameMain();
             break;
     }
