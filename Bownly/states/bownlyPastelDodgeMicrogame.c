@@ -7,16 +7,12 @@
 #include "../../Engine/songPlayer.h"
 
 #include "../enums.h"
-#include "../sfx.h"
-#include "../res/maps/bownlyPastelBkg1Map.h"
-#include "../res/maps/bownlyPastelBkg2Map.h"
-#include "../res/maps/bownlyPastelBkg3Map.h"
-#include "../res/maps/bownlyPastelTreeMap.h"
+// #include "../sfx.h"
+#include "../res/maps/bownlyPastelCloud1Map.h"
+#include "../res/sprites/bownlySprBee.h"
 #include "../res/sprites/bownlySprJumppuff.h"
 #include "../res/sprites/bownlySprPastel.h"
-#include "../res/tiles/bownlyPastelBkgTiles.h"
-#include "../res/tiles/bownlyPastelHeartTiles.h"
-#include "../res/tiles/bownlyPastelTreeTiles.h"
+#include "../res/tiles/bownlyPastelBkg2Tiles.h"
 
 extern const hUGESong_t bownlyVictoryLapSong;
 
@@ -53,17 +49,9 @@ static UINT8 ySpeedJumping;
 static UINT8 jumpTimer;
 static UINT8 JUMP_DURATION = 8U;
 
-static UINT8 jumppuffX;
-static UINT8 jumppuffY;
-static UINT8 jumppuffTimer = 7U;
-#define JUMPPUFF_DURATION 7U
-
-#define SPRID_PASTEL 0U
-#define SPRID_JUPMPUFF 10U
-#define SPRTILE_PASTEL 0U
-#define SPRTILE_JUMPPUFF SPRTILE_PASTEL + bownlySprPastel_TILE_COUNT
-#define BKGID_HEART 0x60U
-
+static INT8 pastelBottomBound;
+static INT8 pastelLeftBound;
+static INT8 pastelRightBound;
 #define LEFT_BOUND 48U
 #define RIGHT_BOUND 652U
 #define PASTEL_TOP_OFFSET 0U
@@ -71,6 +59,30 @@ static UINT8 jumppuffTimer = 7U;
 #define PASTEL_LEFT_OFFSET 12U
 #define PASTEL_RIGHT_OFFSET 12U
 #define PASTEL_MAX_YVEL 32U
+
+static UINT8 jumppuffX;
+static UINT8 jumppuffY;
+static UINT8 jumppuffTimer = 7U;
+#define JUMPPUFF_DURATION 7U
+
+static UINT16 bee1X;
+static UINT16 bee1Y;
+static UINT16 bee2X;
+static UINT16 bee2Y;
+static UINT8 bee1Speed;
+static UINT8 bee2Speed;
+static UINT8 bee1StartTimer;
+static UINT8 bee2StartTimer;
+// static const INT8 beeYSin[12U] = {0,1,2,3,2,1,0,-1,-2,-3,-2,-1};
+
+#define SPRID_PASTEL 0U
+#define SPRID_JUPMPUFF 10U
+#define SPRID_BEE1 12U
+#define SPRID_BEE2 16U
+#define SPRTILE_PASTEL 0U
+#define SPRTILE_JUMPPUFF SPRTILE_PASTEL + bownlySprPastel_TILE_COUNT
+#define SPRTILE_BEE SPRTILE_PASTEL + bownlySprPastel_TILE_COUNT + bownlySprJumppuff_TILE_COUNT
+#define BKGID_HEART 0x60U
 
 
 /* SUBSTATE METHODS */
@@ -81,16 +93,18 @@ static void phasePastelLoop();
 static void inputsPastel();
 
 /* HELPER METHODS */
+static void moveBees();
 static void calcPhysics();
 static UINT8 checkIsGrounded();
+static UINT8 checkBeeCollision();
 static UINT8 checkHeartCollision();
 
 /* DISPLAY METHODS */
-static void animateHearts();
+static void animateBees();
 static void animatePastel();
 
 
-void bownlyPastelMicrogameMain()
+void bownlyPastelDodgeMicrogameMain()
 {
     curJoypad = joypad();
 
@@ -115,9 +129,10 @@ void bownlyPastelMicrogameMain()
 static void phasePastelInit()
 {
     // Initializations
+    mgStatus = WON;
     animTick = 0U;
-    pastelX = 336U;
-    pastelY = 320U;
+    pastelX = 168U;
+    pastelY = 288U;
     pastelXVel = 0U;
     pastelYVel = 0U;
     ySpeedJumping = 12U;
@@ -132,12 +147,18 @@ static void phasePastelInit()
     jumppuffY = 0U;
     jumppuffTimer = 0U;
 
+    bee1X = 656U;
+    bee2X = 656U;
+    bee1Speed = 7U + (mgSpeed << 2U);
+    bee2Speed = 6U + (mgSpeed << 1U);
+    bee1StartTimer = 0U;
+
     xSpeedWalking = 6U + (mgSpeed << 1U);
     xSpeedInAir = 6U + (mgSpeed << 1U);
 
 
     // Bkg setup
-    set_bkg_data(0x3FU, 30U, bownlyPastelBkgTiles);
+    set_bkg_data(0x3FU, 30U, bownlyPastelBkg2Tiles);
     for (i = 0U; i != 20U; ++i)
     {
         for (j = 0U; j != 18U; ++j)
@@ -149,56 +170,41 @@ static void phasePastelInit()
     // Sprite setup
     set_sprite_data(SPRTILE_PASTEL, bownlySprPastel_TILE_COUNT, bownlySprPastel_tiles);
     set_sprite_data(SPRTILE_JUMPPUFF, bownlySprJumppuff_TILE_COUNT, bownlySprJumppuff_tiles);
-    set_bkg_data(BKGID_HEART, 1U, &bownlyPastelHeartTiles[0U]);
-    set_bkg_data(0x70U, 42U, bownlyPastelTreeTiles);
+    set_sprite_data(SPRTILE_BEE, bownlySprBee_TILE_COUNT, bownlySprBee_tiles);
 
     switch (mgDifficulty)
     {
         default:
         case 0U:
             // Map
-            set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
+            set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+            set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
 
-            // Tree(s)
-            set_bkg_tiles(0U, 3U, 6U, 10U, bownlyPastelTreeMap);
-
-            // Hearts
-            set_bkg_tile_xy(6U, 8U + getRandUint8(5U), BKGID_HEART);
-            set_bkg_tile_xy(12U, 6U + getRandUint8(6U), BKGID_HEART);
-            set_bkg_tile_xy(17U, 9U + getRandUint8(4U), BKGID_HEART);
+            // Bee
+            bee1Y = 296U;
             break;
         case 1U:
             // Map
-            set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
-            set_bkg_tiles(12U, 10U, 5U, 6U, bownlyPastelBkg2Map);
+            set_bkg_tiles(3U, 11U, 10U, 3U, bownlyPastelCloud1Map);
+            set_bkg_tiles(13U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+            set_bkg_tiles(25U, 10U, 10U, 3U, bownlyPastelCloud1Map);
 
-            // Tree(s)
-            set_bkg_tiles(3U, 3U, 6U, 10U, bownlyPastelTreeMap);
-
-            // Hearts
-            set_bkg_tile_xy(1U, 8U + getRandUint8(5U), BKGID_HEART);
-            set_bkg_tile_xy(9U, 5U + getRandUint8(4U), BKGID_HEART);
-            set_bkg_tile_xy(14U, 6U + getRandUint8(4U), BKGID_HEART);
-            set_bkg_tile_xy(18U, 9U + getRandUint8(4U), BKGID_HEART);
+            // Bees
+            bee1Y = 296U;
+            bee2Y = 264U;
+            bee2StartTimer = 30U + getRandUint8(30U);
             break;
         case 2U:
-            // Partially occluded tree
-            set_bkg_tiles(16U, 3U, 6U, 10U, bownlyPastelTreeMap);
-
             // Map
-            set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
-            set_bkg_tiles(12U, 10U, 5U, 6U, bownlyPastelBkg2Map);
-            set_bkg_tiles(4U, 7U, 4U, 6U, bownlyPastelBkg3Map);
+            set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+            set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
 
-            // Tree(s)
-            set_bkg_tiles(30U, 3U, 6U, 10U, bownlyPastelTreeMap);
+            // Bees
+            bee1StartTimer = 45;
+            bee2StartTimer = 0U;
 
-            // Hearts
-            set_bkg_tile_xy(2U, 0U + getRandUint8(5U), BKGID_HEART);
-            set_bkg_tile_xy(6U, 1U + getRandUint8(5U), BKGID_HEART);
-            set_bkg_tile_xy(9U, 2U + getRandUint8(6U), BKGID_HEART);
-            set_bkg_tile_xy(14U, 3U + getRandUint8(6U), BKGID_HEART);
-            set_bkg_tile_xy(17U, 5U + getRandUint8(4U), BKGID_HEART);
+            bee1Y = 288U;
+            bee2Y = 288U;
             break;
     }
 
@@ -213,18 +219,20 @@ static void phasePastelLoop()
     hide_metasprite(bownlySprPastel_metasprites[animFrame % 16U], SPRTILE_PASTEL);
     ++animTick;
 
+    moveBees();
+
     inputsPastel();
     calcPhysics();
-    if (checkHeartCollision() == TRUE)
+
+    if (checkBeeCollision() == TRUE)
     {
-        ++heartCount;
-        if (heartCount == mgDifficulty + 3U)
-            mgStatus = WON;
-        playDingSfx();
+        mgStatus = LOST;
+        pastelState = DEAD;
+        // playDingSfx();
     }
-    
+
+    animateBees();
     animatePastel();
-    animateHearts();
 
     // Jumppuff logic
     if (jumppuffTimer == JUMPPUFF_DURATION)
@@ -295,7 +303,7 @@ static void inputsPastel()
             jumppuffTimer = 0U;
             jumppuffX = pastelX >> 2U;
             jumppuffY = ((pastelY + PASTEL_BOTTOM_OFFSET + 4U) >> 2U) + 10U;
-            playBleepSfx();
+            // playBleepSfx();
         }
         else if (pastelState == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
         {
@@ -311,15 +319,54 @@ static void inputsPastel()
 
 
 /******************************** HELPER METHODS *********************************/
+static void moveBees()
+{
+    if (bee1StartTimer != 0U)
+        --bee1StartTimer;
+    if (bee2StartTimer != 0U)
+        --bee2StartTimer;
+
+    switch (mgDifficulty)
+    {
+        default:
+        case 0U:
+            // Straight line
+            if (bee1StartTimer == 0U)
+                bee1X -= bee1Speed;
+            break;
+        case 1U:
+            // Straight line
+            if (bee1StartTimer == 0U)
+                bee1X -= bee1Speed;
+            if (bee2StartTimer == 0U)
+                bee2X -= bee2Speed;
+            break;
+        case 2U:
+            // Straight line
+            if (bee1StartTimer == 0U)
+                bee1X -= bee1Speed;
+            // Sinusoidal
+            if (bee2StartTimer == 0U)
+            {
+                bee2X -= bee2Speed;
+                if ((animTick % 32U) >> 4U == 1U)
+                    bee2Y += 8U;
+                else
+                    bee2Y -= 8U;
+            }
+            break;
+    }
+}
+
 static void calcPhysics()
 {
     // Hypothetical coords that include velocity changes
     x = pastelX + pastelXVel;
     y = pastelY + pastelYVel;
 
-    INT8 pastelBottomBound = (pastelY + PASTEL_BOTTOM_OFFSET) >> 5U;
-    INT8 pastelLeftBound = (x - 32U - PASTEL_LEFT_OFFSET) >> 5U;
-    INT8 pastelRightBound = (x - 32U + PASTEL_RIGHT_OFFSET) >> 5U;
+    pastelBottomBound = (pastelY + PASTEL_BOTTOM_OFFSET) >> 5U;
+    pastelLeftBound = (x - 32U - PASTEL_LEFT_OFFSET) >> 5U;
+    pastelRightBound = (x - 32U + PASTEL_RIGHT_OFFSET) >> 5U;
 
     UINT8 collided = TRUE;
     if (x < LEFT_BOUND)
@@ -422,35 +469,58 @@ static void calcPhysics()
     }
 }
 
-static UINT8 checkHeartCollision()
+static UINT8 checkBeeCollision()
 {
-    y = (pastelY >> 5U) - 1U;  // Her top tiles
-    INT8 pastelLeftBound = (pastelX - 32U - PASTEL_LEFT_OFFSET) >> 5U;
-    INT8 pastelRightBound = (pastelX - 32U + PASTEL_RIGHT_OFFSET) >> 5U;
+    pastelLeftBound = pastelX - PASTEL_LEFT_OFFSET;
+    pastelRightBound = pastelX + PASTEL_RIGHT_OFFSET;
+    pastelBottomBound = pastelY + PASTEL_BOTTOM_OFFSET;
 
-    for (j = 0U; j != 3U; ++j)
+    // if (pastelX - PASTEL_LEFT_OFFSET < bee1X + 64U)
+    // {
+    //     if (pastelX + PASTEL_RIGHT_OFFSET > bee1X)
+    //     {
+    //         if (pastelY + PASTEL_TOP_OFFSET < bee1Y + 64U)
+    //         {
+    //             if (pastelY + PASTEL_BOTTOM_OFFSET > bee1Y)
+
+    // Would && all of these together, but I don't trust the compiler to use lazy evaluation
+    if (pastelX - PASTEL_LEFT_OFFSET < bee1X + 64U)
     {
-        l = get_bkg_tile_xy(pastelRightBound, y + j);
-        if (l == BKGID_HEART)
+        if (pastelX + PASTEL_RIGHT_OFFSET > bee1X)
         {
-            set_bkg_tile_xy(pastelRightBound, y + j, 0x3FU);
-            return TRUE;
-        }
-        l = get_bkg_tile_xy(pastelLeftBound, y + j);
-        if (l == BKGID_HEART)
-        {
-            set_bkg_tile_xy(pastelLeftBound, y + j, 0x3FU);
-            return TRUE;
+            if (pastelY + PASTEL_TOP_OFFSET < bee1Y + 64U)
+            {
+                if (pastelY + PASTEL_BOTTOM_OFFSET > bee1Y)
+                {
+                    return TRUE;
+                }
+            }
         }
     }
+    if (pastelX - PASTEL_LEFT_OFFSET < bee2X + 64U)
+    {
+        if (pastelX + PASTEL_RIGHT_OFFSET > bee2X)
+        {
+            if (pastelY + PASTEL_TOP_OFFSET < bee2Y + 64U)
+            {
+                if (pastelY + PASTEL_BOTTOM_OFFSET > bee2Y)
+                {
+                    return TRUE;
+                }
+            }
+        }
+    }
+
     return FALSE;
 }
 
-
 /******************************** DISPLAY METHODS ********************************/
-static void animateHearts()
+static void animateBees()
 {
-    set_bkg_data(BKGID_HEART, 1U, &bownlyPastelHeartTiles[((animTick >> 3U) % 2U) << 4U]);
+    animFrame = (animTick >> 3U) % 2U;
+
+    move_metasprite(bownlySprBee_metasprites[animFrame], SPRTILE_BEE, SPRID_BEE1, bee1X >> 2U, bee1Y >> 2U);
+    move_metasprite(bownlySprBee_metasprites[animFrame], SPRTILE_BEE, SPRID_BEE2, bee2X >> 2U, bee2Y >> 2U);
 }
 
 static void animatePastel()
@@ -471,6 +541,9 @@ static void animatePastel()
                 animFrame = 10U;
             else
                 animFrame = 11U;
+            break;
+        case DEAD:
+            animFrame = 14U;
             break;
     }
     if (pastelFlipX == TRUE)

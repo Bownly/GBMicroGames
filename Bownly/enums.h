@@ -10,7 +10,8 @@ typedef enum {
 typedef enum {
     IDLE,
     WALKING,
-    AIRBORNE
+    AIRBORNE,
+    DEAD
 } PASTELSTATE;
 
 extern ARROWSTATE arrowstate;

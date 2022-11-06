@@ -120,7 +120,7 @@ void microgameManagerGameLoop()
             // mgDifficulty = (currentScore / 3U) % 3U;
             mgSpeed = (currentScore / 3U) % 3U;
             // mgSpeed = currentScore % 3U;
-            loadNewMG(getRandUint8(4U));
+            // loadNewMG(getRandUint8(4U));
         }
 
 
@@ -139,7 +139,7 @@ void phaseInitMicrogameManager()
     mgDifficulty = 0U;
     mgSpeed = 0U;
 
-    loadNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG(MG_BOWNLY_PASTEL_DODGE);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }

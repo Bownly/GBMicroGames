@@ -9,7 +9,7 @@
 BANKREF(bownlySprBow)
 
 const palette_color_t bownlySprBow_palettes[4] = {
-	RGB8(251, 242, 54), RGB8(132, 126, 135), RGB8(34, 32, 52), RGB8(34, 2, 0)
+	RGB8(251, 242, 54), RGB8(132, 126, 135), RGB8(34, 32, 52), RGB8(125, 1, 0)
 };
 
 const uint8_t bownlySprBow_tiles[224] = {
