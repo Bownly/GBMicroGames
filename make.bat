@@ -10,5 +10,5 @@ C:\gbdk\bin\lcc -Wl-yt3 -Wl-yoA -Wl-ya4 -o GBMicroGames.gb ^
     Bownly/o/*.o Bownly/res/sprites/*.c ^
     Template/o/*.o ^
     teaaaaaaaa/o/*.o
-pause
+exit 0
 
