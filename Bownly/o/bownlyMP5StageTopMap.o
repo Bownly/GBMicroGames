@@ -1,0 +1,26 @@
+XL3
+H A areas 2 global symbols
+M bownlyMP5StageTopMap
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_2 size 28 flags 0 addr 0
+S _bownlyMP5StageTopMap Def000000
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 07 00
+T 00 00 00 44 46 44 46 44 46 44 46 44 46 44 46 44
+R 00 00 07 00
+T 0D 00 00 46 44 46 44 46 44 46 49 4B 45 47 45 47
+R 00 00 07 00
+T 1A 00 00 45 47 45 47 45 47 45 47 45 47 45 47 49
+R 00 00 07 00
+T 27 00 00 4B
+R 00 00 07 00

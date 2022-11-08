@@ -1,0 +1,28 @@
+XL3
+H A areas 2 global symbols
+M bownlyPastelTreeMap
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_2 size 3C flags 0 addr 0
+S _bownlyPastelTreeMap Def000000
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 07 00
+T 00 00 00 3F 3F 70 71 3F 3F 3F 3F 72 73 3F 3F 3F
+R 00 00 07 00
+T 0D 00 00 3F 74 75 76 3F 3F 77 78 79 7A 3F 3F 7B
+R 00 00 07 00
+T 1A 00 00 7C 7D 7E 3F 3F 7F 80 81 82 3F 3F 84 85
+R 00 00 07 00
+T 27 00 00 86 87 88 89 8A 8B 8C 8D 8E 8F 90 91 92
+R 00 00 07 00
+T 34 00 00 93 99 3F 94 95 96 97 98
+R 00 00 07 00
