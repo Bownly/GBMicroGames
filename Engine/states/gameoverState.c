@@ -25,8 +25,8 @@ extern UINT8 animFrame;
 
 
 /* SUBSTATE METHODS */
-void phaseTitleInit();
-void phaseTitleLoop();
+static void phaseGameoverInit();
+static void phaseGameoverLoop();
 
 /* INPUT METHODS */
 
@@ -35,19 +35,19 @@ void phaseTitleLoop();
 /* DISPLAY METHODS */
 
 
-void titleStateMain()
+void gameoverStateMain()
 {
     curJoypad = joypad();
 
     switch (substate)
     {
         case SUB_INIT:
-            phaseTitleInit();
+            phaseGameoverInit();
             break;
         case SUB_LOOP:
-            phaseTitleLoop();
+            phaseGameoverLoop();
             break;
-        default:  // Abort to... uh, itself in the event of unexpected state
+        default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
             substate = SUB_INIT;
             break;
@@ -57,25 +57,27 @@ void titleStateMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseTitleInit()
+void phaseGameoverInit()
 {
     // Initializations
     init_bkg(0xFFU);
     animTick = 0U;
   
+    HIDE_WIN;
     scroll_bkg(-4, 0U);  // For centering the text
 
-    printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
-    printLine(4U, 4U, "TOTALLY NOT", FALSE);
-    printLine(5U, 6U, "WARIOWARE", FALSE);
-    printLine(1U, 8U, "COMMUNITY EDITION", FALSE);
-    printLine(4U, 13U, "PRESS START", FALSE);
+    printLine(5U, 7U, "GAME OVER", FALSE);
+    printLine(5U, 8U, "SCORE:", FALSE);
 
+    set_bkg_tile_xy(11U, 8U, k/100U);
+    set_bkg_tile_xy(12U, 8U, (k/10U)%10U);
+    set_bkg_tile_xy(13U, 8U, k%10U);
+    
     substate = SUB_LOOP;
-    // fadein();
+    fadein();
 }
 
-void phaseTitleLoop()
+void phaseGameoverLoop()
 {
     ++animTick;
     
@@ -91,13 +93,13 @@ void phaseTitleLoop()
 
     if (curJoypad & J_START && !(prevJoypad & J_START))
     {
-        fadeout();
-        initrand(DIV_REG);
+        // fadeout();
+        init_bkg(0xFFU);
+        
         move_bkg(0U, 0U);
 
-        gamestate = STATE_MICROGAME_MANAGER;
+        gamestate = STATE_TITLE;
         substate = SUB_INIT;
-        mgStatus = PLAYING;
     }  
 }
 
