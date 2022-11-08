@@ -1,0 +1,61 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+    _animFrame                                                     ****** GX
+    _animTick                                                      ****** GX
+  7 _animateCursor                                                 000285 R
+    _curJoypad                                                     ****** GX
+  1 _facesGrid                                                     000000 R
+    _fadein                                                        ****** GX
+    _gamestate                                                     ****** GX
+    _getRandUint8                                                  ****** GX
+    _i                                                             ****** GX
+    _init_bkg                                                      ****** GX
+  7 _inputsFace                                                    00015B R
+    _j                                                             ****** GX
+    _joypad                                                        ****** GX
+    _k                                                             ****** GX
+    _m                                                             ****** GX
+    _mgDifficulty                                                  ****** GX
+    _mgStatus                                                      ****** GX
+    _n                                                             ****** GX
+  7 _phaseFaceInit                                                 000030 R
+  7 _phaseFaceLoop                                                 00014C R
+    _playSong                                                      ****** GX
+    _prevJoypad                                                    ****** GX
+  1 _sadCount                                                      000014 R
+    _set_bkg_data                                                  ****** GX
+    _set_bkg_tiles                                                 ****** GX
+    _set_sprite_data                                               ****** GX
+    _shadow_OAM                                                    ****** GX
+    _substate                                                      ****** GX
+    _templateCursorTiles                                           ****** GX
+    _templateFace1Map                                              ****** GX
+    _templateFace2Map                                              ****** GX
+  7 _templateFaceMicrogameMain                                     000000 GR
+    _templateFaceTiles                                             ****** GX
+    _templateTwilightDriveSong                                     ****** GX
+  7 _updateCursorLocation                                          0002A4 R
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 _DATA                                      size     15   flags    0
+   2 _INITIALIZED                               size      0   flags    0
+   3 _DABS                                      size      0   flags    8
+   4 _HOME                                      size      0   flags    0
+   5 _GSINIT                                    size      0   flags    0
+   6 _GSFINAL                                   size      0   flags    0
+   7 _CODE_1                                    size    2D1   flags    0
+   8 _INITIALIZER                               size      0   flags    0
+   9 _CABS                                      size      0   flags    8
+
