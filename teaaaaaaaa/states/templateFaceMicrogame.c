@@ -117,7 +117,7 @@ curJoypad = joypad();
 animTick --;
 if (curJoypad & J_RIGHT)
 {
-if (teaaaAnimationState < 1 & teaaaPlayableSpriteX > 1)
+if (teaaaAnimationState < 1 & teaaaPlayableSpriteX < 159)
 {
 if (teaaaflipSprite == S_FLIPX)
 {
@@ -135,7 +135,7 @@ teaaaAnimationSpeed = 6;
 }
 if (curJoypad & J_LEFT)
 {
-if (teaaaAnimationState < 1 & teaaaPlayableSpriteX < 159)
+if (teaaaAnimationState < 1 & teaaaPlayableSpriteX > 12)
 {
 if (teaaaflipSprite == 0)
 {
