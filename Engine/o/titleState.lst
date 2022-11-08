@@ -1,0 +1,278 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module titleState
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _titleStateMain
+                                     12 	.globl _fadeout
+                                     13 	.globl _printLine
+                                     14 	.globl _initrand
+                                     15 	.globl _init_bkg
+                                     16 	.globl _set_bkg_tile_xy
+                                     17 	.globl _joypad
+                                     18 	.globl _phaseTitleInit
+                                     19 	.globl _phaseTitleLoop
+                                     20 ;--------------------------------------------------------
+                                     21 ; special function registers
+                                     22 ;--------------------------------------------------------
+                                     23 ;--------------------------------------------------------
+                                     24 ; ram data
+                                     25 ;--------------------------------------------------------
+                                     26 	.area _DATA
+                                     27 ;--------------------------------------------------------
+                                     28 ; ram data
+                                     29 ;--------------------------------------------------------
+                                     30 	.area _INITIALIZED
+                                     31 ;--------------------------------------------------------
+                                     32 ; absolute external ram data
+                                     33 ;--------------------------------------------------------
+                                     34 	.area _DABS (ABS)
+                                     35 ;--------------------------------------------------------
+                                     36 ; global & static initialisations
+                                     37 ;--------------------------------------------------------
+                                     38 	.area _HOME
+                                     39 	.area _GSINIT
+                                     40 	.area _GSFINAL
+                                     41 	.area _GSINIT
+                                     42 ;--------------------------------------------------------
+                                     43 ; Home
+                                     44 ;--------------------------------------------------------
+                                     45 	.area _HOME
+                                     46 	.area _HOME
+                                     47 ;--------------------------------------------------------
+                                     48 ; code
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _CODE_1
+                                     51 ;Engine/states/titleState.c:38: void titleStateMain()
+                                     52 ;	---------------------------------
+                                     53 ; Function titleStateMain
+                                     54 ; ---------------------------------
+      000000                         55 _titleStateMain::
+                                     56 ;Engine/states/titleState.c:40: curJoypad = joypad();
+      000000 CDr00r00                57 	call	_joypad
+      000003 21r00r00                58 	ld	hl, #_curJoypad
+      000006 73                      59 	ld	(hl), e
+                                     60 ;Engine/states/titleState.c:42: switch (substate)
+      000007 FAr00r00                61 	ld	a, (#_substate)
+      00000A B7                      62 	or	a, a
+      00000B 28 08                   63 	jr	Z, 00101$
+      00000D FAr00r00                64 	ld	a, (#_substate)
+      000010 3D                      65 	dec	a
+      000011 28 07                   66 	jr	Z, 00102$
+      000013 18 0A                   67 	jr	00103$
+                                     68 ;Engine/states/titleState.c:44: case SUB_INIT:
+      000015                         69 00101$:
+                                     70 ;Engine/states/titleState.c:45: phaseTitleInit();
+      000015 CDr30r00                71 	call	_phaseTitleInit
+                                     72 ;Engine/states/titleState.c:46: break;
+      000018 18 0F                   73 	jr	00104$
+                                     74 ;Engine/states/titleState.c:47: case SUB_LOOP:
+      00001A                         75 00102$:
+                                     76 ;Engine/states/titleState.c:48: phaseTitleLoop();
+      00001A CDrDEr00                77 	call	_phaseTitleLoop
+                                     78 ;Engine/states/titleState.c:49: break;
+      00001D 18 0A                   79 	jr	00104$
+                                     80 ;Engine/states/titleState.c:50: default:  // Abort to... uh, itself in the event of unexpected state
+      00001F                         81 00103$:
+                                     82 ;Engine/states/titleState.c:51: gamestate = STATE_TITLE;
+      00001F 21r00r00                83 	ld	hl, #_gamestate
+      000022 36 00                   84 	ld	(hl), #0x00
+                                     85 ;Engine/states/titleState.c:52: substate = SUB_INIT;
+      000024 21r00r00                86 	ld	hl, #_substate
+      000027 36 00                   87 	ld	(hl), #0x00
+                                     88 ;Engine/states/titleState.c:54: }
+      000029                         89 00104$:
+                                     90 ;Engine/states/titleState.c:55: prevJoypad = curJoypad;
+      000029 FAr00r00                91 	ld	a, (#_curJoypad)
+      00002C EAr00r00                92 	ld	(#_prevJoypad),a
+                                     93 ;Engine/states/titleState.c:56: }
+      00002F C9                      94 	ret
+                                     95 ;Engine/states/titleState.c:60: void phaseTitleInit()
+                                     96 ;	---------------------------------
+                                     97 ; Function phaseTitleInit
+                                     98 ; ---------------------------------
+      000030                         99 _phaseTitleInit::
+                                    100 ;Engine/states/titleState.c:63: init_bkg(0xFFU);
+      000030 3E FF                  101 	ld	a, #0xff
+      000032 F5                     102 	push	af
+      000033 33                     103 	inc	sp
+      000034 CDr00r00               104 	call	_init_bkg
+      000037 33                     105 	inc	sp
+                                    106 ;Engine/states/titleState.c:64: animTick = 0U;
+      000038 21r00r00               107 	ld	hl, #_animTick
+      00003B 36 00                  108 	ld	(hl), #0x00
+                                    109 ;C:/gbdk/include/gb/gb.h:1094: SCX_REG+=x, SCY_REG+=y;
+      00003D F0r00                  110 	ldh	a, (_SCX_REG + 0)
+      00003F C6 FC                  111 	add	a, #0xfc
+      000041 E0r00                  112 	ldh	(_SCX_REG + 0), a
+                                    113 ;Engine/states/titleState.c:68: printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
+      000043 AF                     114 	xor	a, a
+      000044 F5                     115 	push	af
+      000045 33                     116 	inc	sp
+      000046 11r99r00               117 	ld	de, #___str_0
+      000049 D5                     118 	push	de
+      00004A 21 02 03               119 	ld	hl, #0x302
+      00004D E5                     120 	push	hl
+      00004E CDr00r00               121 	call	_printLine
+      000051 E8 05                  122 	add	sp, #5
+                                    123 ;Engine/states/titleState.c:69: printLine(4U, 4U, "TOTALLY NOT", FALSE);
+      000053 AF                     124 	xor	a, a
+      000054 F5                     125 	push	af
+      000055 33                     126 	inc	sp
+      000056 11rAAr00               127 	ld	de, #___str_1
+      000059 D5                     128 	push	de
+      00005A 21 04 04               129 	ld	hl, #0x404
+      00005D E5                     130 	push	hl
+      00005E CDr00r00               131 	call	_printLine
+      000061 E8 05                  132 	add	sp, #5
+                                    133 ;Engine/states/titleState.c:70: printLine(5U, 6U, "WARIOWARE", FALSE);
+      000063 AF                     134 	xor	a, a
+      000064 F5                     135 	push	af
+      000065 33                     136 	inc	sp
+      000066 11rB6r00               137 	ld	de, #___str_2
+      000069 D5                     138 	push	de
+      00006A 21 05 06               139 	ld	hl, #0x605
+      00006D E5                     140 	push	hl
+      00006E CDr00r00               141 	call	_printLine
+      000071 E8 05                  142 	add	sp, #5
+                                    143 ;Engine/states/titleState.c:71: printLine(1U, 8U, "COMMUNITY EDITION", FALSE);
+      000073 AF                     144 	xor	a, a
+      000074 F5                     145 	push	af
+      000075 33                     146 	inc	sp
+      000076 11rC0r00               147 	ld	de, #___str_3
+      000079 D5                     148 	push	de
+      00007A 21 01 08               149 	ld	hl, #0x801
+      00007D E5                     150 	push	hl
+      00007E CDr00r00               151 	call	_printLine
+      000081 E8 05                  152 	add	sp, #5
+                                    153 ;Engine/states/titleState.c:72: printLine(4U, 13U, "PRESS START", FALSE);
+      000083 AF                     154 	xor	a, a
+      000084 F5                     155 	push	af
+      000085 33                     156 	inc	sp
+      000086 11rD2r00               157 	ld	de, #___str_4
+      000089 D5                     158 	push	de
+      00008A 21 04 0D               159 	ld	hl, #0xd04
+      00008D E5                     160 	push	hl
+      00008E CDr00r00               161 	call	_printLine
+      000091 E8 05                  162 	add	sp, #5
+                                    163 ;Engine/states/titleState.c:74: substate = SUB_LOOP;
+      000093 21r00r00               164 	ld	hl, #_substate
+      000096 36 01                  165 	ld	(hl), #0x01
+                                    166 ;Engine/states/titleState.c:76: }
+      000098 C9                     167 	ret
+      000099                        168 ___str_0:
+      000099 4C 45 47 41 4C 4C 59   169 	.ascii "LEGALLY DISTINCT"
+             20 44 49 53 54 49 4E
+             43 54
+      0000A9 00                     170 	.db 0x00
+      0000AA                        171 ___str_1:
+      0000AA 54 4F 54 41 4C 4C 59   172 	.ascii "TOTALLY NOT"
+             20 4E 4F 54
+      0000B5 00                     173 	.db 0x00
+      0000B6                        174 ___str_2:
+      0000B6 57 41 52 49 4F 57 41   175 	.ascii "WARIOWARE"
+             52 45
+      0000BF 00                     176 	.db 0x00
+      0000C0                        177 ___str_3:
+      0000C0 43 4F 4D 4D 55 4E 49   178 	.ascii "COMMUNITY EDITION"
+             54 59 20 45 44 49 54
+             49 4F 4E
+      0000D1 00                     179 	.db 0x00
+      0000D2                        180 ___str_4:
+      0000D2 50 52 45 53 53 20 53   181 	.ascii "PRESS START"
+             54 41 52 54
+      0000DD 00                     182 	.db 0x00
+                                    183 ;Engine/states/titleState.c:78: void phaseTitleLoop()
+                                    184 ;	---------------------------------
+                                    185 ; Function phaseTitleLoop
+                                    186 ; ---------------------------------
+      0000DE                        187 _phaseTitleLoop::
+                                    188 ;Engine/states/titleState.c:80: ++animTick;
+      0000DE 21r00r00               189 	ld	hl, #_animTick
+      0000E1 34                     190 	inc	(hl)
+                                    191 ;Engine/states/titleState.c:82: if ((animTick % 64U) / 48U == 0U)
+      0000E2 7E                     192 	ld	a, (hl)
+      0000E3 E6 3F                  193 	and	a, #0x3f
+      0000E5 06 00                  194 	ld	b, #0x00
+      0000E7 11 30 00               195 	ld	de, #0x0030
+      0000EA D5                     196 	push	de
+      0000EB 4F                     197 	ld	c, a
+      0000EC C5                     198 	push	bc
+      0000ED CDr00r00               199 	call	__divuint
+      0000F0 E8 04                  200 	add	sp, #4
+      0000F2 4B                     201 	ld	c, e
+      0000F3 7A                     202 	ld	a, d
+      0000F4 B1                     203 	or	a, c
+      0000F5 20 12                  204 	jr	NZ, 00103$
+                                    205 ;Engine/states/titleState.c:84: printLine(4U, 13U, "PRESS START", FALSE);
+      0000F7 AF                     206 	xor	a, a
+      0000F8 F5                     207 	push	af
+      0000F9 33                     208 	inc	sp
+      0000FA 11r4Dr01               209 	ld	de, #___str_5
+      0000FD D5                     210 	push	de
+      0000FE 21 04 0D               211 	ld	hl, #0xd04
+      000101 E5                     212 	push	hl
+      000102 CDr00r00               213 	call	_printLine
+      000105 E8 05                  214 	add	sp, #5
+      000107 18 1C                  215 	jr	00104$
+      000109                        216 00103$:
+                                    217 ;Engine/states/titleState.c:88: for (i = 4U; i != 15U; ++i)
+      000109 21r00r00               218 	ld	hl, #_i
+      00010C 36 04                  219 	ld	(hl), #0x04
+      00010E                        220 00109$:
+                                    221 ;Engine/states/titleState.c:89: set_bkg_tile_xy(i, 13U, 0xFFU);
+      00010E 21 0D FF               222 	ld	hl, #0xff0d
+      000111 E5                     223 	push	hl
+      000112 FAr00r00               224 	ld	a, (#_i)
+      000115 F5                     225 	push	af
+      000116 33                     226 	inc	sp
+      000117 CDr00r00               227 	call	_set_bkg_tile_xy
+      00011A E8 03                  228 	add	sp, #3
+                                    229 ;Engine/states/titleState.c:88: for (i = 4U; i != 15U; ++i)
+      00011C 21r00r00               230 	ld	hl, #_i
+      00011F 34                     231 	inc	(hl)
+      000120 7E                     232 	ld	a, (hl)
+      000121 D6 0F                  233 	sub	a, #0x0f
+      000123 20 E9                  234 	jr	NZ, 00109$
+      000125                        235 00104$:
+                                    236 ;Engine/states/titleState.c:92: if (curJoypad & J_START && !(prevJoypad & J_START))
+      000125 FAr00r00               237 	ld	a, (#_curJoypad)
+      000128 07                     238 	rlca
+      000129 D0                     239 	ret	NC
+      00012A FAr00r00               240 	ld	a, (#_prevJoypad)
+      00012D 07                     241 	rlca
+      00012E D8                     242 	ret	C
+                                    243 ;Engine/states/titleState.c:94: fadeout();
+      00012F CDr00r00               244 	call	_fadeout
+                                    245 ;Engine/states/titleState.c:95: initrand(DIV_REG);
+      000132 F0r00                  246 	ldh	a, (_DIV_REG + 0)
+      000134 06 00                  247 	ld	b, #0x00
+      000136 4F                     248 	ld	c, a
+      000137 C5                     249 	push	bc
+      000138 CDr00r00               250 	call	_initrand
+      00013B E1                     251 	pop	hl
+                                    252 ;C:/gbdk/include/gb/gb.h:1080: SCX_REG=x, SCY_REG=y;
+      00013C AF                     253 	xor	a, a
+      00013D E0r00                  254 	ldh	(_SCX_REG + 0), a
+      00013F AF                     255 	xor	a, a
+      000140 E0r00                  256 	ldh	(_SCY_REG + 0), a
+                                    257 ;Engine/states/titleState.c:98: gamestate = STATE_MICROGAME_MANAGER;
+      000142 21r00r00               258 	ld	hl, #_gamestate
+      000145 36 02                  259 	ld	(hl), #0x02
+                                    260 ;Engine/states/titleState.c:99: substate = SUB_INIT;
+      000147 21r00r00               261 	ld	hl, #_substate
+      00014A 36 00                  262 	ld	(hl), #0x00
+                                    263 ;Engine/states/titleState.c:101: }
+      00014C C9                     264 	ret
+      00014D                        265 ___str_5:
+      00014D 50 52 45 53 53 20 53   266 	.ascii "PRESS START"
+             54 41 52 54
+      000158 00                     267 	.db 0x00
+                                    268 	.area _CODE_1
+                                    269 	.area _INITIALIZER
+                                    270 	.area _CABS (ABS)

@@ -1,0 +1,347 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _main
+                                     12 	.globl _titleStateMain
+                                     13 	.globl _microgameManagerGameLoop
+                                     14 	.globl _microgameManagerStateMain
+                                     15 	.globl _init_bkg
+                                     16 	.globl _set_bkg_data
+                                     17 	.globl _wait_vbl_done
+                                     18 	.globl _set_interrupts
+                                     19 	.globl _animTick
+                                     20 	.globl _animFrame
+                                     21 	.globl _mgSpeed
+                                     22 	.globl _mgDifficulty
+                                     23 	.globl _gamestate
+                                     24 	.globl _mgCurrentMG
+                                     25 	.globl _mgStatus
+                                     26 	.globl _substate
+                                     27 	.globl _r
+                                     28 	.globl _n
+                                     29 	.globl _m
+                                     30 	.globl _l
+                                     31 	.globl _k
+                                     32 	.globl _j
+                                     33 	.globl _i
+                                     34 	.globl _prevJoypad
+                                     35 	.globl _curJoypad
+                                     36 	.globl _vbl_count
+                                     37 	.globl _data
+                                     38 	.globl _RAM_SIG
+                                     39 	.globl _initRAM
+                                     40 ;--------------------------------------------------------
+                                     41 ; special function registers
+                                     42 ;--------------------------------------------------------
+                                     43 ;--------------------------------------------------------
+                                     44 ; ram data
+                                     45 ;--------------------------------------------------------
+                                     46 	.area _DATA
+      000000                         47 _data::
+      000000                         48 	.ds 2
+      000002                         49 _vbl_count::
+      000002                         50 	.ds 1
+      000003                         51 _curJoypad::
+      000003                         52 	.ds 1
+      000004                         53 _prevJoypad::
+      000004                         54 	.ds 1
+      000005                         55 _i::
+      000005                         56 	.ds 1
+      000006                         57 _j::
+      000006                         58 	.ds 1
+      000007                         59 _k::
+      000007                         60 	.ds 1
+      000008                         61 _l::
+      000008                         62 	.ds 1
+      000009                         63 _m::
+      000009                         64 	.ds 1
+      00000A                         65 _n::
+      00000A                         66 	.ds 1
+      00000B                         67 _r::
+      00000B                         68 	.ds 1
+      00000C                         69 _substate::
+      00000C                         70 	.ds 1
+      00000D                         71 _mgStatus::
+      00000D                         72 	.ds 1
+      00000E                         73 _mgCurrentMG::
+      00000E                         74 	.ds 9
+                                     75 ;--------------------------------------------------------
+                                     76 ; ram data
+                                     77 ;--------------------------------------------------------
+                                     78 	.area _INITIALIZED
+      000000                         79 _gamestate::
+      000000                         80 	.ds 1
+      000001                         81 _mgDifficulty::
+      000001                         82 	.ds 1
+      000002                         83 _mgSpeed::
+      000002                         84 	.ds 1
+      000003                         85 _animFrame::
+      000003                         86 	.ds 1
+      000004                         87 _animTick::
+      000004                         88 	.ds 1
+                                     89 ;--------------------------------------------------------
+                                     90 ; absolute external ram data
+                                     91 ;--------------------------------------------------------
+                                     92 	.area _DABS (ABS)
+                                     93 ;--------------------------------------------------------
+                                     94 ; global & static initialisations
+                                     95 ;--------------------------------------------------------
+                                     96 	.area _HOME
+                                     97 	.area _GSINIT
+                                     98 	.area _GSFINAL
+                                     99 	.area _GSINIT
+                                    100 ;--------------------------------------------------------
+                                    101 ; Home
+                                    102 ;--------------------------------------------------------
+                                    103 	.area _HOME
+                                    104 	.area _HOME
+                                    105 ;--------------------------------------------------------
+                                    106 ; code
+                                    107 ;--------------------------------------------------------
+                                    108 	.area _CODE
+                                    109 ;main.c:44: void main()
+                                    110 ;	---------------------------------
+                                    111 ; Function main
+                                    112 ; ---------------------------------
+      000000                        113 _main::
+                                    114 ;main.c:46: initRAM(0U);
+      000000 AF                     115 	xor	a, a
+      000001 F5                     116 	push	af
+      000002 33                     117 	inc	sp
+      000003 CDrA2r00               118 	call	_initRAM
+      000006 33                     119 	inc	sp
+                                    120 ;main.c:49: NR52_REG = 0x80; // is 1000 0000 in binary and turns on sound
+      000007 3E 80                  121 	ld	a, #0x80
+      000009 E0r00                  122 	ldh	(_NR52_REG + 0), a
+                                    123 ;main.c:50: NR50_REG = 0x77; // sets the volume for both left and right channel just set to max 0x77
+      00000B 3E 77                  124 	ld	a, #0x77
+      00000D E0r00                  125 	ldh	(_NR50_REG + 0), a
+                                    126 ;main.c:51: NR51_REG = 0xFF; // is 1111 1111 in binary, select which chanels we want to use in this case all of them. One bit for the L one bit for the R of all four channels
+      00000F 3E FF                  127 	ld	a, #0xff
+      000011 E0r00                  128 	ldh	(_NR51_REG + 0), a
+                                    129 ;main.c:52: set_interrupts(TIM_IFLAG | VBL_IFLAG);
+      000013 3E 05                  130 	ld	a, #0x05
+      000015 F5                     131 	push	af
+      000016 33                     132 	inc	sp
+      000017 CDr00r00               133 	call	_set_interrupts
+      00001A 33                     134 	inc	sp
+                                    135 ;main.c:54: set_bkg_data(0xF0U, 8U, borderTiles);
+      00001B 11r00r00               136 	ld	de, #_borderTiles
+      00001E D5                     137 	push	de
+      00001F 21 F0 08               138 	ld	hl, #0x8f0
+      000022 E5                     139 	push	hl
+      000023 CDr00r00               140 	call	_set_bkg_data
+      000026 E8 04                  141 	add	sp, #4
+                                    142 ;main.c:55: set_bkg_data(0U, 46U, fontTiles);
+      000028 11r00r00               143 	ld	de, #_fontTiles
+      00002B D5                     144 	push	de
+      00002C 21 00 2E               145 	ld	hl, #0x2e00
+      00002F E5                     146 	push	hl
+      000030 CDr00r00               147 	call	_set_bkg_data
+      000033 E8 04                  148 	add	sp, #4
+                                    149 ;main.c:57: init_bkg(0xFFU);
+      000035 3E FF                  150 	ld	a, #0xff
+      000037 F5                     151 	push	af
+      000038 33                     152 	inc	sp
+      000039 CDr00r00               153 	call	_init_bkg
+      00003C 33                     154 	inc	sp
+                                    155 ;main.c:58: DISPLAY_ON;
+      00003D F0r00                  156 	ldh	a, (_LCDC_REG + 0)
+      00003F F6 80                  157 	or	a, #0x80
+      000041 E0r00                  158 	ldh	(_LCDC_REG + 0), a
+                                    159 ;main.c:59: SHOW_SPRITES;
+      000043 F0r00                  160 	ldh	a, (_LCDC_REG + 0)
+      000045 F6 02                  161 	or	a, #0x02
+      000047 E0r00                  162 	ldh	(_LCDC_REG + 0), a
+                                    163 ;main.c:60: SHOW_BKG;
+      000049 F0r00                  164 	ldh	a, (_LCDC_REG + 0)
+      00004B F6 01                  165 	or	a, #0x01
+      00004D E0r00                  166 	ldh	(_LCDC_REG + 0), a
+                                    167 ;main.c:61: SHOW_WIN;
+      00004F F0r00                  168 	ldh	a, (_LCDC_REG + 0)
+      000051 F6 20                  169 	or	a, #0x20
+      000053 E0r00                  170 	ldh	(_LCDC_REG + 0), a
+                                    171 ;C:/gbdk/include/gb/gb.h:1316: WX_REG=x, WY_REG=y;
+      000055 3E A0                  172 	ld	a, #0xa0
+      000057 E0r00                  173 	ldh	(_WX_REG + 0), a
+      000059 3E 90                  174 	ld	a, #0x90
+      00005B E0r00                  175 	ldh	(_WY_REG + 0), a
+                                    176 ;main.c:64: gamestate = STATE_TITLE;
+      00005D 21r00r00               177 	ld	hl, #_gamestate
+      000060 36 00                  178 	ld	(hl), #0x00
+                                    179 ;main.c:65: substate = SUB_INIT;
+      000062 21r0Cr00               180 	ld	hl, #_substate
+      000065 36 00                  181 	ld	(hl), #0x00
+                                    182 ;main.c:67: while(1U)
+      000067                        183 00107$:
+                                    184 ;main.c:69: wait_vbl_done();
+      000067 CDr00r00               185 	call	_wait_vbl_done
+                                    186 ;main.c:71: switch(gamestate)
+      00006A FAr00r00               187 	ld	a, (#_gamestate)
+      00006D B7                     188 	or	a, a
+      00006E 28 16                  189 	jr	Z, 00101$
+      000070 FAr00r00               190 	ld	a, (#_gamestate)
+      000073 3D                     191 	dec	a
+      000074 28 F1                  192 	jr	Z, 00107$
+      000076 FAr00r00               193 	ld	a, (#_gamestate)
+      000079 D6 02                  194 	sub	a, #0x02
+      00007B 28 17                  195 	jr	Z, 00103$
+      00007D FAr00r00               196 	ld	a, (#_gamestate)
+      000080 D6 03                  197 	sub	a, #0x03
+      000082 28 15                  198 	jr	Z, 00104$
+      000084 18 E1                  199 	jr	00107$
+                                    200 ;main.c:73: case STATE_TITLE:
+      000086                        201 00101$:
+                                    202 ;main.c:74: SWITCH_ROM(1U);
+      000086 3E 01                  203 	ld	a, #0x01
+      000088 E0r00                  204 	ldh	(__current_bank + 0), a
+      00008A 21 00 20               205 	ld	hl, #0x2000
+      00008D 36 01                  206 	ld	(hl), #0x01
+                                    207 ;main.c:75: titleStateMain();
+      00008F CDr00r00               208 	call	_titleStateMain
+                                    209 ;main.c:76: break;
+      000092 18 D3                  210 	jr	00107$
+                                    211 ;main.c:79: case STATE_MICROGAME_MANAGER:
+      000094                        212 00103$:
+                                    213 ;main.c:80: microgameManagerStateMain();
+      000094 CDr00r00               214 	call	_microgameManagerStateMain
+                                    215 ;main.c:81: break;
+      000097 18 CE                  216 	jr	00107$
+                                    217 ;main.c:82: case STATE_MICROGAME:
+      000099                        218 00104$:
+                                    219 ;main.c:83: microgameManagerGameLoop();
+      000099 CDr00r00               220 	call	_microgameManagerGameLoop
+                                    221 ;main.c:85: }
+                                    222 ;main.c:87: }
+      00009C 18 C9                  223 	jr	00107$
+      00009E                        224 _RAM_SIG:
+      00009E 47                     225 	.db #0x47	; 71	'G'
+      00009F 42                     226 	.db #0x42	; 66	'B'
+      0000A0 4D                     227 	.db #0x4d	; 77	'M'
+      0000A1 47                     228 	.db #0x47	; 71	'G'
+                                    229 ;main.c:90: void initRAM(UBYTE force_clear)
+                                    230 ;	---------------------------------
+                                    231 ; Function initRAM
+                                    232 ; ---------------------------------
+      0000A2                        233 _initRAM::
+                                    234 ;main.c:94: ENABLE_RAM_MBC1;
+      0000A2 21 00 00               235 	ld	hl, #0x0000
+      0000A5 36 0A                  236 	ld	(hl), #0x0a
+                                    237 ;main.c:95: SWITCH_RAM_MBC1(0U);
+      0000A7 26 40                  238 	ld	h, #0x40
+      0000A9 36 00                  239 	ld	(hl), #0x00
+                                    240 ;main.c:98: initialized = 1U;
+      0000AB 0E 01                  241 	ld	c, #0x01
+                                    242 ;main.c:99: for (i = 0U; i != 4U; ++i)
+      0000AD 21r05r00               243 	ld	hl, #_i
+      0000B0 36 00                  244 	ld	(hl), #0x00
+      0000B2                        245 00109$:
+                                    246 ;main.c:101: if (ram_data[RAM_SIG_ADDR + i] != RAM_SIG[i])
+      0000B2 21r05r00               247 	ld	hl, #_i
+      0000B5 5E                     248 	ld	e, (hl)
+      0000B6 16 00                  249 	ld	d, #0x00
+      0000B8 21r00r00               250 	ld	hl, #_ram_data
+      0000BB 19                     251 	add	hl, de
+      0000BC 46                     252 	ld	b, (hl)
+      0000BD 3Er9E                  253 	ld	a, #<(_RAM_SIG)
+      0000BF 21r05r00               254 	ld	hl, #_i
+      0000C2 86                     255 	add	a, (hl)
+      0000C3 5F                     256 	ld	e, a
+      0000C4 3Es00                  257 	ld	a, #>(_RAM_SIG)
+      0000C6 CE 00                  258 	adc	a, #0x00
+      0000C8 57                     259 	ld	d, a
+      0000C9 1A                     260 	ld	a, (de)
+      0000CA 90                     261 	sub	a, b
+      0000CB 28 04                  262 	jr	Z, 00110$
+                                    263 ;main.c:103: initialized = 0U;
+      0000CD 0E 00                  264 	ld	c, #0x00
+                                    265 ;main.c:104: break;
+      0000CF 18 09                  266 	jr	00103$
+      0000D1                        267 00110$:
+                                    268 ;main.c:99: for (i = 0U; i != 4U; ++i)
+      0000D1 21r05r00               269 	ld	hl, #_i
+      0000D4 34                     270 	inc	(hl)
+      0000D5 7E                     271 	ld	a, (hl)
+      0000D6 D6 04                  272 	sub	a, #0x04
+      0000D8 20 D8                  273 	jr	NZ, 00109$
+      0000DA                        274 00103$:
+                                    275 ;main.c:109: if (initialized == 0U || force_clear)
+      0000DA 79                     276 	ld	a, c
+      0000DB B7                     277 	or	a, a
+      0000DC 28 06                  278 	jr	Z, 00106$
+      0000DE F8 02                  279 	ldhl	sp,	#2
+      0000E0 7E                     280 	ld	a, (hl)
+      0000E1 B7                     281 	or	a, a
+      0000E2 28 3D                  282 	jr	Z, 00107$
+      0000E4                        283 00106$:
+                                    284 ;main.c:111: for(i = 0U; i != 255U; ++i) {
+      0000E4 21r05r00               285 	ld	hl, #_i
+      0000E7 36 00                  286 	ld	(hl), #0x00
+      0000E9                        287 00111$:
+                                    288 ;main.c:112: ram_data[i] = 0U;
+      0000E9 3Er00                  289 	ld	a, #<(_ram_data)
+      0000EB 21r05r00               290 	ld	hl, #_i
+      0000EE 86                     291 	add	a, (hl)
+      0000EF 4F                     292 	ld	c, a
+      0000F0 3Es00                  293 	ld	a, #>(_ram_data)
+      0000F2 CE 00                  294 	adc	a, #0x00
+      0000F4 47                     295 	ld	b, a
+      0000F5 AF                     296 	xor	a, a
+      0000F6 02                     297 	ld	(bc), a
+                                    298 ;main.c:111: for(i = 0U; i != 255U; ++i) {
+      0000F7 34                     299 	inc	(hl)
+      0000F8 7E                     300 	ld	a, (hl)
+      0000F9 3C                     301 	inc	a
+      0000FA 20 ED                  302 	jr	NZ, 00111$
+                                    303 ;main.c:115: for (i = 0U; i != 7U; ++i) {
+      0000FC 21r05r00               304 	ld	hl, #_i
+      0000FF 36 00                  305 	ld	(hl), #0x00
+      000101                        306 00113$:
+                                    307 ;main.c:116: ram_data[RAM_SIG_ADDR + i] = RAM_SIG[i];
+      000101 21r05r00               308 	ld	hl, #_i
+      000104 4E                     309 	ld	c, (hl)
+      000105 06 00                  310 	ld	b, #0x00
+      000107 21r00r00               311 	ld	hl, #_ram_data
+      00010A 09                     312 	add	hl, bc
+      00010B 4D                     313 	ld	c, l
+      00010C 44                     314 	ld	b, h
+      00010D 3Er9E                  315 	ld	a, #<(_RAM_SIG)
+      00010F 21r05r00               316 	ld	hl, #_i
+      000112 86                     317 	add	a, (hl)
+      000113 5F                     318 	ld	e, a
+      000114 3Es00                  319 	ld	a, #>(_RAM_SIG)
+      000116 CE 00                  320 	adc	a, #0x00
+      000118 57                     321 	ld	d, a
+      000119 1A                     322 	ld	a, (de)
+      00011A 02                     323 	ld	(bc), a
+                                    324 ;main.c:115: for (i = 0U; i != 7U; ++i) {
+      00011B 34                     325 	inc	(hl)
+      00011C 7E                     326 	ld	a, (hl)
+      00011D D6 07                  327 	sub	a, #0x07
+      00011F 20 E0                  328 	jr	NZ, 00113$
+      000121                        329 00107$:
+                                    330 ;main.c:120: DISABLE_RAM_MBC1;
+      000121 21 00 00               331 	ld	hl, #0x0000
+      000124 36 00                  332 	ld	(hl), #0x00
+                                    333 ;main.c:121: }
+      000126 C9                     334 	ret
+                                    335 	.area _CODE
+                                    336 	.area _INITIALIZER
+      000000                        337 __xinit__gamestate:
+      000000 00                     338 	.db #0x00	; 0
+      000001                        339 __xinit__mgDifficulty:
+      000001 00                     340 	.db #0x00	; 0
+      000002                        341 __xinit__mgSpeed:
+      000002 00                     342 	.db #0x00	; 0
+      000003                        343 __xinit__animFrame:
+      000003 00                     344 	.db #0x00	; 0
+      000004                        345 __xinit__animTick:
+      000004 00                     346 	.db #0x00	; 0
+                                    347 	.area _CABS (ABS)

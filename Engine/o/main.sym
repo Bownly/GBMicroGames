@@ -1,0 +1,69 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+    _LCDC_REG                                                      ****** GX
+    _NR50_REG                                                      ****** GX
+    _NR51_REG                                                      ****** GX
+    _NR52_REG                                                      ****** GX
+  0 _RAM_SIG                                                       00009E GR
+    _WX_REG                                                        ****** GX
+    _WY_REG                                                        ****** GX
+    __current_bank                                                 ****** GX
+  7 __xinit__animFrame                                             000003 R
+  7 __xinit__animTick                                              000004 R
+  7 __xinit__gamestate                                             000000 R
+  7 __xinit__mgDifficulty                                          000001 R
+  7 __xinit__mgSpeed                                               000002 R
+  2 _animFrame                                                     000003 GR
+  2 _animTick                                                      000004 GR
+    _borderTiles                                                   ****** GX
+  1 _curJoypad                                                     000003 GR
+  1 _data                                                          000000 GR
+    _fontTiles                                                     ****** GX
+  2 _gamestate                                                     000000 GR
+  1 _i                                                             000005 GR
+  0 _initRAM                                                       0000A2 GR
+    _init_bkg                                                      ****** GX
+  1 _j                                                             000006 GR
+  1 _k                                                             000007 GR
+  1 _l                                                             000008 GR
+  1 _m                                                             000009 GR
+  0 _main                                                          000000 GR
+  1 _mgCurrentMG                                                   00000E GR
+  2 _mgDifficulty                                                  000001 GR
+  2 _mgSpeed                                                       000002 GR
+  1 _mgStatus                                                      00000D GR
+    _microgameManagerGameLoop                                      ****** GX
+    _microgameManagerStateMain                                     ****** GX
+  1 _n                                                             00000A GR
+  1 _prevJoypad                                                    000004 GR
+  1 _r                                                             00000B GR
+    _ram_data                                                      ****** GX
+    _set_bkg_data                                                  ****** GX
+    _set_interrupts                                                ****** GX
+  1 _substate                                                      00000C GR
+    _titleStateMain                                                ****** GX
+  1 _vbl_count                                                     000002 GR
+    _wait_vbl_done                                                 ****** GX
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size    127   flags    0
+   1 _DATA                                      size     17   flags    0
+   2 _INITIALIZED                               size      5   flags    0
+   3 _DABS                                      size      0   flags    8
+   4 _HOME                                      size      0   flags    0
+   5 _GSINIT                                    size      0   flags    0
+   6 _GSFINAL                                   size      0   flags    0
+   7 _INITIALIZER                               size      5   flags    0
+   8 _CABS                                      size      0   flags    8
+

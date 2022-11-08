@@ -1,0 +1,997 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module microgameManagerState
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _microgameManagerGameLoop
+                                     12 	.globl _microgameManagerStateMain
+                                     13 	.globl _templateFaceMicrogameMain
+                                     14 	.globl _stopSong
+                                     15 	.globl _playSong
+                                     16 	.globl _fadeout
+                                     17 	.globl _fadein
+                                     18 	.globl _printLine
+                                     19 	.globl _drawPopupWindow
+                                     20 	.globl _getRandUint8
+                                     21 	.globl _init_bkg
+                                     22 	.globl _set_win_tile_xy
+                                     23 	.globl _set_bkg_tile_xy
+                                     24 	.globl _set_bkg_data
+                                     25 	.globl _joypad
+                                     26 	.globl _lobbyDurationInstructions
+                                     27 	.globl _lobbyDurationStats
+                                     28 	.globl _transitionTimer
+                                     29 	.globl _mgTimerTickSpeed
+                                     30 	.globl _mgTimeRemaining
+                                     31 	.globl _currentScore
+                                     32 	.globl _currentLives
+                                     33 	.globl _phaseInitMicrogameManager
+                                     34 	.globl _phaseMicrogameManagerInitLobby
+                                     35 	.globl _phaseMicrogameManagerLobbyLoop
+                                     36 	.globl _callMicrogameFunction
+                                     37 	.globl _loadNewMG
+                                     38 	.globl _startMG
+                                     39 	.globl _drawTimer
+                                     40 	.globl _updateTimer
+                                     41 ;--------------------------------------------------------
+                                     42 ; special function registers
+                                     43 ;--------------------------------------------------------
+                                     44 ;--------------------------------------------------------
+                                     45 ; ram data
+                                     46 ;--------------------------------------------------------
+                                     47 	.area _DATA
+      000000                         48 _currentLives::
+      000000                         49 	.ds 1
+      000001                         50 _currentScore::
+      000001                         51 	.ds 1
+      000002                         52 _mgTimeRemaining::
+      000002                         53 	.ds 2
+      000004                         54 _mgTimerTickSpeed::
+      000004                         55 	.ds 1
+      000005                         56 _transitionTimer::
+      000005                         57 	.ds 1
+                                     58 ;--------------------------------------------------------
+                                     59 ; ram data
+                                     60 ;--------------------------------------------------------
+                                     61 	.area _INITIALIZED
+      000000                         62 _lobbyDurationStats::
+      000000                         63 	.ds 1
+      000001                         64 _lobbyDurationInstructions::
+      000001                         65 	.ds 1
+                                     66 ;--------------------------------------------------------
+                                     67 ; absolute external ram data
+                                     68 ;--------------------------------------------------------
+                                     69 	.area _DABS (ABS)
+                                     70 ;--------------------------------------------------------
+                                     71 ; global & static initialisations
+                                     72 ;--------------------------------------------------------
+                                     73 	.area _HOME
+                                     74 	.area _GSINIT
+                                     75 	.area _GSFINAL
+                                     76 	.area _GSINIT
+                                     77 ;--------------------------------------------------------
+                                     78 ; Home
+                                     79 ;--------------------------------------------------------
+                                     80 	.area _HOME
+                                     81 	.area _HOME
+                                     82 ;--------------------------------------------------------
+                                     83 ; code
+                                     84 ;--------------------------------------------------------
+                                     85 	.area _CODE_0
+                                     86 ;Engine/states/microgameManagerState.c:71: void microgameManagerStateMain()
+                                     87 ;	---------------------------------
+                                     88 ; Function microgameManagerStateMain
+                                     89 ; ---------------------------------
+      000000                         90 _microgameManagerStateMain::
+                                     91 ;Engine/states/microgameManagerState.c:73: curJoypad = joypad();
+      000000 CDr00r00                92 	call	_joypad
+      000003 21r00r00                93 	ld	hl, #_curJoypad
+      000006 73                      94 	ld	(hl), e
+                                     95 ;Engine/states/microgameManagerState.c:75: switch (substate)
+      000007 FAr00r00                96 	ld	a, (#_substate)
+      00000A B7                      97 	or	a, a
+      00000B 28 0F                   98 	jr	Z, 00101$
+      00000D FAr00r00                99 	ld	a, (#_substate)
+      000010 3D                     100 	dec	a
+      000011 28 11                  101 	jr	Z, 00103$
+      000013 FAr00r00               102 	ld	a, (#_substate)
+      000016 D6 02                  103 	sub	a, #0x02
+      000018 28 07                  104 	jr	Z, 00102$
+      00001A 18 0D                  105 	jr	00104$
+                                    106 ;Engine/states/microgameManagerState.c:77: case SUB_INIT:
+      00001C                        107 00101$:
+                                    108 ;Engine/states/microgameManagerState.c:78: phaseInitMicrogameManager();
+      00001C CDrC6r00               109 	call	_phaseInitMicrogameManager
+                                    110 ;Engine/states/microgameManagerState.c:79: break;
+      00001F 18 12                  111 	jr	00105$
+                                    112 ;Engine/states/microgameManagerState.c:80: case MGM_INIT_LOBBY:
+      000021                        113 00102$:
+                                    114 ;Engine/states/microgameManagerState.c:81: phaseMicrogameManagerInitLobby();
+      000021 CDrE8r00               115 	call	_phaseMicrogameManagerInitLobby
+                                    116 ;Engine/states/microgameManagerState.c:82: case SUB_LOOP:
+      000024                        117 00103$:
+                                    118 ;Engine/states/microgameManagerState.c:83: phaseMicrogameManagerLobbyLoop();
+      000024 CDr49r02               119 	call	_phaseMicrogameManagerLobbyLoop
+                                    120 ;Engine/states/microgameManagerState.c:84: break;
+      000027 18 0A                  121 	jr	00105$
+                                    122 ;Engine/states/microgameManagerState.c:85: default:  // Abort to title in the event of unexpected state
+      000029                        123 00104$:
+                                    124 ;Engine/states/microgameManagerState.c:86: gamestate = STATE_TITLE;
+      000029 21r00r00               125 	ld	hl, #_gamestate
+      00002C 36 00                  126 	ld	(hl), #0x00
+                                    127 ;Engine/states/microgameManagerState.c:87: substate = SUB_INIT;
+      00002E 21r00r00               128 	ld	hl, #_substate
+      000031 36 00                  129 	ld	(hl), #0x00
+                                    130 ;Engine/states/microgameManagerState.c:89: }
+      000033                        131 00105$:
+                                    132 ;Engine/states/microgameManagerState.c:90: prevJoypad = curJoypad;
+      000033 FAr00r00               133 	ld	a, (#_curJoypad)
+      000036 EAr00r00               134 	ld	(#_prevJoypad),a
+                                    135 ;Engine/states/microgameManagerState.c:91: }
+      000039 C9                     136 	ret
+                                    137 ;Engine/states/microgameManagerState.c:93: void microgameManagerGameLoop()
+                                    138 ;	---------------------------------
+                                    139 ; Function microgameManagerGameLoop
+                                    140 ; ---------------------------------
+      00003A                        141 _microgameManagerGameLoop::
+                                    142 ;Engine/states/microgameManagerState.c:95: updateTimer();
+      00003A CDr98r04               143 	call	_updateTimer
+                                    144 ;Engine/states/microgameManagerState.c:96: if (mgTimeRemaining <= mgTimerTickSpeed)
+      00003D 21r04r00               145 	ld	hl, #_mgTimerTickSpeed
+      000040 4E                     146 	ld	c, (hl)
+      000041 06 00                  147 	ld	b, #0x00
+      000043 21r02r00               148 	ld	hl, #_mgTimeRemaining
+      000046 79                     149 	ld	a, c
+      000047 96                     150 	sub	a, (hl)
+      000048 23                     151 	inc	hl
+      000049 78                     152 	ld	a, b
+      00004A 9E                     153 	sbc	a, (hl)
+      00004B DAr90r03               154 	jp	C,_callMicrogameFunction
+                                    155 ;Engine/states/microgameManagerState.c:98: if (mgStatus != WON)
+      00004E FAr00r00               156 	ld	a, (#_mgStatus)
+      000051 D6 02                  157 	sub	a, #0x02
+      000053 28 05                  158 	jr	Z, 00102$
+                                    159 ;Engine/states/microgameManagerState.c:99: mgStatus = LOST;
+      000055 21r00r00               160 	ld	hl, #_mgStatus
+      000058 36 03                  161 	ld	(hl), #0x03
+      00005A                        162 00102$:
+                                    163 ;Engine/states/microgameManagerState.c:101: if (mgStatus == LOST)
+      00005A FAr00r00               164 	ld	a, (#_mgStatus)
+      00005D D6 03                  165 	sub	a, #0x03
+      00005F 20 04                  166 	jr	NZ, 00104$
+                                    167 ;Engine/states/microgameManagerState.c:103: --currentLives;
+      000061 21r00r00               168 	ld	hl, #_currentLives
+      000064 35                     169 	dec	(hl)
+      000065                        170 00104$:
+                                    171 ;Engine/states/microgameManagerState.c:106: if (currentLives == 0U)
+      000065 FAr00r00               172 	ld	a, (#_currentLives)
+      000068 B7                     173 	or	a, a
+      000069 20 0B                  174 	jr	NZ, 00106$
+                                    175 ;Engine/states/microgameManagerState.c:108: gamestate = STATE_TITLE;
+      00006B 21r00r00               176 	ld	hl, #_gamestate
+      00006E 36 00                  177 	ld	(hl), #0x00
+                                    178 ;Engine/states/microgameManagerState.c:109: substate = SUB_INIT;
+      000070 21r00r00               179 	ld	hl, #_substate
+      000073 36 00                  180 	ld	(hl), #0x00
+      000075 C9                     181 	ret
+      000076                        182 00106$:
+                                    183 ;Engine/states/microgameManagerState.c:113: ++currentScore;
+      000076 21r01r00               184 	ld	hl, #_currentScore
+      000079 34                     185 	inc	(hl)
+                                    186 ;Engine/states/microgameManagerState.c:114: gamestate = STATE_MICROGAME_MANAGER;
+      00007A 21r00r00               187 	ld	hl, #_gamestate
+      00007D 36 02                  188 	ld	(hl), #0x02
+                                    189 ;Engine/states/microgameManagerState.c:115: substate = MGM_INIT_LOBBY;
+      00007F 21r00r00               190 	ld	hl, #_substate
+      000082 36 02                  191 	ld	(hl), #0x02
+                                    192 ;Engine/states/microgameManagerState.c:116: fadeout();
+      000084 CDr00r00               193 	call	_fadeout
+                                    194 ;Engine/states/microgameManagerState.c:119: mgDifficulty = currentScore % 3U;
+      000087 21r01r00               195 	ld	hl, #_currentScore
+      00008A 4E                     196 	ld	c, (hl)
+      00008B 06 00                  197 	ld	b, #0x00
+      00008D C5                     198 	push	bc
+      00008E 11 03 00               199 	ld	de, #0x0003
+      000091 D5                     200 	push	de
+      000092 C5                     201 	push	bc
+      000093 CDr00r00               202 	call	__moduint
+      000096 E8 04                  203 	add	sp, #4
+      000098 C1                     204 	pop	bc
+      000099 21r00r00               205 	ld	hl, #_mgDifficulty
+      00009C 73                     206 	ld	(hl), e
+                                    207 ;Engine/states/microgameManagerState.c:121: mgSpeed = (currentScore / 3U) % 3U;
+      00009D 11 03 00               208 	ld	de, #0x0003
+      0000A0 D5                     209 	push	de
+      0000A1 C5                     210 	push	bc
+      0000A2 CDr00r00               211 	call	__divuint
+      0000A5 E8 04                  212 	add	sp, #4
+      0000A7 01 03 00               213 	ld	bc, #0x0003
+      0000AA C5                     214 	push	bc
+      0000AB D5                     215 	push	de
+      0000AC CDr00r00               216 	call	__moduint
+      0000AF E8 04                  217 	add	sp, #4
+      0000B1 21r00r00               218 	ld	hl, #_mgSpeed
+      0000B4 73                     219 	ld	(hl), e
+                                    220 ;Engine/states/microgameManagerState.c:123: loadNewMG(getRandUint8(5U));
+      0000B5 3E 05                  221 	ld	a, #0x05
+      0000B7 F5                     222 	push	af
+      0000B8 33                     223 	inc	sp
+      0000B9 CDr00r00               224 	call	_getRandUint8
+      0000BC 33                     225 	inc	sp
+      0000BD 7B                     226 	ld	a, e
+      0000BE F5                     227 	push	af
+      0000BF 33                     228 	inc	sp
+      0000C0 CDrC5r03               229 	call	_loadNewMG
+      0000C3 33                     230 	inc	sp
+                                    231 ;Engine/states/microgameManagerState.c:129: callMicrogameFunction();
+      0000C4 C9                     232 	ret
+                                    233 ;Engine/states/microgameManagerState.c:130: }
+      0000C5 C9                     234 	ret
+                                    235 ;Engine/states/microgameManagerState.c:134: void phaseInitMicrogameManager()
+                                    236 ;	---------------------------------
+                                    237 ; Function phaseInitMicrogameManager
+                                    238 ; ---------------------------------
+      0000C6                        239 _phaseInitMicrogameManager::
+                                    240 ;Engine/states/microgameManagerState.c:137: currentLives = 4U;
+      0000C6 21r00r00               241 	ld	hl, #_currentLives
+      0000C9 36 04                  242 	ld	(hl), #0x04
+                                    243 ;Engine/states/microgameManagerState.c:138: currentScore = 0U;
+      0000CB 21r01r00               244 	ld	hl, #_currentScore
+      0000CE 36 00                  245 	ld	(hl), #0x00
+                                    246 ;Engine/states/microgameManagerState.c:139: mgDifficulty = 0U;
+      0000D0 21r00r00               247 	ld	hl, #_mgDifficulty
+      0000D3 36 00                  248 	ld	(hl), #0x00
+                                    249 ;Engine/states/microgameManagerState.c:140: mgSpeed = 0U;
+      0000D5 21r00r00               250 	ld	hl, #_mgSpeed
+      0000D8 36 00                  251 	ld	(hl), #0x00
+                                    252 ;Engine/states/microgameManagerState.c:142: loadNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
+      0000DA 3E 01                  253 	ld	a, #0x01
+      0000DC F5                     254 	push	af
+      0000DD 33                     255 	inc	sp
+      0000DE CDrC5r03               256 	call	_loadNewMG
+      0000E1 33                     257 	inc	sp
+                                    258 ;Engine/states/microgameManagerState.c:144: substate = MGM_INIT_LOBBY;
+      0000E2 21r00r00               259 	ld	hl, #_substate
+      0000E5 36 02                  260 	ld	(hl), #0x02
+                                    261 ;Engine/states/microgameManagerState.c:145: }
+      0000E7 C9                     262 	ret
+                                    263 ;Engine/states/microgameManagerState.c:147: void phaseMicrogameManagerInitLobby()
+                                    264 ;	---------------------------------
+                                    265 ; Function phaseMicrogameManagerInitLobby
+                                    266 ; ---------------------------------
+      0000E8                        267 _phaseMicrogameManagerInitLobby::
+                                    268 ;Engine/states/microgameManagerState.c:149: init_bkg(0xFFU);
+      0000E8 3E FF                  269 	ld	a, #0xff
+      0000EA F5                     270 	push	af
+      0000EB 33                     271 	inc	sp
+      0000EC CDr00r00               272 	call	_init_bkg
+      0000EF 33                     273 	inc	sp
+                                    274 ;Engine/states/microgameManagerState.c:152: stopSong();
+      0000F0 CDr00r00               275 	call	_stopSong
+                                    276 ;Engine/states/microgameManagerState.c:153: SWITCH_ROM(1U);
+      0000F3 3E 01                  277 	ld	a, #0x01
+      0000F5 E0r00                  278 	ldh	(__current_bank + 0), a
+      0000F7 21 00 20               279 	ld	hl, #0x2000
+      0000FA 36 01                  280 	ld	(hl), #0x01
+                                    281 ;Engine/states/microgameManagerState.c:154: switch (mgStatus)
+      0000FC FAr00r00               282 	ld	a, (#_mgStatus)
+      0000FF D6 02                  283 	sub	a, #0x02
+      000101 28 09                  284 	jr	Z, 00102$
+      000103 FAr00r00               285 	ld	a, (#_mgStatus)
+      000106 D6 03                  286 	sub	a, #0x03
+      000108 28 20                  287 	jr	Z, 00103$
+                                    288 ;Engine/states/microgameManagerState.c:157: break;
+      00010A 18 3A                  289 	jr	00104$
+                                    290 ;Engine/states/microgameManagerState.c:158: case WON:
+      00010C                        291 00102$:
+                                    292 ;Engine/states/microgameManagerState.c:159: printLine(6U, 4U, "NICE ONE!", FALSE);
+      00010C AF                     293 	xor	a, a
+      00010D F5                     294 	push	af
+      00010E 33                     295 	inc	sp
+      00010F 11r16r02               296 	ld	de, #___str_0
+      000112 D5                     297 	push	de
+      000113 3E 04                  298 	ld	a, #0x04
+      000115 F5                     299 	push	af
+      000116 33                     300 	inc	sp
+      000117 3E 06                  301 	ld	a, #0x06
+      000119 F5                     302 	push	af
+      00011A 33                     303 	inc	sp
+      00011B CDr00r00               304 	call	_printLine
+      00011E E8 05                  305 	add	sp, #5
+                                    306 ;Engine/states/microgameManagerState.c:160: playSong(&wonJingle);
+      000120 11r00r00               307 	ld	de, #_wonJingle
+      000123 D5                     308 	push	de
+      000124 CDr00r00               309 	call	_playSong
+      000127 E1                     310 	pop	hl
+                                    311 ;Engine/states/microgameManagerState.c:161: break;
+      000128 18 1C                  312 	jr	00104$
+                                    313 ;Engine/states/microgameManagerState.c:162: case LOST:
+      00012A                        314 00103$:
+                                    315 ;Engine/states/microgameManagerState.c:163: printLine(6U, 4U, "BUMMER!", FALSE);
+      00012A AF                     316 	xor	a, a
+      00012B F5                     317 	push	af
+      00012C 33                     318 	inc	sp
+      00012D 11r20r02               319 	ld	de, #___str_1
+      000130 D5                     320 	push	de
+      000131 3E 04                  321 	ld	a, #0x04
+      000133 F5                     322 	push	af
+      000134 33                     323 	inc	sp
+      000135 3E 06                  324 	ld	a, #0x06
+      000137 F5                     325 	push	af
+      000138 33                     326 	inc	sp
+      000139 CDr00r00               327 	call	_printLine
+      00013C E8 05                  328 	add	sp, #5
+                                    329 ;Engine/states/microgameManagerState.c:164: playSong(&lostJingle);
+      00013E 11r00r00               330 	ld	de, #_lostJingle
+      000141 D5                     331 	push	de
+      000142 CDr00r00               332 	call	_playSong
+      000145 E1                     333 	pop	hl
+                                    334 ;Engine/states/microgameManagerState.c:166: }
+      000146                        335 00104$:
+                                    336 ;Engine/states/microgameManagerState.c:169: animTick = 0U;
+      000146 21r00r00               337 	ld	hl, #_animTick
+      000149 36 00                  338 	ld	(hl), #0x00
+                                    339 ;Engine/states/microgameManagerState.c:170: mgStatus = PLAYING;
+      00014B 21r00r00               340 	ld	hl, #_mgStatus
+      00014E 36 01                  341 	ld	(hl), #0x01
+                                    342 ;Engine/states/microgameManagerState.c:171: mgTimeRemaining = 2560U;  // 2560 = 160px * 16
+      000150 21r02r00               343 	ld	hl, #_mgTimeRemaining
+      000153 36 00                  344 	ld	(hl), #0x00
+      000155 23                     345 	inc	hl
+      000156 36 0A                  346 	ld	(hl), #0x0a
+                                    347 ;Engine/states/microgameManagerState.c:172: mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
+      000158 FAr02r00               348 	ld	a, (#(_mgCurrentMG + 2) + 0)
+      00015B 06 00                  349 	ld	b, #0x00
+      00015D 4F                     350 	ld	c, a
+      00015E C5                     351 	push	bc
+      00015F 11 00 0A               352 	ld	de, #0x0a00
+      000162 D5                     353 	push	de
+      000163 CDr00r00               354 	call	__divuint
+      000166 E8 04                  355 	add	sp, #4
+      000168 4B                     356 	ld	c, e
+      000169 42                     357 	ld	b, d
+      00016A 21r00r00               358 	ld	hl, #_mgSpeed
+      00016D 6E                     359 	ld	l, (hl)
+                                    360 ;	spillPairReg hl
+                                    361 ;	spillPairReg hl
+      00016E 26 00                  362 	ld	h, #0x00
+                                    363 ;	spillPairReg hl
+                                    364 ;	spillPairReg hl
+      000170 5D                     365 	ld	e, l
+      000171 54                     366 	ld	d, h
+      000172 29                     367 	add	hl, hl
+      000173 29                     368 	add	hl, hl
+      000174 29                     369 	add	hl, hl
+      000175 19                     370 	add	hl, de
+      000176 3E 3C                  371 	ld	a, #0x3c
+      000178 95                     372 	sub	a, l
+      000179 5F                     373 	ld	e, a
+      00017A 9F                     374 	sbc	a, a
+      00017B 94                     375 	sub	a, h
+      00017C 57                     376 	ld	d, a
+      00017D D5                     377 	push	de
+      00017E C5                     378 	push	bc
+      00017F CDr00r00               379 	call	__divuint
+      000182 E8 04                  380 	add	sp, #4
+      000184 21r04r00               381 	ld	hl, #_mgTimerTickSpeed
+      000187 73                     382 	ld	(hl), e
+                                    383 ;Engine/states/microgameManagerState.c:174: lobbyDurationStats = 100U - mgSpeed * 9U;
+      000188 FAr00r00               384 	ld	a, (#_mgSpeed)
+      00018B 4F                     385 	ld	c, a
+      00018C 87                     386 	add	a, a
+      00018D 87                     387 	add	a, a
+      00018E 87                     388 	add	a, a
+      00018F 81                     389 	add	a, c
+      000190 4F                     390 	ld	c, a
+      000191 3E 64                  391 	ld	a, #0x64
+      000193 91                     392 	sub	a, c
+      000194 EAr00r00               393 	ld	(#_lobbyDurationStats),a
+                                    394 ;Engine/states/microgameManagerState.c:175: lobbyDurationInstructions = 95U - mgSpeed * 9U;
+      000197 3E 5F                  395 	ld	a, #0x5f
+      000199 91                     396 	sub	a, c
+      00019A EAr01r00               397 	ld	(#_lobbyDurationInstructions),a
+                                    398 ;Engine/states/microgameManagerState.c:177: HIDE_WIN;
+      00019D F0r00                  399 	ldh	a, (_LCDC_REG + 0)
+      00019F E6 DF                  400 	and	a, #0xdf
+      0001A1 E0r00                  401 	ldh	(_LCDC_REG + 0), a
+                                    402 ;Engine/states/microgameManagerState.c:180: set_bkg_data(0U, 46U, fontTiles);
+      0001A3 11r00r00               403 	ld	de, #_fontTiles
+      0001A6 D5                     404 	push	de
+      0001A7 21 00 2E               405 	ld	hl, #0x2e00
+      0001AA E5                     406 	push	hl
+      0001AB CDr00r00               407 	call	_set_bkg_data
+      0001AE E8 04                  408 	add	sp, #4
+                                    409 ;Engine/states/microgameManagerState.c:181: set_bkg_data(0xF0U, 8U, borderTiles);
+      0001B0 11r00r00               410 	ld	de, #_borderTiles
+      0001B3 D5                     411 	push	de
+      0001B4 21 F0 08               412 	ld	hl, #0x8f0
+      0001B7 E5                     413 	push	hl
+      0001B8 CDr00r00               414 	call	_set_bkg_data
+      0001BB E8 04                  415 	add	sp, #4
+                                    416 ;Engine/states/microgameManagerState.c:182: set_bkg_data(0xFCU, 3U, timerTiles);
+      0001BD 11r00r00               417 	ld	de, #_timerTiles
+      0001C0 D5                     418 	push	de
+      0001C1 21 FC 03               419 	ld	hl, #0x3fc
+      0001C4 E5                     420 	push	hl
+      0001C5 CDr00r00               421 	call	_set_bkg_data
+      0001C8 E8 04                  422 	add	sp, #4
+                                    423 ;Engine/states/microgameManagerState.c:185: substate = SUB_LOOP;
+      0001CA 21r00r00               424 	ld	hl, #_substate
+      0001CD 36 01                  425 	ld	(hl), #0x01
+                                    426 ;Engine/states/microgameManagerState.c:188: printLine(6U, 7U, "SCORE:", FALSE);
+      0001CF AF                     427 	xor	a, a
+      0001D0 F5                     428 	push	af
+      0001D1 33                     429 	inc	sp
+      0001D2 11r28r02               430 	ld	de, #___str_2
+      0001D5 D5                     431 	push	de
+      0001D6 21 06 07               432 	ld	hl, #0x706
+      0001D9 E5                     433 	push	hl
+      0001DA CDr00r00               434 	call	_printLine
+      0001DD E8 05                  435 	add	sp, #5
+                                    436 ;Engine/states/microgameManagerState.c:189: printLine(6U, 8U, "LIVES:", FALSE);
+      0001DF AF                     437 	xor	a, a
+      0001E0 F5                     438 	push	af
+      0001E1 33                     439 	inc	sp
+      0001E2 11r2Fr02               440 	ld	de, #___str_3
+      0001E5 D5                     441 	push	de
+      0001E6 21 06 08               442 	ld	hl, #0x806
+      0001E9 E5                     443 	push	hl
+      0001EA CDr00r00               444 	call	_printLine
+      0001ED E8 05                  445 	add	sp, #5
+                                    446 ;Engine/states/microgameManagerState.c:190: printLine(6U, 9U, "SPEED:", FALSE);
+      0001EF AF                     447 	xor	a, a
+      0001F0 F5                     448 	push	af
+      0001F1 33                     449 	inc	sp
+      0001F2 11r36r02               450 	ld	de, #___str_4
+      0001F5 D5                     451 	push	de
+      0001F6 21 06 09               452 	ld	hl, #0x906
+      0001F9 E5                     453 	push	hl
+      0001FA CDr00r00               454 	call	_printLine
+      0001FD E8 05                  455 	add	sp, #5
+                                    456 ;Engine/states/microgameManagerState.c:191: printLine(1U, 10U, "DIFFICULTY:", FALSE);
+      0001FF AF                     457 	xor	a, a
+      000200 F5                     458 	push	af
+      000201 33                     459 	inc	sp
+      000202 11r3Dr02               460 	ld	de, #___str_5
+      000205 D5                     461 	push	de
+      000206 3E 0A                  462 	ld	a, #0x0a
+      000208 F5                     463 	push	af
+      000209 33                     464 	inc	sp
+      00020A 3E 01                  465 	ld	a, #0x01
+      00020C F5                     466 	push	af
+      00020D 33                     467 	inc	sp
+      00020E CDr00r00               468 	call	_printLine
+      000211 E8 05                  469 	add	sp, #5
+                                    470 ;Engine/states/microgameManagerState.c:193: fadein();
+                                    471 ;Engine/states/microgameManagerState.c:194: }
+      000213 C3r00r00               472 	jp	_fadein
+      000216                        473 ___str_0:
+      000216 4E 49 43 45 20 4F 4E   474 	.ascii "NICE ONE!"
+             45 21
+      00021F 00                     475 	.db 0x00
+      000220                        476 ___str_1:
+      000220 42 55 4D 4D 45 52 21   477 	.ascii "BUMMER!"
+      000227 00                     478 	.db 0x00
+      000228                        479 ___str_2:
+      000228 53 43 4F 52 45 3A      480 	.ascii "SCORE:"
+      00022E 00                     481 	.db 0x00
+      00022F                        482 ___str_3:
+      00022F 4C 49 56 45 53 3A      483 	.ascii "LIVES:"
+      000235 00                     484 	.db 0x00
+      000236                        485 ___str_4:
+      000236 53 50 45 45 44 3A      486 	.ascii "SPEED:"
+      00023C 00                     487 	.db 0x00
+      00023D                        488 ___str_5:
+      00023D 44 49 46 46 49 43 55   489 	.ascii "DIFFICULTY:"
+             4C 54 59 3A
+      000248 00                     490 	.db 0x00
+                                    491 ;Engine/states/microgameManagerState.c:196: void phaseMicrogameManagerLobbyLoop()
+                                    492 ;	---------------------------------
+                                    493 ; Function phaseMicrogameManagerLobbyLoop
+                                    494 ; ---------------------------------
+      000249                        495 _phaseMicrogameManagerLobbyLoop::
+                                    496 ;Engine/states/microgameManagerState.c:198: ++animTick;
+      000249 21r00r00               497 	ld	hl, #_animTick
+      00024C 34                     498 	inc	(hl)
+                                    499 ;Engine/states/microgameManagerState.c:201: if (animTick < lobbyDurationStats)
+      00024D 7E                     500 	ld	a, (hl)
+      00024E 21r00r00               501 	ld	hl, #_lobbyDurationStats
+      000251 96                     502 	sub	a, (hl)
+      000252 D2rF7r02               503 	jp	NC, 00110$
+                                    504 ;Engine/states/microgameManagerState.c:203: set_bkg_tile_xy(12U, 7U, currentScore/100U);
+      000255 21r01r00               505 	ld	hl, #_currentScore
+      000258 4E                     506 	ld	c, (hl)
+      000259 06 00                  507 	ld	b, #0x00
+      00025B 11 64 00               508 	ld	de, #0x0064
+      00025E D5                     509 	push	de
+      00025F C5                     510 	push	bc
+      000260 CDr00r00               511 	call	__divuint
+      000263 E8 04                  512 	add	sp, #4
+      000265 63                     513 	ld	h, e
+      000266 2E 07                  514 	ld	l, #0x07
+      000268 E5                     515 	push	hl
+      000269 3E 0C                  516 	ld	a, #0x0c
+      00026B F5                     517 	push	af
+      00026C 33                     518 	inc	sp
+      00026D CDr00r00               519 	call	_set_bkg_tile_xy
+      000270 E8 03                  520 	add	sp, #3
+                                    521 ;Engine/states/microgameManagerState.c:204: set_bkg_tile_xy(13U, 7U, (currentScore/10U)%10U);
+      000272 21r01r00               522 	ld	hl, #_currentScore
+      000275 4E                     523 	ld	c, (hl)
+      000276 06 00                  524 	ld	b, #0x00
+      000278 11 0A 00               525 	ld	de, #0x000a
+      00027B D5                     526 	push	de
+      00027C C5                     527 	push	bc
+      00027D CDr00r00               528 	call	__divuint
+      000280 E8 04                  529 	add	sp, #4
+      000282 01 0A 00               530 	ld	bc, #0x000a
+      000285 C5                     531 	push	bc
+      000286 D5                     532 	push	de
+      000287 CDr00r00               533 	call	__moduint
+      00028A E8 04                  534 	add	sp, #4
+      00028C 63                     535 	ld	h, e
+      00028D 2E 07                  536 	ld	l, #0x07
+      00028F E5                     537 	push	hl
+      000290 3E 0D                  538 	ld	a, #0x0d
+      000292 F5                     539 	push	af
+      000293 33                     540 	inc	sp
+      000294 CDr00r00               541 	call	_set_bkg_tile_xy
+      000297 E8 03                  542 	add	sp, #3
+                                    543 ;Engine/states/microgameManagerState.c:205: set_bkg_tile_xy(14U, 7U, currentScore%10U);
+      000299 21r01r00               544 	ld	hl, #_currentScore
+      00029C 4E                     545 	ld	c, (hl)
+      00029D 06 00                  546 	ld	b, #0x00
+      00029F 11 0A 00               547 	ld	de, #0x000a
+      0002A2 D5                     548 	push	de
+      0002A3 C5                     549 	push	bc
+      0002A4 CDr00r00               550 	call	__moduint
+      0002A7 E8 04                  551 	add	sp, #4
+      0002A9 63                     552 	ld	h, e
+      0002AA 2E 07                  553 	ld	l, #0x07
+      0002AC E5                     554 	push	hl
+      0002AD 3E 0E                  555 	ld	a, #0x0e
+      0002AF F5                     556 	push	af
+      0002B0 33                     557 	inc	sp
+      0002B1 CDr00r00               558 	call	_set_bkg_tile_xy
+      0002B4 E8 03                  559 	add	sp, #3
+                                    560 ;Engine/states/microgameManagerState.c:207: set_bkg_tile_xy(12U, 8U, currentLives);
+      0002B6 FAr00r00               561 	ld	a, (#_currentLives)
+      0002B9 67                     562 	ld	h, a
+      0002BA 2E 08                  563 	ld	l, #0x08
+      0002BC E5                     564 	push	hl
+      0002BD 3E 0C                  565 	ld	a, #0x0c
+      0002BF F5                     566 	push	af
+      0002C0 33                     567 	inc	sp
+      0002C1 CDr00r00               568 	call	_set_bkg_tile_xy
+      0002C4 E8 03                  569 	add	sp, #3
+                                    570 ;Engine/states/microgameManagerState.c:208: set_bkg_tile_xy(12U, 8U, currentLives);
+      0002C6 FAr00r00               571 	ld	a, (#_currentLives)
+      0002C9 67                     572 	ld	h, a
+      0002CA 2E 08                  573 	ld	l, #0x08
+      0002CC E5                     574 	push	hl
+      0002CD 3E 0C                  575 	ld	a, #0x0c
+      0002CF F5                     576 	push	af
+      0002D0 33                     577 	inc	sp
+      0002D1 CDr00r00               578 	call	_set_bkg_tile_xy
+      0002D4 E8 03                  579 	add	sp, #3
+                                    580 ;Engine/states/microgameManagerState.c:210: set_bkg_tile_xy(12U, 9U, mgSpeed);
+      0002D6 FAr00r00               581 	ld	a, (#_mgSpeed)
+      0002D9 67                     582 	ld	h, a
+      0002DA 2E 09                  583 	ld	l, #0x09
+      0002DC E5                     584 	push	hl
+      0002DD 3E 0C                  585 	ld	a, #0x0c
+      0002DF F5                     586 	push	af
+      0002E0 33                     587 	inc	sp
+      0002E1 CDr00r00               588 	call	_set_bkg_tile_xy
+      0002E4 E8 03                  589 	add	sp, #3
+                                    590 ;Engine/states/microgameManagerState.c:211: set_bkg_tile_xy(12U, 10U, mgDifficulty);
+      0002E6 FAr00r00               591 	ld	a, (#_mgDifficulty)
+      0002E9 67                     592 	ld	h, a
+      0002EA 2E 0A                  593 	ld	l, #0x0a
+      0002EC E5                     594 	push	hl
+      0002ED 3E 0C                  595 	ld	a, #0x0c
+      0002EF F5                     596 	push	af
+      0002F0 33                     597 	inc	sp
+      0002F1 CDr00r00               598 	call	_set_bkg_tile_xy
+      0002F4 E8 03                  599 	add	sp, #3
+      0002F6 C9                     600 	ret
+      0002F7                        601 00110$:
+                                    602 ;Engine/states/microgameManagerState.c:214: else if (animTick == lobbyDurationStats)
+      0002F7 FAr00r00               603 	ld	a, (#_animTick)
+      0002FA 21r00r00               604 	ld	hl, #_lobbyDurationStats
+      0002FD 96                     605 	sub	a, (hl)
+      0002FE 20 71                  606 	jr	NZ, 00107$
+                                    607 ;Engine/states/microgameManagerState.c:216: stopSong();
+      000300 CDr00r00               608 	call	_stopSong
+                                    609 ;Engine/states/microgameManagerState.c:217: playSong(&premgJingle);
+      000303 11r00r00               610 	ld	de, #_premgJingle
+      000306 D5                     611 	push	de
+      000307 CDr00r00               612 	call	_playSong
+      00030A E1                     613 	pop	hl
+                                    614 ;Engine/states/microgameManagerState.c:220: init_bkg(0xFFU);
+      00030B 3E FF                  615 	ld	a, #0xff
+      00030D F5                     616 	push	af
+      00030E 33                     617 	inc	sp
+      00030F CDr00r00               618 	call	_init_bkg
+      000312 33                     619 	inc	sp
+                                    620 ;Engine/states/microgameManagerState.c:223: k = 0U;
+      000313 21r00r00               621 	ld	hl, #_k
+      000316 36 00                  622 	ld	(hl), #0x00
+                                    623 ;Engine/states/microgameManagerState.c:224: while (mgCurrentMG.instructionsPtr[k] != 0U)
+      000318                        624 00101$:
+      000318 21r07r00               625 	ld	hl, #(_mgCurrentMG + 7)
+      00031B 2A                     626 	ld	a, (hl+)
+      00031C 4F                     627 	ld	c, a
+      00031D 46                     628 	ld	b, (hl)
+      00031E 79                     629 	ld	a, c
+      00031F 21r00r00               630 	ld	hl, #_k
+      000322 86                     631 	add	a, (hl)
+      000323 4F                     632 	ld	c, a
+      000324 30 01                  633 	jr	NC, 00141$
+      000326 04                     634 	inc	b
+      000327                        635 00141$:
+      000327 0A                     636 	ld	a, (bc)
+                                    637 ;Engine/states/microgameManagerState.c:225: ++k;
+      000328 46                     638 	ld	b, (hl)
+      000329 04                     639 	inc	b
+                                    640 ;Engine/states/microgameManagerState.c:224: while (mgCurrentMG.instructionsPtr[k] != 0U)
+      00032A B7                     641 	or	a, a
+      00032B 28 03                  642 	jr	Z, 00103$
+                                    643 ;Engine/states/microgameManagerState.c:225: ++k;
+      00032D 70                     644 	ld	(hl), b
+      00032E 18 E8                  645 	jr	00101$
+      000330                        646 00103$:
+                                    647 ;Engine/states/microgameManagerState.c:226: l = (20U - k) >> 1U;
+      000330 21r00r00               648 	ld	hl, #_k
+      000333 5E                     649 	ld	e, (hl)
+      000334 16 00                  650 	ld	d, #0x00
+      000336 3E 14                  651 	ld	a, #0x14
+      000338 93                     652 	sub	a, e
+      000339 5F                     653 	ld	e, a
+      00033A 9F                     654 	sbc	a, a
+      00033B 92                     655 	sub	a, d
+      00033C 57                     656 	ld	d, a
+      00033D CB 3A                  657 	srl	d
+      00033F CB 1B                  658 	rr	e
+      000341 21r00r00               659 	ld	hl, #_l
+      000344 73                     660 	ld	(hl), e
+                                    661 ;Engine/states/microgameManagerState.c:227: drawPopupWindow(l-1U, 7U, k+1U, 2U);
+      000345 7E                     662 	ld	a, (hl)
+      000346 3D                     663 	dec	a
+      000347 26 02                  664 	ld	h, #0x02
+                                    665 ;	spillPairReg hl
+                                    666 ;	spillPairReg hl
+      000349 E5                     667 	push	hl
+      00034A 33                     668 	inc	sp
+      00034B C5                     669 	push	bc
+      00034C 33                     670 	inc	sp
+      00034D 26 07                  671 	ld	h, #0x07
+                                    672 ;	spillPairReg hl
+                                    673 ;	spillPairReg hl
+      00034F E5                     674 	push	hl
+      000350 33                     675 	inc	sp
+      000351 F5                     676 	push	af
+      000352 33                     677 	inc	sp
+      000353 CDr00r00               678 	call	_drawPopupWindow
+      000356 E8 04                  679 	add	sp, #4
+                                    680 ;Engine/states/microgameManagerState.c:228: printLine(l, 8U, mgCurrentMG.instructionsPtr, FALSE);
+      000358 21r07r00               681 	ld	hl, #(_mgCurrentMG + 7)
+      00035B 2A                     682 	ld	a, (hl+)
+      00035C 4F                     683 	ld	c, a
+      00035D 46                     684 	ld	b, (hl)
+      00035E AF                     685 	xor	a, a
+      00035F F5                     686 	push	af
+      000360 33                     687 	inc	sp
+      000361 C5                     688 	push	bc
+      000362 3E 08                  689 	ld	a, #0x08
+      000364 F5                     690 	push	af
+      000365 33                     691 	inc	sp
+      000366 FAr00r00               692 	ld	a, (#_l)
+      000369 F5                     693 	push	af
+      00036A 33                     694 	inc	sp
+      00036B CDr00r00               695 	call	_printLine
+      00036E E8 05                  696 	add	sp, #5
+      000370 C9                     697 	ret
+      000371                        698 00107$:
+                                    699 ;Engine/states/microgameManagerState.c:230: else if (animTick == (lobbyDurationStats + lobbyDurationInstructions))
+      000371 21r00r00               700 	ld	hl, #_lobbyDurationStats
+      000374 4E                     701 	ld	c, (hl)
+      000375 06 00                  702 	ld	b, #0x00
+      000377 21r01r00               703 	ld	hl, #_lobbyDurationInstructions
+      00037A 6E                     704 	ld	l, (hl)
+                                    705 ;	spillPairReg hl
+                                    706 ;	spillPairReg hl
+      00037B 26 00                  707 	ld	h, #0x00
+                                    708 ;	spillPairReg hl
+                                    709 ;	spillPairReg hl
+      00037D 09                     710 	add	hl, bc
+      00037E 4D                     711 	ld	c, l
+      00037F 44                     712 	ld	b, h
+      000380 21r00r00               713 	ld	hl, #_animTick
+      000383 5E                     714 	ld	e, (hl)
+      000384 16 00                  715 	ld	d, #0x00
+      000386 7B                     716 	ld	a, e
+      000387 91                     717 	sub	a, c
+      000388 C0                     718 	ret	NZ
+      000389 7A                     719 	ld	a, d
+      00038A 90                     720 	sub	a, b
+      00038B CAr34r04               721 	jp	Z,_startMG
+                                    722 ;Engine/states/microgameManagerState.c:232: startMG();
+      00038E C9                     723 	ret
+                                    724 ;Engine/states/microgameManagerState.c:235: }
+      00038F C9                     725 	ret
+                                    726 ;Engine/states/microgameManagerState.c:242: void callMicrogameFunction()
+                                    727 ;	---------------------------------
+                                    728 ; Function callMicrogameFunction
+                                    729 ; ---------------------------------
+      000390                        730 _callMicrogameFunction::
+                                    731 ;Engine/states/microgameManagerState.c:244: SWITCH_ROM(mgCurrentMG.bankId);
+      000390 FAr01r00               732 	ld	a, (#(_mgCurrentMG + 1) + 0)
+      000393 E0r00                  733 	ldh	(__current_bank + 0), a
+      000395 EA 00 20               734 	ld	(#0x2000),a
+                                    735 ;Engine/states/microgameManagerState.c:245: switch (mgCurrentMG.id)
+      000398 21r00r00               736 	ld	hl, #_mgCurrentMG
+      00039B 4E                     737 	ld	c, (hl)
+      00039C 3E 04                  738 	ld	a, #0x04
+      00039E 91                     739 	sub	a, c
+      00039F 38 18                  740 	jr	C, 00106$
+      0003A1 06 00                  741 	ld	b, #0x00
+      0003A3 21rAAr03               742 	ld	hl, #00115$
+      0003A6 09                     743 	add	hl, bc
+      0003A7 09                     744 	add	hl, bc
+      0003A8 09                     745 	add	hl, bc
+      0003A9 E9                     746 	jp	(hl)
+      0003AA                        747 00115$:
+      0003AA C3r00r00               748 	jp	_templateFaceMicrogameMain
+      0003AD C3r00r00               749 	jp	_bownlyBowMicrogameMain
+      0003B0 C3r00r00               750 	jp	_bownlyMP5MicrogameMain
+      0003B3 C3r00r00               751 	jp	_bownlyPastelMicrogameMain
+                                    752 ;Engine/states/../database/microgameList.h:16: MICROGAME(MG_TEMPLATE_FACE, templateFaceMicrogameMain, 1U, 3U, "TEMPLATE FACE GAME", "TEMPLATE DEV", "MAKE HAPPY!")
+                                    753 ;Engine/states/../database/microgameList.h:17: MICROGAME(MG_BOWNLY_BOW, bownlyBowMicrogameMain, 2U, 4U, "BOW", "BOWNLY", "SHOOT")
+                                    754 ;Engine/states/../database/microgameList.h:18: MICROGAME(MG_BOWNLY_MAGIPANELS5, bownlyMP5MicrogameMain, 2U, 4U, "MAGIPANELS 5", "BOWNLY", "INCREASE TO 5")
+                                    755 ;Engine/states/../database/microgameList.h:19: MICROGAME(MG_BOWNLY_PASTEL, bownlyPastelMicrogameMain, 2U, 4U, "PASTEL", "BOWNLY", "COLLECT HEARTS!")
+                                    756 ;Engine/states/../database/microgameList.h:20: MICROGAME(MG_TEAAA_WHACKMOLES,whackMolesMicrogameMain, 8U, 3U, "WHACK THE MOLES", "TEAAA", "HAMMER!")
+      0003B6 C3r00r00               757 	jp	_whackMolesMicrogameMain
+                                    758 ;Engine/states/microgameManagerState.c:254: default:
+      0003B9                        759 00106$:
+                                    760 ;Engine/states/microgameManagerState.c:255: SWITCH_ROM(1U);
+      0003B9 3E 01                  761 	ld	a, #0x01
+      0003BB E0r00                  762 	ldh	(__current_bank + 0), a
+      0003BD 21 00 20               763 	ld	hl, #0x2000
+      0003C0 36 01                  764 	ld	(hl), #0x01
+                                    765 ;Engine/states/microgameManagerState.c:256: templateFaceMicrogameMain();
+                                    766 ;Engine/states/microgameManagerState.c:258: }
+                                    767 ;Engine/states/microgameManagerState.c:259: }
+      0003C2 C3r00r00               768 	jp	_templateFaceMicrogameMain
+                                    769 ;Engine/states/microgameManagerState.c:261: void loadNewMG(MICROGAME newMicrogame)
+                                    770 ;	---------------------------------
+                                    771 ; Function loadNewMG
+                                    772 ; ---------------------------------
+      0003C5                        773 _loadNewMG::
+      0003C5 3B                     774 	dec	sp
+      0003C6 3B                     775 	dec	sp
+                                    776 ;Engine/states/microgameManagerState.c:263: mgCurrentMG.id = newMicrogame;
+      0003C7 11r00r00               777 	ld	de, #_mgCurrentMG
+      0003CA F8 04                  778 	ldhl	sp,	#4
+      0003CC 7E                     779 	ld	a, (hl)
+      0003CD 12                     780 	ld	(de), a
+                                    781 ;Engine/states/microgameManagerState.c:264: mgCurrentMG.bankId = microgameDex[newMicrogame].bankId;
+      0003CE 4E                     782 	ld	c, (hl)
+      0003CF 06 00                  783 	ld	b, #0x00
+      0003D1 69                     784 	ld	l, c
+      0003D2 60                     785 	ld	h, b
+      0003D3 29                     786 	add	hl, hl
+      0003D4 29                     787 	add	hl, hl
+      0003D5 29                     788 	add	hl, hl
+      0003D6 09                     789 	add	hl, bc
+      0003D7 01r00r00               790 	ld	bc,#_microgameDex
+      0003DA 09                     791 	add	hl,bc
+      0003DB 4D                     792 	ld	c, l
+      0003DC 44                     793 	ld	b, h
+      0003DD 59                     794 	ld	e, c
+      0003DE 50                     795 	ld	d, b
+      0003DF 13                     796 	inc	de
+      0003E0 1A                     797 	ld	a, (de)
+      0003E1 EAr01r00               798 	ld	(#(_mgCurrentMG + 1)),a
+                                    799 ;Engine/states/microgameManagerState.c:265: mgCurrentMG.namePtr = microgameDex[newMicrogame].namePtr;
+      0003E4 69                     800 	ld	l, c
+                                    801 ;	spillPairReg hl
+                                    802 ;	spillPairReg hl
+      0003E5 60                     803 	ld	h, b
+                                    804 ;	spillPairReg hl
+                                    805 ;	spillPairReg hl
+      0003E6 23                     806 	inc	hl
+      0003E7 23                     807 	inc	hl
+      0003E8 23                     808 	inc	hl
+      0003E9 5D                     809 	ld	e, l
+      0003EA 54                     810 	ld	d, h
+      0003EB 1A                     811 	ld	a, (de)
+      0003EC F8 00                  812 	ldhl	sp,	#0
+      0003EE 22                     813 	ld	(hl+), a
+      0003EF 13                     814 	inc	de
+      0003F0 1A                     815 	ld	a, (de)
+      0003F1 77                     816 	ld	(hl), a
+      0003F2 11r03r00               817 	ld	de, #(_mgCurrentMG + 3)
+      0003F5 F8 00                  818 	ldhl	sp,	#0
+      0003F7 2A                     819 	ld	a, (hl+)
+      0003F8 12                     820 	ld	(de), a
+      0003F9 13                     821 	inc	de
+      0003FA 7E                     822 	ld	a, (hl)
+      0003FB 12                     823 	ld	(de), a
+                                    824 ;Engine/states/microgameManagerState.c:266: mgCurrentMG.bylinePtr = microgameDex[newMicrogame].bylinePtr;
+      0003FC 21 05 00               825 	ld	hl, #0x0005
+      0003FF 09                     826 	add	hl, bc
+      000400 5D                     827 	ld	e, l
+      000401 54                     828 	ld	d, h
+      000402 1A                     829 	ld	a, (de)
+      000403 F8 00                  830 	ldhl	sp,	#0
+      000405 22                     831 	ld	(hl+), a
+      000406 13                     832 	inc	de
+      000407 1A                     833 	ld	a, (de)
+      000408 77                     834 	ld	(hl), a
+      000409 11r05r00               835 	ld	de, #(_mgCurrentMG + 5)
+      00040C F8 00                  836 	ldhl	sp,	#0
+      00040E 2A                     837 	ld	a, (hl+)
+      00040F 12                     838 	ld	(de), a
+      000410 13                     839 	inc	de
+      000411 7E                     840 	ld	a, (hl)
+      000412 12                     841 	ld	(de), a
+                                    842 ;Engine/states/microgameManagerState.c:267: mgCurrentMG.instructionsPtr = microgameDex[newMicrogame].instructionsPtr;
+      000413 21 07 00               843 	ld	hl, #0x0007
+      000416 09                     844 	add	hl, bc
+      000417 5D                     845 	ld	e, l
+      000418 54                     846 	ld	d, h
+      000419 1A                     847 	ld	a, (de)
+      00041A F8 00                  848 	ldhl	sp,	#0
+      00041C 22                     849 	ld	(hl+), a
+      00041D 13                     850 	inc	de
+      00041E 1A                     851 	ld	a, (de)
+      00041F 77                     852 	ld	(hl), a
+      000420 11r07r00               853 	ld	de, #(_mgCurrentMG + 7)
+      000423 F8 00                  854 	ldhl	sp,	#0
+      000425 2A                     855 	ld	a, (hl+)
+      000426 12                     856 	ld	(de), a
+      000427 13                     857 	inc	de
+      000428 7E                     858 	ld	a, (hl)
+      000429 12                     859 	ld	(de), a
+                                    860 ;Engine/states/microgameManagerState.c:268: mgCurrentMG.duration = microgameDex[newMicrogame].duration;
+      00042A 11r02r00               861 	ld	de, #_mgCurrentMG + 2
+      00042D 03                     862 	inc	bc
+      00042E 03                     863 	inc	bc
+      00042F 0A                     864 	ld	a, (bc)
+      000430 12                     865 	ld	(de), a
+                                    866 ;Engine/states/microgameManagerState.c:269: }
+      000431 33                     867 	inc	sp
+      000432 33                     868 	inc	sp
+      000433 C9                     869 	ret
+                                    870 ;Engine/states/microgameManagerState.c:271: void startMG()
+                                    871 ;	---------------------------------
+                                    872 ; Function startMG
+                                    873 ; ---------------------------------
+      000434                        874 _startMG::
+                                    875 ;Engine/states/microgameManagerState.c:273: fadeout();
+      000434 CDr00r00               876 	call	_fadeout
+                                    877 ;Engine/states/microgameManagerState.c:274: stopSong();
+      000437 CDr00r00               878 	call	_stopSong
+                                    879 ;Engine/states/microgameManagerState.c:275: SHOW_WIN;
+      00043A F0r00                  880 	ldh	a, (_LCDC_REG + 0)
+      00043C F6 20                  881 	or	a, #0x20
+      00043E E0r00                  882 	ldh	(_LCDC_REG + 0), a
+                                    883 ;Engine/states/microgameManagerState.c:276: drawTimer();
+      000440 CDr58r04               884 	call	_drawTimer
+                                    885 ;Engine/states/microgameManagerState.c:277: transitionTimer = 0U;
+      000443 21r05r00               886 	ld	hl, #_transitionTimer
+      000446 36 00                  887 	ld	(hl), #0x00
+                                    888 ;Engine/states/microgameManagerState.c:278: gamestate = STATE_MICROGAME;
+      000448 21r00r00               889 	ld	hl, #_gamestate
+      00044B 36 03                  890 	ld	(hl), #0x03
+                                    891 ;Engine/states/microgameManagerState.c:279: substate = SUB_INIT;
+      00044D 21r00r00               892 	ld	hl, #_substate
+      000450 36 00                  893 	ld	(hl), #0x00
+                                    894 ;Engine/states/microgameManagerState.c:280: mgStatus = PLAYING;
+      000452 21r00r00               895 	ld	hl, #_mgStatus
+      000455 36 01                  896 	ld	(hl), #0x01
+                                    897 ;Engine/states/microgameManagerState.c:281: }
+      000457 C9                     898 	ret
+                                    899 ;Engine/states/microgameManagerState.c:285: void drawTimer()
+                                    900 ;	---------------------------------
+                                    901 ; Function drawTimer
+                                    902 ; ---------------------------------
+      000458                        903 _drawTimer::
+                                    904 ;Engine/states/microgameManagerState.c:287: set_win_tile_xy(0U, 0U, 0xFCU);  // Left end
+      000458 3E FC                  905 	ld	a, #0xfc
+      00045A F5                     906 	push	af
+      00045B 33                     907 	inc	sp
+      00045C AF                     908 	xor	a, a
+      00045D 0F                     909 	rrca
+      00045E F5                     910 	push	af
+      00045F CDr00r00               911 	call	_set_win_tile_xy
+      000462 E8 03                  912 	add	sp, #3
+                                    913 ;Engine/states/microgameManagerState.c:288: for (i = 1U; i != 21U; ++i)
+      000464 21r00r00               914 	ld	hl, #_i
+      000467 36 01                  915 	ld	(hl), #0x01
+      000469                        916 00105$:
+                                    917 ;Engine/states/microgameManagerState.c:289: set_win_tile_xy(i, 0U, 0xFDU);  // Body
+      000469 3E FD                  918 	ld	a, #0xfd
+      00046B F5                     919 	push	af
+      00046C 33                     920 	inc	sp
+      00046D AF                     921 	xor	a, a
+      00046E F5                     922 	push	af
+      00046F 33                     923 	inc	sp
+      000470 FAr00r00               924 	ld	a, (#_i)
+      000473 F5                     925 	push	af
+      000474 33                     926 	inc	sp
+      000475 CDr00r00               927 	call	_set_win_tile_xy
+      000478 E8 03                  928 	add	sp, #3
+                                    929 ;Engine/states/microgameManagerState.c:288: for (i = 1U; i != 21U; ++i)
+      00047A 21r00r00               930 	ld	hl, #_i
+      00047D 34                     931 	inc	(hl)
+      00047E 7E                     932 	ld	a, (hl)
+      00047F D6 15                  933 	sub	a, #0x15
+      000481 20 E6                  934 	jr	NZ, 00105$
+                                    935 ;C:/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+      000483 21r9Er00               936 	ld	hl, #(_shadow_OAM + 158)
+      000486 36 FE                  937 	ld	(hl), #0xfe
+                                    938 ;C:/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+      000488 21r9Cr00               939 	ld	hl, #(_shadow_OAM + 156)
+                                    940 ;C:/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+      00048B 36 98                  941 	ld	(hl), #0x98
+      00048D 23                     942 	inc	hl
+      00048E 36 A0                  943 	ld	(hl), #0xa0
+                                    944 ;C:/gbdk/include/gb/gb.h:1316: WX_REG=x, WY_REG=y;
+      000490 AF                     945 	xor	a, a
+      000491 E0r00                  946 	ldh	(_WX_REG + 0), a
+      000493 3E 88                  947 	ld	a, #0x88
+      000495 E0r00                  948 	ldh	(_WY_REG + 0), a
+                                    949 ;Engine/states/microgameManagerState.c:292: move_win(0U, 136U);
+                                    950 ;Engine/states/microgameManagerState.c:293: }
+      000497 C9                     951 	ret
+                                    952 ;Engine/states/microgameManagerState.c:295: void updateTimer()
+                                    953 ;	---------------------------------
+                                    954 ; Function updateTimer
+                                    955 ; ---------------------------------
+      000498                        956 _updateTimer::
+                                    957 ;Engine/states/microgameManagerState.c:297: mgTimeRemaining -= mgTimerTickSpeed;
+      000498 21r04r00               958 	ld	hl, #_mgTimerTickSpeed
+      00049B 4E                     959 	ld	c, (hl)
+      00049C 06 00                  960 	ld	b, #0x00
+      00049E 21r02r00               961 	ld	hl, #_mgTimeRemaining
+      0004A1 7E                     962 	ld	a, (hl)
+      0004A2 91                     963 	sub	a, c
+      0004A3 22                     964 	ld	(hl+), a
+      0004A4 7E                     965 	ld	a, (hl)
+      0004A5 98                     966 	sbc	a, b
+                                    967 ;Engine/states/microgameManagerState.c:298: move_win((160U - (mgTimeRemaining >> 4U)), 136U);
+      0004A6 32                     968 	ld	(hl-), a
+      0004A7 2A                     969 	ld	a, (hl+)
+      0004A8 4F                     970 	ld	c, a
+      0004A9 46                     971 	ld	b, (hl)
+      0004AA CB 38                  972 	srl	b
+      0004AC CB 19                  973 	rr	c
+      0004AE CB 38                  974 	srl	b
+      0004B0 CB 19                  975 	rr	c
+      0004B2 CB 38                  976 	srl	b
+      0004B4 CB 19                  977 	rr	c
+      0004B6 CB 38                  978 	srl	b
+      0004B8 CB 19                  979 	rr	c
+      0004BA 3E A0                  980 	ld	a, #0xa0
+      0004BC 91                     981 	sub	a, c
+      0004BD E0r00                  982 	ldh	(_WX_REG + 0), a
+                                    983 ;C:/gbdk/include/gb/gb.h:1316: WX_REG=x, WY_REG=y;
+      0004BF 3E 88                  984 	ld	a, #0x88
+      0004C1 E0r00                  985 	ldh	(_WY_REG + 0), a
+                                    986 ;Engine/states/microgameManagerState.c:298: move_win((160U - (mgTimeRemaining >> 4U)), 136U);
+                                    987 ;Engine/states/microgameManagerState.c:299: }
+      0004C3 C9                     988 	ret
+                                    989 	.area _CODE_0
+                                    990 	.area _INITIALIZER
+      000000                        991 __xinit__lobbyDurationStats:
+      000000 5A                     992 	.db #0x5a	; 90	'Z'
+      000001                        993 __xinit__lobbyDurationInstructions:
+      000001 5A                     994 	.db #0x5a	; 90	'Z'
+                                    995 	.area _CABS (ABS)

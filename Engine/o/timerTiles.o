@@ -1,0 +1,31 @@
+XL3
+H 9 areas 2 global symbols
+M timerTiles
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 50 flags 0 addr 0
+S _timerTiles Def000000
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 00 00
+T 00 00 00 FF FF 80 80 80 80 FF 80 FF 80 80 FF 80
+R 00 00 00 00
+T 0D 00 00 FF FF FF FF FF 00 00 00 00 FF 00 FF 00
+R 00 00 00 00
+T 1A 00 00 00 FF 00 FF FF FF 01 01 01 01 01 01 01
+R 00 00 00 00
+T 27 00 00 01 01 01 01 01 01 01 01 01 00 00 00 00
+R 00 00 00 00
+T 34 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 00
+T 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 00
+T 4E 00 00 00 00
+R 00 00 00 00
