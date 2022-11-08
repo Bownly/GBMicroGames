@@ -95,6 +95,8 @@ void microgameManagerGameLoop()
     updateTimer();
     if (mgTimeRemaining <= mgTimerTickSpeed)
     {
+        stopSong();
+        
         if (mgStatus != WON)
             mgStatus = LOST;
 
