@@ -7,7 +7,6 @@
 #include "../../Engine/songPlayer.h"
 
 #include "../enums.h"
-#include "../sfx.h"
 #include "../res/maps/bownlyPastelBkg1Map.h"
 #include "../res/maps/bownlyPastelBkg2Map.h"
 #include "../res/maps/bownlyPastelBkg3Map.h"
@@ -93,6 +92,10 @@ static UINT8 checkHeartCollision();
 static void animateHearts();
 static void animatePastel();
 
+/* SFX METHODS */
+static void sfxDing();
+static void sfxBleep();
+
 
 void bownlyPastelHeartsMicrogameMain()
 {
@@ -127,7 +130,6 @@ static void phasePastelInit()
     ySpeedJumping = 12U;
     jumpTimer = 0U;
 
-    pastelState = IDLE;
     pastelState = AIRBORNE;
     pastelFlipX = FALSE;
     heartCount = 0U;
@@ -224,7 +226,7 @@ static void phasePastelLoop()
         ++heartCount;
         if (heartCount == mgDifficulty + 3U)
             mgStatus = WON;
-        playDingSfx();
+        sfxDing();
     }
     
     animatePastel();
@@ -299,7 +301,7 @@ static void inputsPastel()
             jumppuffTimer = 0U;
             jumppuffX = pastelX >> 2U;
             jumppuffY = ((pastelY + PASTEL_BOTTOM_OFFSET + 4U) >> 2U) + 10U;
-            playBleepSfx();
+            sfxBleep();
         }
         else if (pastelState == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
         {
@@ -481,4 +483,23 @@ static void animatePastel()
         move_metasprite_vflip(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
     else
         move_metasprite(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+}
+
+
+/********************************** SFX METHODS **********************************/
+void sfxBleep()
+{
+    NR10_REG = 0x34U;
+    NR11_REG = 0x70U;
+    NR12_REG = 0xF0U;
+    NR13_REG = 0xBAU;
+    NR14_REG = 0xC6U;
+}
+
+void sfxDing()
+{
+    NR21_REG = 0x80U;
+    NR22_REG = 0x73U;
+    NR23_REG = 0x9FU;
+    NR24_REG = 0xC7U;
 }

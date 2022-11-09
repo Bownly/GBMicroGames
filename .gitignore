@@ -1,4 +1,7 @@
-o
+*.o
+*.asm
+*.lst
+*.sym
 *.gb
 *.sav
 *.ihx

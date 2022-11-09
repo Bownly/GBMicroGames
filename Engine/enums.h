@@ -5,7 +5,8 @@ typedef enum {
     STATE_TITLE,
     STATE_MAIN_MENU,
     STATE_MICROGAME_MANAGER,
-    STATE_MICROGAME
+    STATE_MICROGAME,
+    STATE_GAMEOVER
 } GAMESTATE;
 
 typedef enum {

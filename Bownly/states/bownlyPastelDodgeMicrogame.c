@@ -138,7 +138,6 @@ static void phasePastelInit()
     ySpeedJumping = 12U;
     jumpTimer = 0U;
 
-    pastelState = IDLE;
     pastelState = AIRBORNE;
     pastelFlipX = FALSE;
     heartCount = 0U;
@@ -147,8 +146,8 @@ static void phasePastelInit()
     jumppuffY = 0U;
     jumppuffTimer = 0U;
 
-    bee1X = 656U;
-    bee2X = 656U;
+    bee1X = 720U;
+    bee2X = 720U;
     bee1Speed = 7U + (mgSpeed << 2U);
     bee2Speed = 6U + (mgSpeed << 1U);
     bee1StartTimer = 0U;
@@ -185,9 +184,8 @@ static void phasePastelInit()
             break;
         case 1U:
             // Map
-            set_bkg_tiles(3U, 11U, 10U, 3U, bownlyPastelCloud1Map);
-            set_bkg_tiles(13U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-            set_bkg_tiles(25U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+            set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+            set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
 
             // Bees
             bee1Y = 296U;
@@ -208,7 +206,7 @@ static void phasePastelInit()
             break;
     }
 
-    playSong(&bownlyVictoryLapSong);
+    // playSong(&bownlyVictoryLapSong);
 
     fadein();
     substate = SUB_LOOP;
@@ -228,7 +226,7 @@ static void phasePastelLoop()
     {
         mgStatus = LOST;
         pastelState = DEAD;
-        // playDingSfx();
+        // playHurtSfx();
     }
 
     animateBees();
