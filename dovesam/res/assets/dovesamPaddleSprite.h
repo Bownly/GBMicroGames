@@ -8,19 +8,19 @@
 
 #define dovesamPaddleSprite_TILE_ORIGIN 0
 #define dovesamPaddleSprite_TILE_H 8
-#define dovesamPaddleSprite_WIDTH 20
-#define dovesamPaddleSprite_HEIGHT 4
-#define dovesamPaddleSprite_TILE_COUNT 7
-#define dovesamPaddleSprite_PIVOT_X 10
-#define dovesamPaddleSprite_PIVOT_Y 2
-#define dovesamPaddleSprite_PIVOT_W 20
-#define dovesamPaddleSprite_PIVOT_H 4
+#define dovesamPaddleSprite_WIDTH 24
+#define dovesamPaddleSprite_HEIGHT 8
+#define dovesamPaddleSprite_TILE_COUNT 2
+#define dovesamPaddleSprite_PIVOT_X 12
+#define dovesamPaddleSprite_PIVOT_Y 4
+#define dovesamPaddleSprite_PIVOT_W 24
+#define dovesamPaddleSprite_PIVOT_H 8
 
 BANKREF_EXTERN(dovesamPaddleSprite)
 
 extern const palette_color_t dovesamPaddleSprite_palettes[4];
-extern const uint8_t dovesamPaddleSprite_tiles[112];
+extern const uint8_t dovesamPaddleSprite_tiles[32];
 
-extern const metasprite_t* const dovesamPaddleSprite_metasprites[4];
+extern const metasprite_t* const dovesamPaddleSprite_metasprites[1];
 
 #endif

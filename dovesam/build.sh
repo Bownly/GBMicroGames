@@ -11,7 +11,7 @@ MAPS=dovesam/res/raw_maps
 
 $BIN/lcc -Wa-l -Wf-bo$BANK -c -o dovesam/o/dovesamPaddleMicrogame.o dovesam/states/dovesamPaddleMicrogame.c
 
-$BIN/png2asset $SPRITES/dovesamPaddleSprite.png -spr8x8 -sw 20 -sh 4 -b $BANK -c $ASSETS/dovesamPaddleSprite.c
+$BIN/png2asset $SPRITES/dovesamPaddleSprite.png -spr8x8 -sw 24 -sh 8 -b $BANK -c $ASSETS/dovesamPaddleSprite.c
 $BIN/png2asset $SPRITES/dovesamBallSprite.png -spr8x8 -sw 8 -sh 8 -b $BANK -c $ASSETS/dovesamBallSprite.c
 
 $BIN/png2asset $MAPS/dovesamPaddleArena.png -map -noflip -bpp 2 -max_palettes 1 -pack_mode gb -b $BANK -c \
