@@ -12,8 +12,7 @@
 #include "../../Engine/fade.h"
 #include "../../Engine/songPlayer.h"
 
-#include "../enums.h"
-#include "../res/assets/dovesamPaddleSprite.h"
+#include "../res/assets/dovesamPaddleSpriteSheet.h"
 #include "../res/assets/dovesamBallSprite.h"
 #include "../res/maps/dovesamPaddleArena.h"
 
@@ -41,11 +40,13 @@ extern UINT8 animFrame;
 static UINT16 paddleX;
 static UINT16 paddleY;
 static UINT16 paddleSpeed;
+static UINT16 paddleWidth;
 
 static UINT16 ballX;
 static UINT16 ballY;
 static INT16 bspeedX;
 static INT16 bspeedY;
+
 
 #define VRAM_SAFE_START 0x30
 
@@ -53,15 +54,15 @@ static INT16 bspeedY;
 #define SPRID_BALL 5U
 
 #define SPRTILE_PADDLE 0x00U
-#define SPRTILE_BALL SPRTILE_PADDLE + dovesamPaddleSprite_TILE_COUNT
+#define SPRTILE_BALL SPRTILE_PADDLE + dovesamPaddleSpriteSheet_TILE_COUNT
 
 #define SPRTILE_CURSOR 0x00U  // The location in the sprite tile memory where the cursor sprite tiles will be written to
 #define BKGTILE_TestS 0x40U  // The location in the bkg tile memory where the Test tiles will be written to
 #define TestsXAnchor 3U  // The bkg tile index of the leftmost Test(s)
 #define TestsYAnchor 3U  // The bkg tile index of the topmost Test(s)
 
-#define PADDLE_LEFT_LIMIT 24U
-#define PADDLE_RIGHT_LIMIT 148U
+#define PADDLE_LEFT_LIMIT ( 8U + 7U ) << 4
+#define PADDLE_RIGHT_LIMIT ( 160U - 7U + 8U ) << 4
 
 #define SUBPIXEL_DRAW( x ) ( x >> 4 )
 
@@ -71,6 +72,9 @@ static INT16 bspeedY;
 #define COLLISION_LEFT (18U << 4)
 #define COLLISION_RIGHT (156U << 4)
 #define PADDLE_WIDTH ( 20U << 4 )
+
+#define HPW ( paddleWidth >> 1 ) /* Half paddle width in subpixels, uint16 */
+#define HBW ( 4U << 4 ) /* Half ball width, in sub-pixels */
 
 /* SUBSTATE METHODS */
 static void phaseTestInit();
@@ -116,7 +120,7 @@ static void phaseTestInit()
 
     paddleX = 75U << 4;
     paddleY = 130U << 4;
-    paddleSpeed = 24U;//2U << 4;
+    paddleSpeed = 24U;
 
     //ballX = 50U << 4;
     ballX = ( 20U + getRandUint8(50U) ) << 4;
@@ -135,20 +139,21 @@ static void phaseTestInit()
         dovesamPaddleArena_map, VRAM_SAFE_START );
 
     // Setting up the sprites
-    set_sprite_data(SPRTILE_PADDLE, dovesamPaddleSprite_TILE_COUNT, dovesamPaddleSprite_tiles );
+    set_sprite_data(SPRTILE_PADDLE, dovesamPaddleSpriteSheet_TILE_COUNT, dovesamPaddleSpriteSheet_tiles );
     set_sprite_data(SPRTILE_BALL, dovesamBallSprite_TILE_COUNT, dovesamBallSprite_tiles );
 
-    move_metasprite(dovesamPaddleSprite_metasprites[0U], SPRTILE_PADDLE, SPRID_PADDLE,
+    move_metasprite(dovesamPaddleSpriteSheet_metasprites[mgDifficulty], SPRTILE_PADDLE, SPRID_PADDLE,
         SUBPIXEL_DRAW(paddleX), SUBPIXEL_DRAW(paddleY) );
     move_metasprite(dovesamBallSprite_metasprites[0U], SPRTILE_BALL, SPRID_BALL, 
         SUBPIXEL_DRAW(ballX), SUBPIXEL_DRAW(ballY) );
 
-    // Integrate mgDifficulty into the game
-    
-    // This particular microgame doesn't impement mgSpeed. Not all microgames necessarily need to.
-    // (But every microgame DOES need to account for all 3 levels of mgDifficulty.)
-    // The timer moves faster with each level of mgSpeed by default, so even microgames like this one will speed up.
-    // If you want to see an example of mgSpeed integration, check out the Bownly/Bow microgame.
+    // The paddle gets smaller as mgDifficulty increases. Set paddleWidth here for collision checks etc
+    switch( mgDifficulty )
+    {
+        case 0: paddleWidth = 30U << 4; break;
+        case 1: paddleWidth = 22U << 4; break;
+        case 2: paddleWidth = 14U << 4; break;
+    }
 
     // Play music
     //playSong(&dovesamTwilightDriveSong);
@@ -171,12 +176,14 @@ static void phaseTestLoop()
 /******************************** INPUT METHODS *********************************/
 static void inputsTest()
 {
-    if( (curJoypad & J_LEFT) && (SUBPIXEL_DRAW(paddleX) > PADDLE_LEFT_LIMIT ) )
+    if( (curJoypad & J_LEFT) && //(SUBPIXEL_DRAW(paddleX) > PADDLE_LEFT_LIMIT ) )
+        ( paddleX - HPW ) > PADDLE_LEFT_LIMIT )
     {
         paddleX -= paddleSpeed;
         updatePaddlePos();
     }
-    else if( (curJoypad & J_RIGHT) && ( SUBPIXEL_DRAW(paddleX) < PADDLE_RIGHT_LIMIT ) )
+    else if( (curJoypad & J_RIGHT) && //( SUBPIXEL_DRAW(paddleX) < PADDLE_RIGHT_LIMIT ) )
+        ( paddleX + HPW ) < PADDLE_RIGHT_LIMIT )
     {
         paddleX += paddleSpeed;
         updatePaddlePos();
@@ -188,8 +195,8 @@ static void inputsTest()
 static void updateBall()
 {
     /* Collision checks */
-    #define HBW (4U << 4) 
-    #define HPW (10U << 4)
+//    #define HBW (4U << 4) 
+//    #define HPW (10U << 4)
 
     //Top of screen
     if( ballY <= COLLISION_TOP )
@@ -224,6 +231,6 @@ static void updateBall()
 /******************************** DISPLAY METHODS ********************************/
 static void updatePaddlePos()
 {
-    move_metasprite(dovesamPaddleSprite_metasprites[0U], SPRTILE_PADDLE, SPRID_PADDLE, 
+    move_metasprite(dovesamPaddleSpriteSheet_metasprites[mgDifficulty], SPRTILE_PADDLE, SPRID_PADDLE, 
         SUBPIXEL_DRAW(paddleX), SUBPIXEL_DRAW(paddleY) );
 }
