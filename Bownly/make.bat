@@ -47,6 +47,8 @@ C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprBee.png -spr8x8 -sw 16 -sh 16 
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprPastel.png -spr8x8 -sw 32 -sh 32 -b 3 -py 0
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprJumppuff.png -spr8x8 -sw 16 -b 3 -py 0
 
+C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyTenseBossBattleSong.o Bownly/res/audio/bownlyTenseBossBattleSong.c
+
 C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyPastelHeartsMicrogame.o Bownly/states/bownlyPastelHeartsMicrogame.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyPastelDodgeMicrogame.o Bownly/states/bownlyPastelDodgeMicrogame.c
 

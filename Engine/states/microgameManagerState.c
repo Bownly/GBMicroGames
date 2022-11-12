@@ -132,7 +132,7 @@ void microgameManagerGameLoop()
             // mgDifficulty = (currentScore / 3U) % 3U;
             mgSpeed = (currentScore / 3U) % 3U;
             // mgSpeed = currentScore % 3U;
-            loadNewMG(getRandUint8(6U));
+            // loadNewMG(getRandUint8(6U));
         }
     }
     else

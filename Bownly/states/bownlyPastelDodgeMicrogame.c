@@ -7,14 +7,13 @@
 #include "../../Engine/songPlayer.h"
 
 #include "../enums.h"
-// #include "../sfx.h"
 #include "../res/maps/bownlyPastelCloud1Map.h"
 #include "../res/sprites/bownlySprBee.h"
 #include "../res/sprites/bownlySprJumppuff.h"
 #include "../res/sprites/bownlySprPastel.h"
 #include "../res/tiles/bownlyPastelBkg2Tiles.h"
 
-extern const hUGESong_t bownlyVictoryLapSong;
+extern const hUGESong_t bownlyTenseBossBattleSong;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -59,6 +58,7 @@ static INT8 pastelRightBound;
 #define PASTEL_LEFT_OFFSET 12U
 #define PASTEL_RIGHT_OFFSET 12U
 #define PASTEL_MAX_YVEL 32U
+static UINT8 deadTimer;
 
 static UINT8 jumppuffX;
 static UINT8 jumppuffY;
@@ -103,6 +103,11 @@ static UINT8 checkHeartCollision();
 static void animateBees();
 static void animatePastel();
 
+/* SFX METHODS */
+static void sfxDing();
+static void sfxBleep();
+static void sfxHurt();
+
 
 void bownlyPastelDodgeMicrogameMain()
 {
@@ -137,6 +142,7 @@ static void phasePastelInit()
     pastelYVel = 0U;
     ySpeedJumping = 12U;
     jumpTimer = 0U;
+    deadTimer = 0U;
 
     pastelState = AIRBORNE;
     pastelFlipX = FALSE;
@@ -150,7 +156,6 @@ static void phasePastelInit()
     bee2X = 720U;
     bee1Speed = 7U + (mgSpeed << 2U);
     bee2Speed = 6U + (mgSpeed << 1U);
-    bee1StartTimer = 0U;
 
     xSpeedWalking = 6U + (mgSpeed << 1U);
     xSpeedInAir = 6U + (mgSpeed << 1U);
@@ -171,42 +176,48 @@ static void phasePastelInit()
     set_sprite_data(SPRTILE_JUMPPUFF, bownlySprJumppuff_TILE_COUNT, bownlySprJumppuff_tiles);
     set_sprite_data(SPRTILE_BEE, bownlySprBee_TILE_COUNT, bownlySprBee_tiles);
 
+    // Map
+    set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+    set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
+    // Pillars
+    for (j = 12U; j != 18U; ++j)
+    {
+        set_bkg_tile_xy(0, j, 0x54U);
+        set_bkg_tile_xy(1, j, 0x55U);
+        set_bkg_tile_xy(8, j, 0x54U);
+        set_bkg_tile_xy(9, j, 0x55U);
+        set_bkg_tile_xy(10, j, 0x54U);
+        set_bkg_tile_xy(11, j, 0x55U);
+        set_bkg_tile_xy(18, j, 0x54U);
+        set_bkg_tile_xy(19, j, 0x55U);
+    }
+
     switch (mgDifficulty)
     {
         default:
         case 0U:
-            // Map
-            set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-            set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-
             // Bee
             bee1Y = 296U;
+            bee1StartTimer = getRandUint8(15U);
             break;
         case 1U:
-            // Map
-            set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-            set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-
             // Bees
             bee1Y = 296U;
             bee2Y = 264U;
-            bee2StartTimer = 30U + getRandUint8(30U);
+            bee1StartTimer = getRandUint8(15U);
+            bee2StartTimer = bee1StartTimer + 15U + getRandUint8(30U);
             break;
         case 2U:
-            // Map
-            set_bkg_tiles(0U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-            set_bkg_tiles(10U, 10U, 10U, 3U, bownlyPastelCloud1Map);
-
             // Bees
-            bee1StartTimer = 45;
             bee2StartTimer = 0U;
+            bee1StartTimer = 25U + getRandUint8(40U);
 
             bee1Y = 288U;
             bee2Y = 288U;
             break;
     }
 
-    // playSong(&bownlyVictoryLapSong);
+    playSong(&bownlyTenseBossBattleSong);
 
     fadein();
     substate = SUB_LOOP;
@@ -219,14 +230,17 @@ static void phasePastelLoop()
 
     moveBees();
 
-    inputsPastel();
-    calcPhysics();
+    if (pastelState != DEAD)
+    {
+        inputsPastel();
+        calcPhysics();
+    }
 
     if (checkBeeCollision() == TRUE)
     {
         mgStatus = LOST;
         pastelState = DEAD;
-        // playHurtSfx();
+        sfxHurt();
     }
 
     animateBees();
@@ -301,7 +315,7 @@ static void inputsPastel()
             jumppuffTimer = 0U;
             jumppuffX = pastelX >> 2U;
             jumppuffY = ((pastelY + PASTEL_BOTTOM_OFFSET + 4U) >> 2U) + 10U;
-            // playBleepSfx();
+            sfxBleep();
         }
         else if (pastelState == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
         {
@@ -354,6 +368,11 @@ static void moveBees()
             }
             break;
     }
+
+    if (bee1X > 720U)
+        bee1X = 750U;
+    if (bee2X > 720U)
+        bee2X = 750U;
 }
 
 static void calcPhysics()
@@ -469,39 +488,27 @@ static void calcPhysics()
 
 static UINT8 checkBeeCollision()
 {
-    pastelLeftBound = pastelX - PASTEL_LEFT_OFFSET;
-    pastelRightBound = pastelX + PASTEL_RIGHT_OFFSET;
-    pastelBottomBound = pastelY + PASTEL_BOTTOM_OFFSET;
-
-    // if (pastelX - PASTEL_LEFT_OFFSET < bee1X + 64U)
-    // {
-    //     if (pastelX + PASTEL_RIGHT_OFFSET > bee1X)
-    //     {
-    //         if (pastelY + PASTEL_TOP_OFFSET < bee1Y + 64U)
-    //         {
-    //             if (pastelY + PASTEL_BOTTOM_OFFSET > bee1Y)
-
     // Would && all of these together, but I don't trust the compiler to use lazy evaluation
-    if (pastelX - PASTEL_LEFT_OFFSET < bee1X + 64U)
+    if (pastelX - 16U < bee1X + 28U)
     {
-        if (pastelX + PASTEL_RIGHT_OFFSET > bee1X)
+        if (pastelX + 16U > bee1X - 28U)
         {
-            if (pastelY + PASTEL_TOP_OFFSET < bee1Y + 64U)
+            if (pastelY + 40U < bee1Y + 44U)
             {
-                if (pastelY + PASTEL_BOTTOM_OFFSET > bee1Y)
+                if (pastelY + 120U > bee1Y + 20U)
                 {
                     return TRUE;
                 }
             }
         }
     }
-    if (pastelX - PASTEL_LEFT_OFFSET < bee2X + 64U)
+    if (pastelX - 16U < bee2X + 28U)
     {
-        if (pastelX + PASTEL_RIGHT_OFFSET > bee2X)
+        if (pastelX + 16U > bee2X - 28U)
         {
-            if (pastelY + PASTEL_TOP_OFFSET < bee2Y + 64U)
+            if (pastelY + 40U < bee2Y + 44U)
             {
-                if (pastelY + PASTEL_BOTTOM_OFFSET > bee2Y)
+                if (pastelY + 120U > bee2Y + 20U)
                 {
                     return TRUE;
                 }
@@ -511,6 +518,7 @@ static UINT8 checkBeeCollision()
 
     return FALSE;
 }
+
 
 /******************************** DISPLAY METHODS ********************************/
 static void animateBees()
@@ -541,11 +549,50 @@ static void animatePastel()
                 animFrame = 11U;
             break;
         case DEAD:
-            animFrame = 14U;
+            if (++deadTimer < 7U)
+                animFrame = 14U;
+            else if (++deadTimer < 21U)
+                animFrame = 15U;
+            else
+                animFrame = 0xFFU;
             break;
     }
-    if (pastelFlipX == TRUE)
-        move_metasprite_vflip(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+    if (animFrame == 0xFFU)  // Yeah, this is sloppy. Whatever
+    {
+        hide_metasprite(bownlySprPastel_metasprites[0U], SPRTILE_PASTEL);
+    }
     else
-        move_metasprite(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+    {
+        if (pastelFlipX == TRUE)
+            move_metasprite_vflip(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+        else
+            move_metasprite(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+    }
+}
+
+
+/********************************** SFX METHODS **********************************/
+void sfxBleep()
+{
+    NR10_REG = 0x34U;
+    NR11_REG = 0x70U;
+    NR12_REG = 0xF0U;
+    NR13_REG = 0xBAU;
+    NR14_REG = 0xC6U;
+}
+
+void sfxDing()
+{
+    NR21_REG = 0x80U;
+    NR22_REG = 0x73U;
+    NR23_REG = 0x9FU;
+    NR24_REG = 0xC7U;
+}
+
+void sfxHurt()
+{
+    NR41_REG = 0x03U;
+    NR42_REG = 0xF0U;
+    NR43_REG = 0x5FU;
+    NR44_REG = 0xC0U;
 }
