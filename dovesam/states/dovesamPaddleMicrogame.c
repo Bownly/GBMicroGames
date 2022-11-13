@@ -125,10 +125,10 @@ static void phaseTestInit()
     //ballX = 50U << 4;
     ballX = ( 20U + getRandUint8(50U) ) << 4;
     ballY = 50U << 4;
-    bspeedX = getRandUint8(16U);
+    bspeedX = 10U + getRandUint8(6U);
     bspeedX = ( getRandUint8(10U) % 2 == 0 ) ? bspeedX : bspeedX * -1;
     //bspeedY = ( -20 + getRandUint8(6U) );
-    bspeedY = -20U - ( 3 * mgSpeed);
+    bspeedY = -25U - ( 10 * mgSpeed);
 
     /* Start out winning, lose if we drop the ball */
     mgStatus = WON;
@@ -201,11 +201,16 @@ static void updateBall()
     //Top of screen
     if( ballY <= COLLISION_TOP )
         bspeedY *= (-1);
-    else if( ballY >= COLLISION_BOTTOM &&
+    // Paddle
+    else if(( ballY >= COLLISION_BOTTOM ) &&
+            ( ballY <= ( COLLISION_BOTTOM + (2 << 4) ) ) &&
             ( (ballX + HBW) >= (paddleX - HPW) ) &&
             ( (ballX - HBW) <= (paddleX + HPW) ) )
     {
         bspeedY *= (-1);
+        /* Move the ball up a pixel, to make sure the ball is out of the collision box of
+           the paddle */
+        ballY -= ( 1 << 4 );
     }
     else if( ballY >= COLLISION_LOSE )
     {
