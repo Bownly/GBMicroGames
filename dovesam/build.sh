@@ -16,8 +16,10 @@ $BIN/png2asset $SPRITES/dovesamBallSprite.png -spr8x8 -sw 8 -sh 8 -b $BANK -c $A
 
 $BIN/png2asset $MAPS/dovesamPaddleArena.png -map -noflip -bpp 2 -max_palettes 1 -pack_mode gb -b $BANK -c \
     $ASSETS/dovesamPaddleArena.c
+$BIN/png2asset $MAPS/dovesamButtons.png -map -noflip -bpp 2 -max_palettes 1 -pack_mode gb -b $BANK -c $ASSETS/dovesamButtons.c
 
 $BIN/lcc -Wa-l -Wf-bo$BANK -c -o dovesam/o/dovesamPaddleMicrogame.o dovesam/states/dovesamPaddleMicrogame.c
+$BIN/lcc -Wa-l -Wf-bo$BANK -c -o dovesam/o/dovesamCodeCrackMicrogame.o dovesam/states/dovesamCodeCrackMicrogame.c
 
 # @REM TODO:
 # @REM Screenshake?
