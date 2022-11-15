@@ -34,12 +34,14 @@ extern UINT8 animTick;
 extern UINT8 animFrame;
 
 //Some constants
-static const unsigned char LEFT_MAP[4]  = { 0x00, 0x01, 0x04, 0x05 };
-static const unsigned char DOWN_MAP[4]  = { 0x02, 0x03, 0x06, 0x07 };
-static const unsigned char RIGHT_MAP[4] = { 0x08, 0x09, 0x0c, 0x0d };
-static const unsigned char UP_MAP[4]    = { 0x0a, 0x0b, 0x0e, 0x0f };
-static const unsigned char A_MAP[4]     = { 0x10, 0x11, 0x14, 0x15 };
-static const unsigned char B_MAP[4]     = { 0x12, 0x13, 0x16, 0x17 };
+static const unsigned char LEFT_MAP[4]      = { 0x00, 0x01, 0x04, 0x05 };
+static const unsigned char DOWN_MAP[4]      = { 0x02, 0x03, 0x06, 0x07 };
+static const unsigned char RIGHT_MAP[4]     = { 0x08, 0x09, 0x0c, 0x0d };
+static const unsigned char UP_MAP[4]        = { 0x0a, 0x0b, 0x0e, 0x0f };
+static const unsigned char A_MAP[4]         = { 0x10, 0x11, 0x14, 0x15 };
+static const unsigned char B_MAP[4]         = { 0x12, 0x13, 0x16, 0x17 };
+static const unsigned char EMPTY_MAP[4]     = { 0x18, 0x19, 0x1c, 0x1d };
+static const unsigned char SUCCESS_MAP[4]   = { 0x1a, 0x1b, 0x1e, 0x1f };
 
 #define MAX_CODE_INPUTS 8
 BUTTONS code[ MAX_CODE_INPUTS ];
@@ -53,13 +55,14 @@ BUTTONS code[ MAX_CODE_INPUTS ];
 
 /* SUBSTATE METHODS */
 static void phaseTestInit();
-static void phaseTestLoop();
+static void phaseCodeLoop();
 
 /* INPUT METHODS */
-static void inputsTest();
+static void inputsCode();
 
 /* HELPER METHODS */
 static void buttonDraw( UINT8 x, UINT8 y, BUTTONS b );
+static UINT8 buttonToJoypad( BUTTONS b );
 
 /* DISPLAY METHODS */
 
@@ -75,7 +78,7 @@ void dovesamCodeCrackMicrogameMain()
             phaseTestInit();
             break;
         case SUB_LOOP:
-            phaseTestLoop();
+            phaseCodeLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -99,12 +102,19 @@ static void phaseTestInit()
     /* Generate the code to crack */
     for( i = 0; i < MAX_CODE_INPUTS; i++ )
     {
-        code[i] = getRandUint8( NO_OF_BUTTONS );
+        code[i] = getRandUint8( BUTTON_EMPTY );
     }
 
     /* Draw the code on the screen */
     for( i = 0; i < MAX_CODE_INPUTS; i++ )
         buttonDraw( 2U + (2 * i), 5U, code[i] );
+
+    /* Draw the empty progress boxes */
+    for( i = 0; i < MAX_CODE_INPUTS; i++ )
+        buttonDraw( 2U + (2 * i ), 8U, BUTTON_EMPTY );
+
+    /* Use k to track current index in the code */
+    k = 0;
 
     // Play music
     //playSong(&dovesamTwilightDriveSong);
@@ -113,20 +123,35 @@ static void phaseTestInit()
     substate = SUB_LOOP;
 }
 
-static void phaseTestLoop()
+static void phaseCodeLoop()
 {
     ++animTick;
 
     if (mgStatus == PLAYING)
     {
-        inputsTest(); 
+        inputsCode(); 
     }
 }
 
 /******************************** INPUT METHODS *********************************/
-static void inputsTest()
+static void inputsCode()
 {
-    
+    #define GET_CODE  buttonToJoypad( code[k] )
+
+    /* Check if we have pressed the button we are looking for */
+    if( (curJoypad & GET_CODE ) && !( prevJoypad & GET_CODE ) )
+    {
+        /* Fill in the progress box */
+        buttonDraw( 2U + (2 * k ), 8U, BUTTON_SUCCESS );
+
+        /* Increment our position in the code, check if we have won */
+        k++;
+
+        if( k == MAX_CODE_INPUTS )
+            mgStatus = WON;
+    }
+
+    #undef GET_CODE
 }
 
 
@@ -155,12 +180,32 @@ static void buttonDraw( UINT8 x, UINT8 y, BUTTONS b )
         case BUTTON_B:
             my_map = B_MAP;
             break;
+        case BUTTON_EMPTY:
+            my_map = EMPTY_MAP;
+            break;
+        case BUTTON_SUCCESS:
+            my_map = SUCCESS_MAP;
+            break;
         default: 
             my_map = LEFT_MAP;
             break;
     }
 
     set_bkg_based_tiles( x, y, 2, 2, my_map, VRAM_SAFE_START );
-}
+} /* buttonDraw */
+
+static UINT8 buttonToJoypad( BUTTONS b )
+{
+    switch( b )
+    {
+        case BUTTON_LEFT: return J_LEFT;
+        case BUTTON_DOWN: return J_DOWN;
+        case BUTTON_RIGHT: return J_RIGHT;
+        case BUTTON_UP: return J_UP;
+        case BUTTON_A: return J_A;
+        case BUTTON_B: return J_B;
+        default: return 0;
+    }
+} /* buttonToJoypad */
 
 /******************************** DISPLAY METHODS ********************************/
