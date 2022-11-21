@@ -26,8 +26,9 @@
 #define __synchingFeelingEggTiles_h_INCLUDE
 
 /* Bank of tiles. */
-#define synchingFeelEggTilesBank 0
+#define synchingFeelEggTilesBank 11
 /* Start of tile array. */
+extern const void __bank_synchingFeelEggTiles;
 extern const unsigned char synchingFeelEggTiles[];
 
 #endif

@@ -6,7 +6,7 @@
 
  Info:
    Section       : 
-   Bank          : 3
+   Bank          : 11
    Map size      : 4 x 4
    Tile set      : C:\Users\MattP\Documents\GBDK\GBMicroGames-master\SynchingFeeling\res\raw tiles\synchingFeelingEggTiles.gbr
    Plane count   : 1 plane (8 bits)
@@ -22,7 +22,7 @@
 
 #define synchingFeelingEggMapsWidth 4
 #define synchingFeelingEggMapsHeight 4
-#define synchingFeelingEggMapsBank 3
+#define synchingFeelingEggMapsBank 11
 
 extern const void __bank_synchingFeelingEggMaps;
 extern const unsigned char synchingFeelingEggMaps[];

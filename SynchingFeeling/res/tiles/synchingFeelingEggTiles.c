@@ -1,3 +1,5 @@
+#pragma bank 11
+
 /*
 
  SYNCHINGFEELINGEGGTILES.C
@@ -23,6 +25,7 @@
 */
 
 /* Start of tile array. */
+const void __at(11) __bank_synchingFeelEggTiles;
 const unsigned char synchingFeelEggTiles[] =
 {
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
