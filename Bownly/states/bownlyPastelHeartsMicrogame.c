@@ -17,7 +17,7 @@
 #include "../res/tiles/bownlyPastelHeartTiles.h"
 #include "../res/tiles/bownlyPastelTreeTiles.h"
 
-extern const hUGESong_t bownlyVictoryLapSong;
+extern const hUGESong_t bownlyKnotAnywhere2Song;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -208,7 +208,7 @@ static void phasePastelInit()
             break;
     }
 
-    playSong(&bownlyVictoryLapSong);
+    playSong(&bownlyKnotAnywhere2Song);
 
     fadein();
     substate = SUB_LOOP;

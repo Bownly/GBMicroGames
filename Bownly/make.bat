@@ -30,7 +30,7 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5Microgame.o Bownly/states/
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyThingyMicrogame.o Bownly/states/bownlyThingyMicrogame.c
 
 @REM Bank 3
-C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyVictoryLapSong.o Bownly/res/audio/bownlyVictoryLapSong.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyKnotAnywhere2Song.o Bownly/res/audio/bownlyKnotAnywhere2Song.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyPastelBkgTiles.o Bownly/res/tiles/bownlyPastelBkgTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyPastelHeartTiles.o Bownly/res/tiles/bownlyPastelHeartTiles.c
@@ -52,20 +52,59 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyTenseBossBattleSong.o Bownly/
 C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyPastelHeartsMicrogame.o Bownly/states/bownlyPastelHeartsMicrogame.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo3 -c -o Bownly/o/bownlyPastelDodgeMicrogame.o Bownly/states/bownlyPastelDodgeMicrogame.c
 
+@REM Bank 9
+@REM C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyTireTiles.o Bownly/res/tiles/bownlyTireTiles.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyGrassBkgTiles.o Bownly/res/tiles/bownlyGrassBkgTiles.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronCrownTiles.o Bownly/res/tiles/bownlyBeronCrownTiles.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronMushTiles.o Bownly/res/tiles/bownlyBeronMushTiles.c
+
+@REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprDrill.png -spr8x8 -sw 8 -sh 8 -b 9 -py 0 -px 0 -sp 16
+@REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprSophie.png -spr8x8 -sw 24 -sh 24 -b 9 -py 0 -px 0
+@REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprLizard.png -spr8x8 -sw 16 -sh 24 -b 9
+@REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlyBkgEarth.png -spr8x8 -b 9 -map -tile_origin 48 -noflip
+C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprRabbit.png -spr8x8 -b 9 -map -tile_origin 48 -noflip
+C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprCarrot.png -spr8x8 -b 9 -map -tile_origin 160 -noflip
+C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprBeron.png -spr8x8 -sw 16 -sh 16 -b 9 -py 0 -px 0
+
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyKnotAnywhere1Song.o Bownly/res/audio/bownlyKnotAnywhere1Song.c
+
+@REM C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyKillerDrillerMicrogame.o Bownly/states/bownlyKillerDrillerMicrogame.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyCarrotMicrogame.o Bownly/states/bownlyCarrotMicrogame.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly/states/bownlyFlappyBeronMicrogame.c
+
+
 
 @REM Thingy TODO:
-@REM Thingy eat anim for won
 @REM Sfx
 @REM Music
 
-@REM Pastel Dodge TODO:
-@REM Clean up map 2 and bee placement
-@REM Tighten up collision
-@REM Spawn bees offscreen
-@REM Death anim
-@REM Sfx
+@REM Pastel Hearts TODO:
+@REM Swap out song
+
+@REM Carrot TODO:
+@REM Add eating particle effects
+
+@REM Flappy Beron TODO:
+@REM Spawn mushrooms
+@REM Scoll mushrooms/respawn when off screen
+@REM Add gravity to Beron
+@REM Flap input
+@REM Collision -> LOSE
+@REM Make/add background art
+@REM Sfx (flap/collision)
 @REM Music
 
-@REM 
-@REM Add o folders !!!!!!
-@REM Update readme to mention forking instead of cloning
+@REM Killer Driller TODO:
+@REM Animate drill
+@REM Render wheels and animate them (stretch goal)
+@REM Catch drill
+@REM Respawn drill if not caught
+@REM Spawn lizards
+@REM Killision lizards
+@REM MG win
+@REM MG lose if lizards escape
+@REM Draw buildings
+@REM Draw killed buildings if lizards escape
+@REM Screenshake
+@REM Sfx
+@REM Music

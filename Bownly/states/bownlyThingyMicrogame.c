@@ -37,10 +37,10 @@ static INT8 thingyXVel;
 static INT8 thingyYVel;
 static UINT8 xSpeed;
 static UINT8 ySpeed;
-INT8 thingyTopBound;
-INT8 thingyBottomBound;
-INT8 thingyLeftBound;
-INT8 thingyRightBound;
+static INT8 thingyTopBound;
+static INT8 thingyBottomBound;
+static INT8 thingyLeftBound;
+static INT8 thingyRightBound;
 
 static UINT16 bananaX;
 static UINT16 bananaY;
@@ -67,7 +67,6 @@ static void inputsThingy();
 
 /* HELPER METHODS */
 static void calcPhysics();
-static UINT8 checkIsGrounded();
 static UINT8 checkBananaCollision();
 
 /* DISPLAY METHODS */

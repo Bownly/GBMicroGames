@@ -572,7 +572,7 @@ static void animatePastel()
 
 
 /********************************** SFX METHODS **********************************/
-void sfxBleep()
+static void sfxBleep()
 {
     NR10_REG = 0x34U;
     NR11_REG = 0x70U;
@@ -581,7 +581,7 @@ void sfxBleep()
     NR14_REG = 0xC6U;
 }
 
-void sfxDing()
+static void sfxDing()
 {
     NR21_REG = 0x80U;
     NR22_REG = 0x73U;
@@ -589,7 +589,7 @@ void sfxDing()
     NR24_REG = 0xC7U;
 }
 
-void sfxHurt()
+static void sfxHurt()
 {
     NR41_REG = 0x03U;
     NR42_REG = 0xF0U;
