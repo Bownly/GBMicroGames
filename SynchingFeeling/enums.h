@@ -1,6 +1,7 @@
 #ifndef SYNCHINGFEELING_ENUMS_H
 #define SYNCHINGFEELING_ENUMS_H
 
+// Egg
 typedef enum {
     IDLE,          // Ready to jump
     JUMPING,       // Jumping
@@ -19,5 +20,17 @@ typedef enum {
 } BLOCKSTATE;
 
 extern BLOCKSTATE blockstate;
+
+// Ghost
+typedef enum {
+    EYE_CENTER,
+    EYE_UP,
+    EYE_DOWN,
+    EYE_LEFT,
+    EYE_RIGHT,
+    BLINK
+} EYESTATE;
+
+extern EYESTATE eyestate;
  
 #endif

@@ -3,7 +3,12 @@
 
 #include "../hUGETracker/hUGEDriver.h"
 
+// egg
 void playGoodHitSfx();
 void playBadHitSfx();
+
+// ghost
+void playGhostSpotSfx();
+void playGhostFailSfx();
 
 #endif

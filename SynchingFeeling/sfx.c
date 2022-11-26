@@ -16,3 +16,19 @@ void playBadHitSfx()
     NR43_REG = 0x5FU;
     NR44_REG = 0xC0U;
 }
+
+void playGhostSpotSfx()
+{
+    NR21_REG = 0x80U;
+    NR22_REG = 0x73U;
+    NR23_REG = 0x9FU;
+    NR24_REG = 0xC7U;
+}
+
+void playGhostFailSfx()
+{
+    NR41_REG = 0x03U;
+    NR42_REG = 0xF0U;
+    NR43_REG = 0x5FU;
+    NR44_REG = 0xC0U;
+}
