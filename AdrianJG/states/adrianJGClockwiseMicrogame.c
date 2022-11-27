@@ -38,8 +38,8 @@ extern UINT8 mgSpeed;
 extern UINT8 mgStatus;
 
 extern UINT8 i;  // Used mostly for loops
-extern UINT8 j;  // Used mostly for loops
-extern UINT8 k;  // Used for whatever
+extern UINT8 j;  // Used for whatever
+extern UINT8 k;  // Used for timer
 
 static UINT8 currentCharacter;
 static DIRECTIONS initialDirection;
@@ -101,6 +101,7 @@ static void phaseClockwiseInit()
     // Initializations
     init_bkg(0xFFU);
     currentCharacter = 0;
+    i = 0;
     k = 0;
     j = 0;
     initialDirection = getRandUint8(4);
@@ -121,16 +122,22 @@ static void phaseClockwiseInit()
 
 static void phaseClockwiseLoop()
 {
+    //Move non-playable character arms
     if (k == 1 && currentCharacter < level[mgDifficulty].numberCharacters - 1) {        
         moveArms(currentCharacter, currentDirection);        
-    }  
+    }
+    
+    //Change character
     if (k == 40 - (mgDifficulty * 5) - (mgSpeed * 5) && currentCharacter < level[mgDifficulty].numberCharacters - 1) {
         k = 0;
         currentCharacter++;
         currentDirection = (currentDirection + 1) % 4;
     }
+
+    //Timer increase
     k++;
     
+    //Player action
     if (!playerHasMadeAction) {
         if (curJoypad & J_UP && !(prevJoypad & J_UP)) {
             playerControl(UP);           
@@ -143,6 +150,7 @@ static void phaseClockwiseLoop()
         }
     }
 
+    //Win animation logic
     if (mgStatus == WON && currentCharacter == level[mgDifficulty].numberCharacters - 1) {        
         j++;
         if (j % 32 == 0) {
@@ -165,11 +173,14 @@ static void spawnCharacters() {
 }
 
 static void moveArms(UINT8 characterIndex, DIRECTIONS direction) {
+    //Make sound
     NR10_REG = 0x24;
     NR11_REG = 0x00;
     NR12_REG = 0xA0;
     NR13_REG = 0x73;
     NR14_REG = 0x86;
+
+    //Draw the character arms
     switch (direction)
     {
         case UP:
@@ -198,6 +209,10 @@ static void playerControl(DIRECTIONS direction) {
     j = level[mgDifficulty].numberCharacters - 1;
     moveArms(j, direction);
     playerHasMadeAction = TRUE;
+
+    //Check win condition
     mgStatus = (initialDirection + j) % 4 == direction ? WON : LOST;
+
+    //Remove "You" tiles
     set_bkg_tiles(level[mgDifficulty].characters[j].x, level[mgDifficulty].characters[j].y - 3, 2, 2, adrianJGClockwiseBlankMap);
 }
