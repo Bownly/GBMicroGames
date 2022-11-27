@@ -9,6 +9,7 @@
 #include "Engine/structs/Microgame.h"
 #include "Engine/states/microgameManagerState.h"
 #include "Engine/states/titleState.h"
+#include "Engine/states/gameoverState.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char fontTiles[];
@@ -71,7 +72,7 @@ void main()
         switch(gamestate)
         {
             case STATE_TITLE:
-                SWITCH_ROM_MBC1(1U);
+                SWITCH_ROM(1U);
                 titleStateMain();
                 break;
             case STATE_MAIN_MENU:
@@ -81,6 +82,10 @@ void main()
                 break;
             case STATE_MICROGAME:
                 microgameManagerGameLoop();
+                break;
+            case STATE_GAMEOVER:
+                SWITCH_ROM(1U);
+                gameoverStateMain();
                 break;
         }
     }

@@ -11,6 +11,14 @@
 #include "../res/tiles/borderTiles.h"
 #include "../res/tiles/fontTiles.h"
 #include "../res/tiles/timerTiles.h"
+#include "../res/tiles/engineDMGTiles.h"
+#include "../res/maps/engineDMGBat0Map.h"
+#include "../res/maps/engineDMGBat1Map.h"
+#include "../res/maps/engineDMGBat2Map.h"
+#include "../res/maps/engineDMGBat3Map.h"
+#include "../res/maps/engineDMGBat4Map.h"
+#include "../res/sprites/engineGBCart.h"
+#include "../res/sprites/engineDMGBezel.h"
 
 #include "../../Template/states/templateFaceMicrogame.h"
 
@@ -63,6 +71,7 @@ void loadNewMG(MICROGAME);
 void startMG();
 
 /* DISPLAY METHODS */
+void drawBattery(UINT8);
 void drawTimer();
 void updateTimer();
 
@@ -95,6 +104,7 @@ void microgameManagerGameLoop()
     updateTimer();
     if (mgTimeRemaining <= mgTimerTickSpeed)
     {
+        stopSong();
         if (mgStatus != WON)
             mgStatus = LOST;
 
@@ -105,8 +115,10 @@ void microgameManagerGameLoop()
 
         if (currentLives == 0U)
         {
-            gamestate = STATE_TITLE;
+            k = currentScore;  // Using k for this because I am irresponsible and reckless
+            gamestate = STATE_GAMEOVER;
             substate = SUB_INIT;
+            fadeout();
         }
         else
         {
@@ -120,10 +132,8 @@ void microgameManagerGameLoop()
             // mgDifficulty = (currentScore / 3U) % 3U;
             mgSpeed = (currentScore / 3U) % 3U;
             // mgSpeed = currentScore % 3U;
-            loadNewMG(getRandUint8(4U));
+            // loadNewMG(getRandUint8(4U));
         }
-
-
     }
     else
         callMicrogameFunction();
@@ -139,18 +149,28 @@ void phaseInitMicrogameManager()
     mgDifficulty = 0U;
     mgSpeed = 0U;
 
-    loadNewMG(MG_BOWNLY_BOW);  // Edit this line with your MG's enum for testing purposes
+    stopSong();
+    loadNewMG(MG_BOWNLY_PASTEL);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
 
 void phaseMicrogameManagerInitLobby()
 {
-    init_bkg(0xFFU);
+    SWITCH_ROM(1U);
+
+    // Reload graphics
+    set_bkg_data(0U, 46U, fontTiles);
+    set_bkg_data(0xF0U, 8U, borderTiles);
+    set_bkg_data(0xFCU, 3U, timerTiles);
+
+    // Draw dmg bezel
+    // init_bkg(0xFFU);
+    set_bkg_data(0x30, 7U, engineDMGTiles);
+    set_bkg_data(0x90, engineDMGBezel_TILE_COUNT, engineDMGBezel_tiles);
+    set_bkg_tiles(0U, 0U, 20U, 18U, engineDMGBezel_map);
 
     // Play appropriate jingle(s)
-    stopSong();
-    SWITCH_ROM_MBC1(1U);
     switch (mgStatus)
     {
         default:
@@ -167,7 +187,6 @@ void phaseMicrogameManagerInitLobby()
 
     // Initializations
     animTick = 0U;
-    mgStatus = PLAYING;
     mgTimeRemaining = 2560U;  // 2560 = 160px * 16
     mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 
@@ -175,20 +194,16 @@ void phaseMicrogameManagerInitLobby()
     lobbyDurationInstructions = 95U - mgSpeed * 9U;
     
     HIDE_WIN;
-
-    // Reload graphics
-    set_bkg_data(0U, 46U, fontTiles);
-    set_bkg_data(0xF0U, 8U, borderTiles);
-    set_bkg_data(0xFCU, 3U, timerTiles);
-
     
     substate = SUB_LOOP;
 
+    drawBattery(currentLives);
+
     // TEMP STUFF TODO: delete me
     printLine(6U, 7U, "SCORE:", FALSE);
-    printLine(6U, 8U, "LIVES:", FALSE);
-    printLine(6U, 9U, "SPEED:", FALSE);
-    printLine(1U, 10U, "DIFFICULTY:", FALSE);
+    // printLine(6U, 8U, "LIVES:", FALSE);
+    printLine(6U, 8U, "SPEED:", FALSE);
+    printLine(6U, 9U, "LEVEL:", FALSE);
 
     fadein();
 }
@@ -197,18 +212,30 @@ void phaseMicrogameManagerLobbyLoop()
 {
     ++animTick;
 
-    // Animate score increase visuals
+    // TODO: Animate score increase visuals
     if (animTick < lobbyDurationStats)
     {
+        if (mgStatus == LOST)
+        {
+            // Make the battery LED blink
+            if (animTick % 8U == 0U)
+            {
+                if (animTick % 16U == 0U)
+                    drawBattery(currentLives);
+                else
+                    drawBattery(currentLives - 1U);
+            }
+        }
+
         set_bkg_tile_xy(12U, 7U, currentScore/100U);
         set_bkg_tile_xy(13U, 7U, (currentScore/10U)%10U);
         set_bkg_tile_xy(14U, 7U, currentScore%10U);
 
-        set_bkg_tile_xy(12U, 8U, currentLives);
-        set_bkg_tile_xy(12U, 8U, currentLives);
+        // set_bkg_tile_xy(12U, 8U, currentLives);
+        // set_bkg_tile_xy(12U, 8U, currentLives);
         
-        set_bkg_tile_xy(12U, 9U, mgSpeed);
-        set_bkg_tile_xy(12U, 10U, mgDifficulty);
+        set_bkg_tile_xy(12U, 8U, mgSpeed);
+        set_bkg_tile_xy(12U, 9U, mgDifficulty);
 
     }
     else if (animTick == lobbyDurationStats)
@@ -219,13 +246,17 @@ void phaseMicrogameManagerLobbyLoop()
         // Erase stats text
         init_bkg(0xFFU);
 
-        // When done, show new instructions
+        // Draw gb cart
+        set_bkg_data(0x40, engineGBCart_TILE_COUNT, engineGBCart_tiles);
+        set_bkg_tiles(2U, 0U, 16U, 18U, engineGBCart_map);
+
+        // Show new instructions
         k = 0U;
         while (mgCurrentMG.instructionsPtr[k] != 0U)
             ++k;
         l = (20U - k) >> 1U;
-        drawPopupWindow(l-1U, 7U, k+1U, 2U);
-        printLine(l, 8U, mgCurrentMG.instructionsPtr, FALSE);
+        // drawPopupWindow(l-1U, 7U, k+1U, 2U);
+        printLine(l, 10U, mgCurrentMG.instructionsPtr, FALSE);
     }
     else if (animTick == (lobbyDurationStats + lobbyDurationInstructions))
     {
@@ -241,7 +272,7 @@ void phaseMicrogameManagerLobbyLoop()
 /******************************** HELPER METHODS *********************************/
 void callMicrogameFunction()
 {
-    SWITCH_ROM_MBC1(mgCurrentMG.bankId);
+    SWITCH_ROM(mgCurrentMG.bankId);
     switch (mgCurrentMG.id)
     {
         #define MICROGAME(game, gameFunction, a, b, c, d, e) \
@@ -252,7 +283,7 @@ void callMicrogameFunction()
         #undef MICROGAME
 
         default:
-            SWITCH_ROM_MBC1(1U);
+            SWITCH_ROM(1U);
             templateFaceMicrogameMain();
             break;
     }
@@ -282,6 +313,30 @@ void startMG()
 
 
 /******************************** DISPLAY METHODS ********************************/
+void drawBattery(UINT8 lives)
+{
+    // unsigned char engineDMGBat0Map[];
+    switch (lives)
+    {
+        default:
+        case 0U:
+            set_bkg_tiles(1U, 4U, 1U, 5U, engineDMGBat0Map);
+            break;
+        case 1U:
+            set_bkg_tiles(1U, 4U, 1U, 5U, engineDMGBat1Map);
+            break;
+        case 2U:
+            set_bkg_tiles(1U, 4U, 1U, 5U, engineDMGBat2Map);
+            break;
+        case 3U:
+            set_bkg_tiles(1U, 4U, 1U, 5U, engineDMGBat3Map);
+            break;
+        case 4U:
+            set_bkg_tiles(1U, 4U, 1U, 5U, engineDMGBat4Map);
+            break;
+    }
+}
+
 void drawTimer()
 {
     set_win_tile_xy(0U, 0U, 0xFCU);  // Left end

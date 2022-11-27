@@ -5,7 +5,7 @@ Link to the jam page on Itch: [https://itch.io/jam/gb-microgames-jam](https://it
 
 ## Setup - How To
 0. Reach out to me (@Bownly) either on Twitter or Itch and let me know that you want to participate. I'll assign a bank number to you.
-1. Clone the repo and make a branch off of master.
+1. Fork the repo and make a branch off of master.
 2. Make a folder in the project's root directory with your Itch name as the folder name. (If you want, you can make a copy of the Template folder and work off of that as a base.)
 3. Add a line for your microgame inside *Engine/database/microgameList.h*. The proper format should be pretty self explanatory.
 4. In *make.bat*, add a call to your personal *make* file, and add your files to the line at the end that builds the rom. Again, the proper format should be self explanatory.
@@ -44,6 +44,7 @@ Link to the jam page on Itch: [https://itch.io/jam/gb-microgames-jam](https://it
 
 
 ## Misc guidelines and tips
+- If you end up getting errors to the effect of "missing file: Engine/o/whatever", create a folder called "o" inside the Bownly, Engine, and Template folders.
 - Look for *actual template cart art.png* inside */Template/cart art*. For each microgame you make, include an edit of that pic. Don't worry about putting it into the rom or anything. I'll do all of that during the post-jam compilation steps. The only restrictions are that you keep the outline intact, and don't touch the two rows of white pixels towards the top.
 - Preface as many files and variables as possible with your username to avoid multiple definition errors. And/or make your variables static when appropriate, for similar reasons.
 - Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's exactly what the entire Template folder is there for.
@@ -83,3 +84,5 @@ Note that this is intended to be a noncommercial project. That said, if the game
 
 ## Misc.
 Thanks for reading all of the above junk. By the way, if you have any good ideas for a name for this project, let me know. "GB MicroGames" is not a very catchy name. Also, if you want to help contribute art/music to the actual game itself (like for the title screen, etc.), please reach out to me.
+
+(Test)
