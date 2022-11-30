@@ -42,7 +42,8 @@ static const unsigned char A_MAP[4]         = { 0x10, 0x11, 0x14, 0x15 };
 static const unsigned char B_MAP[4]         = { 0x12, 0x13, 0x16, 0x17 };
 static const unsigned char EMPTY_MAP[4]     = { 0x18, 0x19, 0x1c, 0x1d };
 static const unsigned char SUCCESS_MAP[4]   = { 0x1a, 0x1b, 0x1e, 0x1f };
-
+static const unsigned char SMALL_EMPTY_MAP[4] = { 0x20, 0x21, 0x24, 0x25 };
+static const unsigned char SMALL_FAIL_MAP[4] = { 0x22, 0x23, 0x26, 0x27 };
 #define MAX_CODE_INPUTS 8
 BUTTONS code[ MAX_CODE_INPUTS ];
 
@@ -113,6 +114,21 @@ static void phaseTestInit()
     for( i = 0; i < MAX_CODE_INPUTS; i++ )
         buttonDraw( 2U + (2 * i ), 8U, BUTTON_EMPTY );
 
+    /* Store how many fails are allowed in m */
+    switch( mgDifficulty )
+    {
+        case 0: m = 2; break;
+        case 1: m = 1; break;
+        case 2: m = 0; break;
+    }
+
+    /* n is number of mistakes made so far */
+    n = 0;
+
+    /* Draw the "lives" boxes, depending on the difficulty */
+    for( i = 0; i < m + 1; i++ )
+        buttonDraw( ( 8U - (m) ) + ( 2 * i ), 12U, BUTTON_SMALL_EMPTY );
+
     /* Use k to track current index in the code */
     k = 0;
 
@@ -150,6 +166,15 @@ static void inputsCode()
         if( k == MAX_CODE_INPUTS )
             mgStatus = WON;
     }
+    else if( ( curJoypad > 0 ) && ( curJoypad != prevJoypad ) && !( curJoypad & GET_CODE ) )
+    {
+        /* Fill in an attempt, then check if we have lost */
+        buttonDraw( ( 8U - (m) ) + ( 2 * n ), 12U, BUTTON_SMALL_FAIL );
+        n++;
+
+        if( n >= m + 1 )
+            mgStatus = LOST;
+    }
 
     #undef GET_CODE
 }
@@ -185,6 +210,12 @@ static void buttonDraw( UINT8 x, UINT8 y, BUTTONS b )
             break;
         case BUTTON_SUCCESS:
             my_map = SUCCESS_MAP;
+            break;
+        case BUTTON_SMALL_EMPTY:
+            my_map = SMALL_EMPTY_MAP;
+            break;
+        case BUTTON_SMALL_FAIL:
+            my_map = SMALL_FAIL_MAP;
             break;
         default: 
             my_map = LEFT_MAP;

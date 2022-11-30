@@ -9,17 +9,17 @@
 #define dovesamButtons_TILE_ORIGIN 0
 #define dovesamButtons_TILE_H 8
 #define dovesamButtons_WIDTH 32
-#define dovesamButtons_HEIGHT 64
-#define dovesamButtons_TILE_COUNT 32
+#define dovesamButtons_HEIGHT 80
+#define dovesamButtons_TILE_COUNT 40
 #define dovesamButtons_MAP_ATTRIBUTES 0
 #define dovesamButtons_TILE_PALS dovesamButtons_tile_pals
 
 BANKREF_EXTERN(dovesamButtons)
 
 extern const palette_color_t dovesamButtons_palettes[4];
-extern const uint8_t dovesamButtons_tiles[512];
+extern const uint8_t dovesamButtons_tiles[640];
 
-extern const unsigned char dovesamButtons_map[32];
-extern const unsigned char* dovesamButtons_tile_pals[32];
+extern const unsigned char dovesamButtons_map[40];
+extern const unsigned char* dovesamButtons_tile_pals[40];
 
 #endif
