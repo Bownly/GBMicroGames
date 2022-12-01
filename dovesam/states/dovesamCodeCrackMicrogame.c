@@ -125,9 +125,11 @@ static void phaseTestInit()
     /* n is number of mistakes made so far */
     n = 0;
 
+    printLine( 2U, 12U, "ATTEMPTS", FALSE );
+
     /* Draw the "lives" boxes, depending on the difficulty */
     for( i = 0; i < m + 1; i++ )
-        buttonDraw( ( 8U - (m) ) + ( 2 * i ), 12U, BUTTON_SMALL_EMPTY );
+        buttonDraw( 12U + ( 2 * i ), 12U, BUTTON_SMALL_EMPTY );
 
     /* Use k to track current index in the code */
     k = 0;
@@ -164,16 +166,22 @@ static void inputsCode()
         k++;
 
         if( k == MAX_CODE_INPUTS )
+        {
             mgStatus = WON;
+            printLine( 2U, 12U, "UNLOCKED", FALSE );
+        }
     }
     else if( ( curJoypad > 0 ) && ( curJoypad != prevJoypad ) && !( curJoypad & GET_CODE ) )
     {
         /* Fill in an attempt, then check if we have lost */
-        buttonDraw( ( 8U - (m) ) + ( 2 * n ), 12U, BUTTON_SMALL_FAIL );
+        buttonDraw( 12U + ( 2 * n ), 12U, BUTTON_SMALL_FAIL );
         n++;
 
         if( n >= m + 1 )
+        {
             mgStatus = LOST;
+            printLine( 2U, 12U, "LOCKED  ", FALSE );
+        }
     }
 
     #undef GET_CODE
