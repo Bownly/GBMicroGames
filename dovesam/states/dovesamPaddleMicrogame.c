@@ -203,7 +203,7 @@ static void updateBall()
         bspeedY *= (-1);
     // Paddle
     else if(( ballY >= COLLISION_BOTTOM ) &&
-            ( ballY <= ( COLLISION_BOTTOM + (2 << 4) ) ) &&
+            ( ballY <= ( COLLISION_BOTTOM + (4 << 4) ) ) &&
             ( (ballX + HBW) >= (paddleX - HPW) ) &&
             ( (ballX - HBW) <= (paddleX + HPW) ) )
     {
