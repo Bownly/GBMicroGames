@@ -6,3 +6,4 @@
 *.sav
 *.ihx
 .vscode
+.DS_Store
