@@ -62,6 +62,7 @@ void phaseTitleInit()
     // Initializations
     init_bkg(0xFFU);
     animTick = 0U;
+    HIDE_WIN;
   
     scroll_bkg(-4, 0U);  // For centering the text
 
@@ -97,6 +98,7 @@ void phaseTitleLoop()
 
         gamestate = STATE_MICROGAME_MANAGER;
         substate = SUB_INIT;
+        mgStatus = PLAYING;
     }  
 }
 

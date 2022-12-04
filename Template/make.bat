@@ -13,6 +13,3 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Template/o/templateTwilightDriveSong.o Templ
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFaceMicrogame.o Template/states/templateFaceMicrogame.c
 
-@REM TODO:
-@REM Screenshake?
-@REM sfx
