@@ -12,7 +12,7 @@ C:\gbdk\bin\lcc -Wl-yt3 -Wl-yoA -Wl-ya4 -o GBMicroGames.gb ^
     hUGETracker/hUGEDriver.obj.o ^
     Engine/o/*.o Engine/res/sprites/*.c ^
     Bownly/o/*.o Bownly/res/sprites/*.c ^
-    dovesam/o/*.o dovesam/res/assets/*.c
+    dovesam/o/*.o dovesam/res/assets/*.c ^
     joaomakesgames/o/*.o ^
     oshf/o/*.o ^
     AdrianJG/o/*.o ^
