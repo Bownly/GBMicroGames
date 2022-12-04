@@ -20,7 +20,7 @@
 #include "../res/sprites/engineGBCart.h"
 #include "../res/sprites/engineDMGBezel.h"
 
-#include "../../Template/states/templateFaceMicrogame.h"
+#include "../../oshf/states/oshfRPSMicrogame.h"
 
 extern const hUGESong_t premgJingle;
 extern const hUGESong_t wonJingle;
@@ -150,7 +150,7 @@ void phaseInitMicrogameManager()
     mgSpeed = 0U;
 
     stopSong();
-    loadNewMG(MG_BOWNLY_PASTEL);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG(MG_OSHF_RPS);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
@@ -284,7 +284,7 @@ void callMicrogameFunction()
 
         default:
             SWITCH_ROM(1U);
-            templateFaceMicrogameMain();
+            oshfRPSMicrogameMain();
             break;
     }
 }
