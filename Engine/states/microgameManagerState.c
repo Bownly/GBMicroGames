@@ -114,7 +114,6 @@ void microgameManagerGameLoop()
         }
         if (currentLives != 0U)
             ++currentScore;
-        
         gamestate = STATE_MICROGAME_MANAGER;
         substate = MGM_INIT_LOBBY;
         fadeout();
