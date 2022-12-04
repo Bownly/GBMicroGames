@@ -1,0 +1,7 @@
+#ifndef __adrianJGHitTheNoteBackground_h_INCLUDE
+#define __adrianJGHitTheNoteBackground_h_INCLUDE
+
+extern const unsigned char adrianJGHitTheNoteBackground_map_data[360];
+extern const unsigned char adrianJGHitTheNoteBackground_tile_data[656];
+
+#endif

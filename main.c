@@ -84,7 +84,7 @@ void main()
                 microgameManagerGameLoop();
                 break;
             case STATE_GAMEOVER:
-                SWITCH_ROM(1U);
+                SWITCH_ROM(4U);
                 gameoverStateMain();
                 break;
         }
