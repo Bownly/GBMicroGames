@@ -141,6 +141,7 @@ void phaseInitMicrogameManager()
     mgSpeed = 0U;
 
     stopSong();
+
     loadNewMG(MG_TEMPLATE_FACE);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
