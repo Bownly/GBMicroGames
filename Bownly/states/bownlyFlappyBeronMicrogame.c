@@ -12,6 +12,10 @@
 #include "../res/sprites/bownlySprBeron.h"
 #include "../res/tiles/bownlyBeronCrownTiles.h"
 #include "../res/tiles/bownlyBeronMushTiles.h"
+#include "../res/maps/bownlyBeronCapUpMap.h"
+#include "../res/maps/bownlyBeronCapDownMap.h"
+#include "../res/maps/bownlyBeronStalkUpMap.h"
+#include "../res/maps/bownlyBeronStalkDownMap.h"
 
 extern const hUGESong_t bownlyKnotAnywhere1Song;
 
@@ -85,7 +89,7 @@ void bownlyFlappyBeronMicrogameMain()
 static void phaseFlappyBeronInit()
 {
     // Initializations
-    init_bkg(0xFFU);
+    init_bkg(0x64U);
     animTick = 0U;
 
     // rabbitX = 150U;
@@ -95,33 +99,21 @@ static void phaseFlappyBeronInit()
     // Setting up the sprites
     set_sprite_data(SPRTILE_BERON, bownlySprBeron_TILE_COUNT, bownlySprBeron_tiles);
 
-    // set_bkg_data(0x30U, bownlySprRabbit_TILE_COUNT, bownlySprRabbit_tiles);
-    // set_bkg_data(0xA0U, bownlySprCarrot_TILE_COUNT, bownlySprCarrot_tiles);
-    // set_bkg_data(0x70U, 5U, bownlyGrassBkgTiles);
-    // set_bkg_tiles(8U, 8U, 4U, 4U, bownlySprRabbit_map + 16U);
 
-    // drawGrass();
 
-    // Setup carrots
-    // switch (mgDifficulty)
-    // {
-    //     default:
-    //     case 0U:
-    //         m = 2U;
-    //         n = 17U;
-    //         eatGoal = 5U;
-    //         break;
-    //     case 1U:
-    //         m = 4U;
-    //         n = 16U;
-    //         eatGoal = 8U;
-    //         break;
-    //     case 2U:
-    //         m = 5U;
-    //         n = 14U;
-    //         eatGoal = 12U;
-    //         break;
-    // }
+    // Setup Mushrooms
+    set_bkg_data(0x30U, 53U, bownlyBeronMushTiles);
+    // m = getRandUint8(9U);  // m = height of top mushroom
+    // n = m + 5U - mgDifficulty;
+    set_bkg_tiles(10U, 9U, 6U, 3U, bownlyBeronCapDownMap);
+    set_bkg_tiles(12U, 0U, 2U, 9U, bownlyBeronStalkDownMap);
+    // set_bkg_tiles(10U, 9U, 6U, 3U, bownlyBeronCapUpMap);
+    // set_bkg_tiles(12U, 0U, 2U, 9U, bownlyBeronStalkUpMap);
+    set_bkg_tiles(20U, 8U, 6U, 3U, bownlyBeronCapUpMap);
+    set_bkg_tiles(22U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
+
+    set_bkg_tiles(0U, 9U, 6U, 3U, bownlyBeronCapDownMap);
+    set_bkg_tiles(2U, 0U, 2U, 9U, bownlyBeronStalkDownMap);
 
     // for (i = m; i != n; i += 3U)
     //     set_bkg_tiles(i, CARROT_Y, 3U, 3U, bownlySprCarrot_map);
@@ -132,7 +124,7 @@ static void phaseFlappyBeronInit()
 
     fadein();
     // fadein() sets the sprites to a palette that I don't want to use here
-    OBP0_REG = 0xE4;  // 11 10 01 00
+    // OBP0_REG = 0xE4;  // 11 10 01 00
 }
 
 static void phaseFlappyBeronLoop()
@@ -143,6 +135,8 @@ static void phaseFlappyBeronLoop()
         animFrame = 1U;
 
     move_metasprite(bownlySprBeron_metasprites[animFrame], SPRTILE_BERON, SPRID_BERON, BERON_X, beronY);
+
+    scroll_bkg(1, 0U);
 
     // if (mgStatus == PLAYING)
     //     inputsEat();

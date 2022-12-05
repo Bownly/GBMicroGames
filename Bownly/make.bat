@@ -58,6 +58,11 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyGrassBkgTiles.o Bownly/res/ti
 C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronCrownTiles.o Bownly/res/tiles/bownlyBeronCrownTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronMushTiles.o Bownly/res/tiles/bownlyBeronMushTiles.c
 
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronCapUpMap.o Bownly/res/maps/bownlyBeronCapUpMap.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronCapDownMap.o Bownly/res/maps/bownlyBeronCapDownMap.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronStalkUpMap.o Bownly/res/maps/bownlyBeronStalkUpMap.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyBeronStalkDownMap.o Bownly/res/maps/bownlyBeronStalkDownMap.c
+
 @REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprDrill.png -spr8x8 -sw 8 -sh 8 -b 9 -py 0 -px 0 -sp 16
 @REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprSophie.png -spr8x8 -sw 24 -sh 24 -b 9 -py 0 -px 0
 @REM C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprLizard.png -spr8x8 -sw 16 -sh 24 -b 9
@@ -74,15 +79,16 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly
 
 
 
-@REM Thingy TODO:
-@REM Sfx
-@REM Music
+@REM Template face TODO:
+@REM Replace music
+@REM Add sfx maybe
 
 @REM Pastel Hearts TODO:
 @REM Swap out song
 
-@REM Carrot TODO:
-@REM Add eating particle effects
+@REM Thingy TODO:
+@REM Sfx
+@REM Music
 
 @REM Flappy Beron TODO:
 @REM Spawn mushrooms
@@ -90,7 +96,6 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly
 @REM Add gravity to Beron
 @REM Flap input
 @REM Collision -> LOSE
-@REM Make/add background art
 @REM Sfx (flap/collision)
 @REM Music
 
