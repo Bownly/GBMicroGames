@@ -1,9 +1,10 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "../../Engine/common.h"
-#include "../../Engine/enums.h"
-#include "../../Engine/fade.h"
+#include "../common.h"
+#include "../enums.h"
+#include "../fade.h"
+#include "../songPlayer.h"
 
 #include "../res/sprites/engineGBPrinter.h"
 #include "../res/sprites/engineGBPrintout.h"
