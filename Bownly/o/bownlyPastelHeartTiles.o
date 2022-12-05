@@ -1,0 +1,26 @@
+XL3
+H A areas 2 global symbols
+M bownlyPastelHeartTiles
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_2 size 30 flags 0 addr 0
+S _bownlyPastelHeartTiles Def000000
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 07 00
+T 00 00 00 FF FF 93 93 01 01 01 01 01 01 81 81 C3
+R 00 00 07 00
+T 0D 00 00 C3 E7 E7 FF FF C9 C9 80 80 80 80 80 80
+R 00 00 07 00
+T 1A 00 00 81 81 C3 C3 E7 E7 00 00 00 00 00 00 00
+R 00 00 07 00
+T 27 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 07 00

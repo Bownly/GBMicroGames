@@ -1,0 +1,34 @@
+XL3
+H A areas 2 global symbols
+M bownlyBowBkgTiles
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_2 size 60 flags 0 addr 0
+S _bownlyBowBkgTiles Def000000
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 07 00
+T 00 00 00 00 00 00 00 45 00 45 00 AE 00 FA 00 DB
+R 00 00 07 00
+T 0D 00 00 00 FF 00 FF 00 FF 00 FF 00 FF 00 FF 00
+R 00 00 07 00
+T 1A 00 00 FF 00 FF 00 FF 00 00 00 00 00 00 00 00
+R 00 00 07 00
+T 27 00 00 00 00 07 00 38 00 44 00 80 00 80 00 80
+R 00 00 07 00
+T 34 00 00 00 84 00 43 00 3C 00 00 00 00 00 00 00
+R 00 00 07 00
+T 41 00 00 00 00 00 00 00 00 00 00 1C 00 E2 00 01
+R 00 00 07 00
+T 4E 00 00 00 01 00 06 00 02 00 02 00 22 00 C4 00
+R 00 00 07 00
+T 5B 00 00 78 00 00 00 00
+R 00 00 07 00

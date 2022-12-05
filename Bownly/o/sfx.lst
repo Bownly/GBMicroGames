@@ -1,0 +1,170 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module sfx
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _playUnlockSfx
+                                     12 	.globl _playMoveSfx
+                                     13 	.globl _playHurtSfx
+                                     14 	.globl _playDingSfx
+                                     15 	.globl _playCollisionSfx
+                                     16 	.globl _playBleepSfx
+                                     17 ;--------------------------------------------------------
+                                     18 ; special function registers
+                                     19 ;--------------------------------------------------------
+                                     20 ;--------------------------------------------------------
+                                     21 ; ram data
+                                     22 ;--------------------------------------------------------
+                                     23 	.area _DATA
+                                     24 ;--------------------------------------------------------
+                                     25 ; ram data
+                                     26 ;--------------------------------------------------------
+                                     27 	.area _INITIALIZED
+                                     28 ;--------------------------------------------------------
+                                     29 ; absolute external ram data
+                                     30 ;--------------------------------------------------------
+                                     31 	.area _DABS (ABS)
+                                     32 ;--------------------------------------------------------
+                                     33 ; global & static initialisations
+                                     34 ;--------------------------------------------------------
+                                     35 	.area _HOME
+                                     36 	.area _GSINIT
+                                     37 	.area _GSFINAL
+                                     38 	.area _GSINIT
+                                     39 ;--------------------------------------------------------
+                                     40 ; Home
+                                     41 ;--------------------------------------------------------
+                                     42 	.area _HOME
+                                     43 	.area _HOME
+                                     44 ;--------------------------------------------------------
+                                     45 ; code
+                                     46 ;--------------------------------------------------------
+                                     47 	.area _CODE_2
+                                     48 ;Bownly/sfx.c:4: void playBleepSfx()
+                                     49 ;	---------------------------------
+                                     50 ; Function playBleepSfx
+                                     51 ; ---------------------------------
+      000000                         52 _playBleepSfx::
+                                     53 ;Bownly/sfx.c:6: NR10_REG = 0x34U;
+      000000 3E 34                   54 	ld	a, #0x34
+      000002 E0r00                   55 	ldh	(_NR10_REG + 0), a
+                                     56 ;Bownly/sfx.c:7: NR11_REG = 0x70U;
+      000004 3E 70                   57 	ld	a, #0x70
+      000006 E0r00                   58 	ldh	(_NR11_REG + 0), a
+                                     59 ;Bownly/sfx.c:8: NR12_REG = 0xF0U;
+      000008 3E F0                   60 	ld	a, #0xf0
+      00000A E0r00                   61 	ldh	(_NR12_REG + 0), a
+                                     62 ;Bownly/sfx.c:9: NR13_REG = 0xBAU;
+      00000C 3E BA                   63 	ld	a, #0xba
+      00000E E0r00                   64 	ldh	(_NR13_REG + 0), a
+                                     65 ;Bownly/sfx.c:10: NR14_REG = 0xC6U;
+      000010 3E C6                   66 	ld	a, #0xc6
+      000012 E0r00                   67 	ldh	(_NR14_REG + 0), a
+                                     68 ;Bownly/sfx.c:11: }
+      000014 C9                      69 	ret
+                                     70 ;Bownly/sfx.c:13: void playCollisionSfx()
+                                     71 ;	---------------------------------
+                                     72 ; Function playCollisionSfx
+                                     73 ; ---------------------------------
+      000015                         74 _playCollisionSfx::
+                                     75 ;Bownly/sfx.c:15: NR41_REG = 0x1FU;
+      000015 3E 1F                   76 	ld	a, #0x1f
+      000017 E0r00                   77 	ldh	(_NR41_REG + 0), a
+                                     78 ;Bownly/sfx.c:16: NR42_REG = 0xF1U;
+      000019 3E F1                   79 	ld	a, #0xf1
+      00001B E0r00                   80 	ldh	(_NR42_REG + 0), a
+                                     81 ;Bownly/sfx.c:17: NR43_REG = 0x40U;
+      00001D 3E 40                   82 	ld	a, #0x40
+      00001F E0r00                   83 	ldh	(_NR43_REG + 0), a
+                                     84 ;Bownly/sfx.c:18: NR44_REG = 0x87U;
+      000021 3E 87                   85 	ld	a, #0x87
+      000023 E0r00                   86 	ldh	(_NR44_REG + 0), a
+                                     87 ;Bownly/sfx.c:19: }
+      000025 C9                      88 	ret
+                                     89 ;Bownly/sfx.c:21: void playDingSfx()
+                                     90 ;	---------------------------------
+                                     91 ; Function playDingSfx
+                                     92 ; ---------------------------------
+      000026                         93 _playDingSfx::
+                                     94 ;Bownly/sfx.c:23: NR21_REG = 0x80U;
+      000026 3E 80                   95 	ld	a, #0x80
+      000028 E0r00                   96 	ldh	(_NR21_REG + 0), a
+                                     97 ;Bownly/sfx.c:24: NR22_REG = 0x73U;
+      00002A 3E 73                   98 	ld	a, #0x73
+      00002C E0r00                   99 	ldh	(_NR22_REG + 0), a
+                                    100 ;Bownly/sfx.c:25: NR23_REG = 0x9FU;
+      00002E 3E 9F                  101 	ld	a, #0x9f
+      000030 E0r00                  102 	ldh	(_NR23_REG + 0), a
+                                    103 ;Bownly/sfx.c:26: NR24_REG = 0xC7U;
+      000032 3E C7                  104 	ld	a, #0xc7
+      000034 E0r00                  105 	ldh	(_NR24_REG + 0), a
+                                    106 ;Bownly/sfx.c:27: }
+      000036 C9                     107 	ret
+                                    108 ;Bownly/sfx.c:29: void playHurtSfx()
+                                    109 ;	---------------------------------
+                                    110 ; Function playHurtSfx
+                                    111 ; ---------------------------------
+      000037                        112 _playHurtSfx::
+                                    113 ;Bownly/sfx.c:31: NR41_REG = 0x03U;
+      000037 3E 03                  114 	ld	a, #0x03
+      000039 E0r00                  115 	ldh	(_NR41_REG + 0), a
+                                    116 ;Bownly/sfx.c:32: NR42_REG = 0xF0U;
+      00003B 3E F0                  117 	ld	a, #0xf0
+      00003D E0r00                  118 	ldh	(_NR42_REG + 0), a
+                                    119 ;Bownly/sfx.c:33: NR43_REG = 0x5FU;
+      00003F 3E 5F                  120 	ld	a, #0x5f
+      000041 E0r00                  121 	ldh	(_NR43_REG + 0), a
+                                    122 ;Bownly/sfx.c:34: NR44_REG = 0xC0U;
+      000043 3E C0                  123 	ld	a, #0xc0
+      000045 E0r00                  124 	ldh	(_NR44_REG + 0), a
+                                    125 ;Bownly/sfx.c:35: }
+      000047 C9                     126 	ret
+                                    127 ;Bownly/sfx.c:37: void playMoveSfx()
+                                    128 ;	---------------------------------
+                                    129 ; Function playMoveSfx
+                                    130 ; ---------------------------------
+      000048                        131 _playMoveSfx::
+                                    132 ;Bownly/sfx.c:39: NR41_REG = 0x1FU;
+      000048 3E 1F                  133 	ld	a, #0x1f
+      00004A E0r00                  134 	ldh	(_NR41_REG + 0), a
+                                    135 ;Bownly/sfx.c:40: NR42_REG = 0xF1U;
+      00004C 3E F1                  136 	ld	a, #0xf1
+      00004E E0r00                  137 	ldh	(_NR42_REG + 0), a
+                                    138 ;Bownly/sfx.c:41: NR43_REG = 0x20U;
+      000050 3E 20                  139 	ld	a, #0x20
+      000052 E0r00                  140 	ldh	(_NR43_REG + 0), a
+                                    141 ;Bownly/sfx.c:42: NR44_REG = 0xC0U;
+      000054 3E C0                  142 	ld	a, #0xc0
+      000056 E0r00                  143 	ldh	(_NR44_REG + 0), a
+                                    144 ;Bownly/sfx.c:43: }
+      000058 C9                     145 	ret
+                                    146 ;Bownly/sfx.c:45: void playUnlockSfx()
+                                    147 ;	---------------------------------
+                                    148 ; Function playUnlockSfx
+                                    149 ; ---------------------------------
+      000059                        150 _playUnlockSfx::
+                                    151 ;Bownly/sfx.c:47: NR10_REG = 0x1EU;
+      000059 3E 1E                  152 	ld	a, #0x1e
+      00005B E0r00                  153 	ldh	(_NR10_REG + 0), a
+                                    154 ;Bownly/sfx.c:48: NR11_REG = 0x10U;
+      00005D 3E 10                  155 	ld	a, #0x10
+      00005F E0r00                  156 	ldh	(_NR11_REG + 0), a
+                                    157 ;Bownly/sfx.c:49: NR12_REG = 0xF3U;
+      000061 3E F3                  158 	ld	a, #0xf3
+      000063 E0r00                  159 	ldh	(_NR12_REG + 0), a
+                                    160 ;Bownly/sfx.c:50: NR13_REG = 0x00U;
+      000065 AF                     161 	xor	a, a
+      000066 E0r00                  162 	ldh	(_NR13_REG + 0), a
+                                    163 ;Bownly/sfx.c:51: NR14_REG = 0x87U;
+      000068 3E 87                  164 	ld	a, #0x87
+      00006A E0r00                  165 	ldh	(_NR14_REG + 0), a
+                                    166 ;Bownly/sfx.c:52: }
+      00006C C9                     167 	ret
+                                    168 	.area _CODE_2
+                                    169 	.area _INITIALIZER
+                                    170 	.area _CABS (ABS)

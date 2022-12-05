@@ -123,16 +123,16 @@ void microgameManagerGameLoop()
         else
         {
             ++currentScore;
-            gamestate = STATE_MICROGAME_MANAGER;
-            substate = MGM_INIT_LOBBY;
-            fadeout();
+        gamestate = STATE_MICROGAME_MANAGER;
+        substate = MGM_INIT_LOBBY;
+        fadeout();
 
-            // TEST stuff
-            mgDifficulty = currentScore % 3U;
-            // mgDifficulty = (currentScore / 3U) % 3U;
-            mgSpeed = (currentScore / 3U) % 3U;
-            // mgSpeed = currentScore % 3U;
-            // loadNewMG(getRandUint8(6U));
+        // TEST stuff
+        mgDifficulty = currentScore % 3U;
+        // mgDifficulty = (currentScore / 3U) % 3U;
+        mgSpeed = (currentScore / 3U) % 3U;
+        // mgSpeed = currentScore % 3U;
+            // loadNewMG(getRandUint8(4U));
         }
     }
     else
@@ -150,7 +150,8 @@ void phaseInitMicrogameManager()
     mgSpeed = 0U;
 
     stopSong();
-    loadNewMG(MG_BOWNLY_FLAPPY_BERON);  // Edit this line with your MG's enum for testing purposes
+
+    loadNewMG(MG_TEMPLATE_FACE);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
@@ -223,7 +224,7 @@ void phaseMicrogameManagerLobbyLoop()
                 if (animTick % 16U == 0U)
                     drawBattery(currentLives);
                 else
-                    drawBattery(currentLives - 1U);
+                    drawBattery(currentLives + 1U);
             }
         }
 
@@ -240,23 +241,33 @@ void phaseMicrogameManagerLobbyLoop()
     }
     else if (animTick == lobbyDurationStats)
     {
-        stopSong();
-        playSong(&premgJingle);
+        if (currentLives == 0U)  // If we need to gameover
+        {
+            k = currentScore;  // Using k for this because I am irresponsible and reckless
+            gamestate = STATE_GAMEOVER;
+            substate = SUB_INIT;
+            fadeout();
+        }
+        else
+        {
+            stopSong();
+            playSong(&premgJingle);
 
-        // Erase stats text
-        init_bkg(0xFFU);
+            // Erase stats text
+            init_bkg(0xFFU);
 
-        // Draw gb cart
-        set_bkg_data(0x40, engineGBCart_TILE_COUNT, engineGBCart_tiles);
-        set_bkg_tiles(2U, 0U, 16U, 18U, engineGBCart_map);
+            // Draw gb cart
+            set_bkg_data(0x40, engineGBCart_TILE_COUNT, engineGBCart_tiles);
+            set_bkg_tiles(2U, 0U, 16U, 18U, engineGBCart_map);
 
-        // Show new instructions
-        k = 0U;
-        while (mgCurrentMG.instructionsPtr[k] != 0U)
-            ++k;
-        l = (20U - k) >> 1U;
-        // drawPopupWindow(l-1U, 7U, k+1U, 2U);
-        printLine(l, 10U, mgCurrentMG.instructionsPtr, FALSE);
+            // Show new instructions
+            k = 0U;
+            while (mgCurrentMG.instructionsPtr[k] != 0U)
+                ++k;
+            l = (20U - k) >> 1U;
+            // drawPopupWindow(l-1U, 7U, k+1U, 2U);
+            printLine(l, 10U, mgCurrentMG.instructionsPtr, FALSE);
+        }
     }
     else if (animTick == (lobbyDurationStats + lobbyDurationInstructions))
     {

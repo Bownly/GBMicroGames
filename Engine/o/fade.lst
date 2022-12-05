@@ -1,0 +1,278 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module fade
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _fadeout
+                                     12 	.globl _fadein
+                                     13 	.globl _performantdelay
+                                     14 	.globl _getIsFadedOut
+                                     15 	.globl _wait_vbl_done
+                                     16 	.globl _isFadedOut
+                                     17 ;--------------------------------------------------------
+                                     18 ; special function registers
+                                     19 ;--------------------------------------------------------
+                                     20 ;--------------------------------------------------------
+                                     21 ; ram data
+                                     22 ;--------------------------------------------------------
+                                     23 	.area _DATA
+      000000                         24 _isFadedOut::
+      000000                         25 	.ds 1
+                                     26 ;--------------------------------------------------------
+                                     27 ; ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area _INITIALIZED
+                                     30 ;--------------------------------------------------------
+                                     31 ; absolute external ram data
+                                     32 ;--------------------------------------------------------
+                                     33 	.area _DABS (ABS)
+                                     34 ;--------------------------------------------------------
+                                     35 ; global & static initialisations
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _HOME
+                                     38 	.area _GSINIT
+                                     39 	.area _GSFINAL
+                                     40 	.area _GSINIT
+                                     41 ;--------------------------------------------------------
+                                     42 ; Home
+                                     43 ;--------------------------------------------------------
+                                     44 	.area _HOME
+                                     45 	.area _HOME
+                                     46 ;--------------------------------------------------------
+                                     47 ; code
+                                     48 ;--------------------------------------------------------
+                                     49 	.area _CODE
+                                     50 ;Engine/fade.c:5: UINT8 getIsFadedOut()
+                                     51 ;	---------------------------------
+                                     52 ; Function getIsFadedOut
+                                     53 ; ---------------------------------
+      000000                         54 _getIsFadedOut::
+                                     55 ;Engine/fade.c:7: return isFadedOut;
+      000000 21r00r00                56 	ld	hl, #_isFadedOut
+      000003 5E                      57 	ld	e, (hl)
+                                     58 ;Engine/fade.c:8: }
+      000004 C9                      59 	ret
+                                     60 ;Engine/fade.c:11: void performantdelay(UINT8 numloops)
+                                     61 ;	---------------------------------
+                                     62 ; Function performantdelay
+                                     63 ; ---------------------------------
+      000005                         64 _performantdelay::
+                                     65 ;Engine/fade.c:14: for (j = 0U; j != numloops; j++)
+      000005 0E 00                   66 	ld	c, #0x00
+      000007                         67 00103$:
+      000007 F8 02                   68 	ldhl	sp,	#2
+      000009 7E                      69 	ld	a, (hl)
+      00000A 91                      70 	sub	a, c
+      00000B C8                      71 	ret	Z
+                                     72 ;Engine/fade.c:16: wait_vbl_done();
+      00000C CDr00r00                73 	call	_wait_vbl_done
+                                     74 ;Engine/fade.c:14: for (j = 0U; j != numloops; j++)
+      00000F 0C                      75 	inc	c
+                                     76 ;Engine/fade.c:18: }
+      000010 18 F5                   77 	jr	00103$
+                                     78 ;Engine/fade.c:20: void fadein() 
+                                     79 ;	---------------------------------
+                                     80 ; Function fadein
+                                     81 ; ---------------------------------
+      000012                         82 _fadein::
+                                     83 ;Engine/fade.c:23: for (i = 0U; i != 3U; i++) 
+      000012 0E 00                   84 	ld	c, #0x00
+      000014                         85 00106$:
+                                     86 ;Engine/fade.c:25: switch(i) 
+      000014 79                      87 	ld	a, c
+      000015 B7                      88 	or	a, a
+      000016 28 0B                   89 	jr	Z, 00101$
+      000018 79                      90 	ld	a, c
+      000019 3D                      91 	dec	a
+      00001A 28 15                   92 	jr	Z, 00102$
+      00001C 79                      93 	ld	a, c
+      00001D D6 02                   94 	sub	a, #0x02
+      00001F 28 1E                   95 	jr	Z, 00103$
+      000021 18 28                   96 	jr	00104$
+                                     97 ;Engine/fade.c:27: case 0U:
+      000023                         98 00101$:
+                                     99 ;Engine/fade.c:29: OBP0_REG = 0x40;  // Dark grey as transparent
+      000023 3E 40                  100 	ld	a, #0x40
+      000025 E0r00                  101 	ldh	(_OBP0_REG + 0), a
+                                    102 ;Engine/fade.c:30: OBP1_REG = 0x40;
+      000027 3E 40                  103 	ld	a, #0x40
+      000029 E0r00                  104 	ldh	(_OBP1_REG + 0), a
+                                    105 ;Engine/fade.c:31: BGP_REG = 0x40;  // Bkg
+      00002B 3E 40                  106 	ld	a, #0x40
+      00002D E0r00                  107 	ldh	(_BGP_REG + 0), a
+                                    108 ;Engine/fade.c:32: break;
+      00002F 18 1A                  109 	jr	00104$
+                                    110 ;Engine/fade.c:33: case 1U:
+      000031                        111 00102$:
+                                    112 ;Engine/fade.c:35: OBP0_REG = 0x81;  // Dark grey as transparent
+      000031 3E 81                  113 	ld	a, #0x81
+      000033 E0r00                  114 	ldh	(_OBP0_REG + 0), a
+                                    115 ;Engine/fade.c:36: OBP1_REG = 0x81;
+      000035 3E 81                  116 	ld	a, #0x81
+      000037 E0r00                  117 	ldh	(_OBP1_REG + 0), a
+                                    118 ;Engine/fade.c:37: BGP_REG = 0x90;
+      000039 3E 90                  119 	ld	a, #0x90
+      00003B E0r00                  120 	ldh	(_BGP_REG + 0), a
+                                    121 ;Engine/fade.c:38: break;
+      00003D 18 0C                  122 	jr	00104$
+                                    123 ;Engine/fade.c:39: case 2U:
+      00003F                        124 00103$:
+                                    125 ;Engine/fade.c:42: OBP0_REG = 0xD2;  // Dark grey as transparent  11010010
+      00003F 3E D2                  126 	ld	a, #0xd2
+      000041 E0r00                  127 	ldh	(_OBP0_REG + 0), a
+                                    128 ;Engine/fade.c:43: OBP1_REG = 0xD2;
+      000043 3E D2                  129 	ld	a, #0xd2
+      000045 E0r00                  130 	ldh	(_OBP1_REG + 0), a
+                                    131 ;Engine/fade.c:44: BGP_REG = 0xE4;
+      000047 3E E4                  132 	ld	a, #0xe4
+      000049 E0r00                  133 	ldh	(_BGP_REG + 0), a
+                                    134 ;Engine/fade.c:46: }
+      00004B                        135 00104$:
+                                    136 ;Engine/fade.c:47: performantdelay(1U);
+      00004B C5                     137 	push	bc
+      00004C 3E 01                  138 	ld	a, #0x01
+      00004E F5                     139 	push	af
+      00004F 33                     140 	inc	sp
+      000050 CDr05r00               141 	call	_performantdelay
+      000053 33                     142 	inc	sp
+      000054 C1                     143 	pop	bc
+                                    144 ;Engine/fade.c:23: for (i = 0U; i != 3U; i++) 
+      000055 0C                     145 	inc	c
+      000056 79                     146 	ld	a, c
+      000057 D6 03                  147 	sub	a, #0x03
+      000059 20 B9                  148 	jr	NZ, 00106$
+                                    149 ;Engine/fade.c:49: isFadedOut = 0U;
+      00005B 21r00r00               150 	ld	hl, #_isFadedOut
+      00005E 36 00                  151 	ld	(hl), #0x00
+                                    152 ;Engine/fade.c:51: }
+      000060 C9                     153 	ret
+                                    154 ;Engine/fade.c:53: void fadeout() 
+                                    155 ;	---------------------------------
+                                    156 ; Function fadeout
+                                    157 ; ---------------------------------
+      000061                        158 _fadeout::
+                                    159 ;Engine/fade.c:57: for (i = 0U; i != 4U; i++) 
+      000061 0E 00                  160 	ld	c, #0x00
+      000063                        161 00110$:
+                                    162 ;Engine/fade.c:59: switch(i) 
+      000063 79                     163 	ld	a, c
+      000064 B7                     164 	or	a, a
+      000065 28 0F                  165 	jr	Z, 00101$
+      000067 79                     166 	ld	a, c
+      000068 3D                     167 	dec	a
+      000069 28 19                  168 	jr	Z, 00102$
+      00006B 79                     169 	ld	a,c
+      00006C FE 02                  170 	cp	a,#0x02
+      00006E 28 22                  171 	jr	Z, 00103$
+      000070 D6 03                  172 	sub	a, #0x03
+      000072 28 2C                  173 	jr	Z, 00104$
+      000074 18 36                  174 	jr	00105$
+                                    175 ;Engine/fade.c:61: case 0U:
+      000076                        176 00101$:
+                                    177 ;Engine/fade.c:63: OBP0_REG = 0xD2;  // Dark grey as transparent  11010010
+      000076 3E D2                  178 	ld	a, #0xd2
+      000078 E0r00                  179 	ldh	(_OBP0_REG + 0), a
+                                    180 ;Engine/fade.c:64: OBP1_REG = 0xD2;
+      00007A 3E D2                  181 	ld	a, #0xd2
+      00007C E0r00                  182 	ldh	(_OBP1_REG + 0), a
+                                    183 ;Engine/fade.c:65: BGP_REG = 0xE4;
+      00007E 3E E4                  184 	ld	a, #0xe4
+      000080 E0r00                  185 	ldh	(_BGP_REG + 0), a
+                                    186 ;Engine/fade.c:66: break;
+      000082 18 28                  187 	jr	00105$
+                                    188 ;Engine/fade.c:67: case 1U:
+      000084                        189 00102$:
+                                    190 ;Engine/fade.c:69: OBP0_REG = 0x81;  // Dark grey as transparent
+      000084 3E 81                  191 	ld	a, #0x81
+      000086 E0r00                  192 	ldh	(_OBP0_REG + 0), a
+                                    193 ;Engine/fade.c:70: OBP1_REG = 0x81;
+      000088 3E 81                  194 	ld	a, #0x81
+      00008A E0r00                  195 	ldh	(_OBP1_REG + 0), a
+                                    196 ;Engine/fade.c:71: BGP_REG = 0x90;
+      00008C 3E 90                  197 	ld	a, #0x90
+      00008E E0r00                  198 	ldh	(_BGP_REG + 0), a
+                                    199 ;Engine/fade.c:72: break;
+      000090 18 1A                  200 	jr	00105$
+                                    201 ;Engine/fade.c:73: case 2U:
+      000092                        202 00103$:
+                                    203 ;Engine/fade.c:75: OBP0_REG = 0x40;  // Dark grey as transparent
+      000092 3E 40                  204 	ld	a, #0x40
+      000094 E0r00                  205 	ldh	(_OBP0_REG + 0), a
+                                    206 ;Engine/fade.c:76: OBP1_REG = 0x40;
+      000096 3E 40                  207 	ld	a, #0x40
+      000098 E0r00                  208 	ldh	(_OBP1_REG + 0), a
+                                    209 ;Engine/fade.c:77: BGP_REG = 0x40;
+      00009A 3E 40                  210 	ld	a, #0x40
+      00009C E0r00                  211 	ldh	(_BGP_REG + 0), a
+                                    212 ;Engine/fade.c:78: break;
+      00009E 18 0C                  213 	jr	00105$
+                                    214 ;Engine/fade.c:79: case 3U:
+      0000A0                        215 00104$:
+                                    216 ;Engine/fade.c:80: OBP0_REG = 0x00;
+      0000A0 3E 00                  217 	ld	a, #0x00
+      0000A2 E0r00                  218 	ldh	(_OBP0_REG + 0), a
+                                    219 ;Engine/fade.c:81: OBP1_REG = 0x00;
+      0000A4 3E 00                  220 	ld	a, #0x00
+      0000A6 E0r00                  221 	ldh	(_OBP1_REG + 0), a
+                                    222 ;Engine/fade.c:82: BGP_REG = 0x00;
+      0000A8 3E 00                  223 	ld	a, #0x00
+      0000AA E0r00                  224 	ldh	(_BGP_REG + 0), a
+                                    225 ;Engine/fade.c:84: }
+      0000AC                        226 00105$:
+                                    227 ;Engine/fade.c:85: performantdelay(1U);
+      0000AC C5                     228 	push	bc
+      0000AD 3E 01                  229 	ld	a, #0x01
+      0000AF F5                     230 	push	af
+      0000B0 33                     231 	inc	sp
+      0000B1 CDr05r00               232 	call	_performantdelay
+      0000B4 33                     233 	inc	sp
+      0000B5 C1                     234 	pop	bc
+                                    235 ;Engine/fade.c:57: for (i = 0U; i != 4U; i++) 
+      0000B6 0C                     236 	inc	c
+      0000B7 79                     237 	ld	a, c
+                                    238 ;Engine/fade.c:89: for (i = 0U; i != 40U; i++)
+      0000B8 D6 04                  239 	sub	a,#0x04
+      0000BA 20 A7                  240 	jr	NZ, 00110$
+      0000BC 4F                     241 	ld	c,a
+      0000BD                        242 00112$:
+                                    243 ;C:/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+      0000BD 69                     244 	ld	l, c
+                                    245 ;	spillPairReg hl
+                                    246 ;	spillPairReg hl
+      0000BE 26 00                  247 	ld	h, #0x00
+                                    248 ;	spillPairReg hl
+                                    249 ;	spillPairReg hl
+      0000C0 29                     250 	add	hl, hl
+      0000C1 29                     251 	add	hl, hl
+      0000C2 5D                     252 	ld	e, l
+      0000C3 54                     253 	ld	d, h
+      0000C4 21r00r00               254 	ld	hl, #_shadow_OAM
+      0000C7 19                     255 	add	hl, de
+                                    256 ;C:/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+      0000C8 AF                     257 	xor	a, a
+      0000C9 22                     258 	ld	(hl+), a
+      0000CA 77                     259 	ld	(hl), a
+                                    260 ;C:/gbdk/include/gb/gb.h:1493: shadow_OAM[nb].prop=prop;
+      0000CB 21r01r00               261 	ld	hl,#_shadow_OAM + 1
+      0000CE 19                     262 	add	hl,de
+      0000CF 23                     263 	inc	hl
+      0000D0 23                     264 	inc	hl
+      0000D1 36 00                  265 	ld	(hl), #0x00
+                                    266 ;Engine/fade.c:89: for (i = 0U; i != 40U; i++)
+      0000D3 0C                     267 	inc	c
+      0000D4 79                     268 	ld	a, c
+      0000D5 D6 28                  269 	sub	a, #0x28
+      0000D7 20 E4                  270 	jr	NZ, 00112$
+                                    271 ;Engine/fade.c:95: isFadedOut = 1U;
+      0000D9 21r00r00               272 	ld	hl, #_isFadedOut
+      0000DC 36 01                  273 	ld	(hl), #0x01
+                                    274 ;Engine/fade.c:96: }
+      0000DE C9                     275 	ret
+                                    276 	.area _CODE
+                                    277 	.area _INITIALIZER
+                                    278 	.area _CABS (ABS)

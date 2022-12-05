@@ -1,0 +1,104 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+    _SCX_REG                                                       ****** GX
+    _SCY_REG                                                       ****** GX
+    ___current_base_tile                                           ****** GX
+    ___current_metasprite                                          ****** GX
+    ___move_metasprite                                             ****** GX
+    __moduint                                                      ****** GX
+    _animFrame                                                     ****** GX
+    _animTick                                                      ****** GX
+  7 _animatePreston                                                000522 R
+    _bownlyMP5DiceTiles                                            ****** GX
+    _bownlyMP5HeartTiles                                           ****** GX
+  7 _bownlyMP5MicrogameMain                                        000000 GR
+    _bownlyMP5StageColMap                                          ****** GX
+    _bownlyMP5StageTiles                                           ****** GX
+    _bownlyMP5StageTopMap                                          ****** GX
+    _bownlySprPreston_metasprites                                  ****** GX
+    _bownlySprPreston_tiles                                        ****** GX
+    _bownlyTheWhiteSong                                            ****** GX
+  1 _buttonHoldTick                                                000000 R
+    _curJoypad                                                     ****** GX
+  1 _didWinFlip                                                    00009F R
+  7 _drawPanel                                                     0005D8 R
+    _fadein                                                        ****** GX
+  1 _flipAnimTick                                                  000002 R
+  1 _flipDuration                                                  000003 R
+    _gamestate                                                     ****** GX
+    _getRandUint8                                                  ****** GX
+  1 _gridPanels                                                    000008 R
+    _i                                                             ****** GX
+  7 _incrementPanel                                                000466 R
+  7 _initGrid                                                      0002F1 R
+    _init_bkg                                                      ****** GX
+  7 _inputsMP5                                                     00014B R
+    _j                                                             ****** GX
+    _joypad                                                        ****** GX
+    _k                                                             ****** GX
+    _l                                                             ****** GX
+    _m                                                             ****** GX
+    _mgDifficulty                                                  ****** GX
+    _mgStatus                                                      ****** GX
+    _panel0Map                                                     ****** GX
+    _panel1Map                                                     ****** GX
+    _panel2Map                                                     ****** GX
+    _panel3Map                                                     ****** GX
+    _panel4Map                                                     ****** GX
+    _panelFlip1Map                                                 ****** GX
+    _panelFlip2Map                                                 ****** GX
+    _panelPointMap                                                 ****** GX
+    _panelXMap                                                     ****** GX
+  7 _phaseMagipanels5Init                                          000030 R
+  7 _phaseMagipanels5Loop                                          00011A R
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    _playCollisionSfx                                              ****** GX
+    _playHurtSfx                                                   ****** GX
+    _playMoveSfx                                                   ****** GX
+    _playSong                                                      ****** GX
+  1 _prestonHP                                                     000007 R
+  1 _prestonIsHorz                                                 000006 R
+  1 _prestonXIndex                                                 000004 R
+  1 _prestonYIndex                                                 000005 R
+    _prevJoypad                                                    ****** GX
+  1 _remaining5s                                                   00009E R
+  1 _screenShakeTick                                               000001 R
+    _set_bkg_data                                                  ****** GX
+    _set_bkg_tile_xy                                               ****** GX
+    _set_bkg_tiles                                                 ****** GX
+    _set_sprite_data                                               ****** GX
+  7 _setupHearts                                                   00068D R
+  7 _setupPanel                                                    0004AE R
+    _shadow_OAM                                                    ****** GX
+    _substate                                                      ****** GX
+  7 _tryShakeScreen                                                0006D6 R
+  7 _updateFlippingPanels                                          00072C R
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 _DATA                                      size     A0   flags    0
+   2 _INITIALIZED                               size      0   flags    0
+   3 _DABS                                      size      0   flags    8
+   4 _HOME                                      size      0   flags    0
+   5 _GSINIT                                    size      0   flags    0
+   6 _GSFINAL                                   size      0   flags    0
+   7 _CODE_2                                    size    881   flags    0
+   8 _INITIALIZER                               size      0   flags    0
+   9 _CABS                                      size      0   flags    8
+

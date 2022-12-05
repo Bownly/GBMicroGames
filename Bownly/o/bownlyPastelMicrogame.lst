@@ -1,0 +1,1785 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module bownlyPastelMicrogame
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _bownlyPastelMicrogameMain
+                                     12 	.globl _playDingSfx
+                                     13 	.globl _playBleepSfx
+                                     14 	.globl _playSong
+                                     15 	.globl _fadein
+                                     16 	.globl _getRandUint8
+                                     17 	.globl _set_sprite_data
+                                     18 	.globl _get_bkg_tile_xy
+                                     19 	.globl _set_bkg_tile_xy
+                                     20 	.globl _set_bkg_tiles
+                                     21 	.globl _set_bkg_data
+                                     22 	.globl _joypad
+                                     23 ;--------------------------------------------------------
+                                     24 ; special function registers
+                                     25 ;--------------------------------------------------------
+                                     26 ;--------------------------------------------------------
+                                     27 ; ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area _DATA
+      000000                         30 _x:
+      000000                         31 	.ds 2
+      000002                         32 _y:
+      000002                         33 	.ds 2
+      000004                         34 _pastelX:
+      000004                         35 	.ds 2
+      000006                         36 _pastelY:
+      000006                         37 	.ds 2
+      000008                         38 _pastelXVel:
+      000008                         39 	.ds 1
+      000009                         40 _pastelYVel:
+      000009                         41 	.ds 1
+      00000A                         42 _pastelState:
+      00000A                         43 	.ds 1
+      00000B                         44 _xSpeedWalking:
+      00000B                         45 	.ds 1
+      00000C                         46 _xSpeedInAir:
+      00000C                         47 	.ds 1
+      00000D                         48 _ySpeedJumping:
+      00000D                         49 	.ds 1
+      00000E                         50 _jumpTimer:
+      00000E                         51 	.ds 1
+      00000F                         52 _jumppuffX:
+      00000F                         53 	.ds 1
+      000010                         54 _jumppuffY:
+      000010                         55 	.ds 1
+                                     56 ;--------------------------------------------------------
+                                     57 ; ram data
+                                     58 ;--------------------------------------------------------
+                                     59 	.area _INITIALIZED
+      000000                         60 _heartCount:
+      000000                         61 	.ds 1
+      000001                         62 _pastelFlipX:
+      000001                         63 	.ds 1
+      000002                         64 _JUMP_DURATION:
+      000002                         65 	.ds 1
+      000003                         66 _jumppuffTimer:
+      000003                         67 	.ds 1
+                                     68 ;--------------------------------------------------------
+                                     69 ; absolute external ram data
+                                     70 ;--------------------------------------------------------
+                                     71 	.area _DABS (ABS)
+                                     72 ;--------------------------------------------------------
+                                     73 ; global & static initialisations
+                                     74 ;--------------------------------------------------------
+                                     75 	.area _HOME
+                                     76 	.area _GSINIT
+                                     77 	.area _GSFINAL
+                                     78 	.area _GSINIT
+                                     79 ;--------------------------------------------------------
+                                     80 ; Home
+                                     81 ;--------------------------------------------------------
+                                     82 	.area _HOME
+                                     83 	.area _HOME
+                                     84 ;--------------------------------------------------------
+                                     85 ; code
+                                     86 ;--------------------------------------------------------
+                                     87 	.area _CODE_2
+                                     88 ;Bownly/states/bownlyPastelMicrogame.c:93: void bownlyPastelMicrogameMain()
+                                     89 ;	---------------------------------
+                                     90 ; Function bownlyPastelMicrogameMain
+                                     91 ; ---------------------------------
+      000000                         92 _bownlyPastelMicrogameMain::
+                                     93 ;Bownly/states/bownlyPastelMicrogame.c:95: curJoypad = joypad();
+      000000 CDr00r00                94 	call	_joypad
+      000003 21r00r00                95 	ld	hl, #_curJoypad
+      000006 73                      96 	ld	(hl), e
+                                     97 ;Bownly/states/bownlyPastelMicrogame.c:97: switch (substate)
+      000007 FAr00r00                98 	ld	a, (#_substate)
+      00000A B7                      99 	or	a, a
+      00000B 28 08                  100 	jr	Z, 00101$
+      00000D FAr00r00               101 	ld	a, (#_substate)
+      000010 3D                     102 	dec	a
+      000011 28 07                  103 	jr	Z, 00102$
+      000013 18 0A                  104 	jr	00103$
+                                    105 ;Bownly/states/bownlyPastelMicrogame.c:99: case SUB_INIT:
+      000015                        106 00101$:
+                                    107 ;Bownly/states/bownlyPastelMicrogame.c:100: phasePastelInit();
+      000015 CDr30r00               108 	call	_phasePastelInit
+                                    109 ;Bownly/states/bownlyPastelMicrogame.c:101: break;
+      000018 18 0F                  110 	jr	00104$
+                                    111 ;Bownly/states/bownlyPastelMicrogame.c:102: case SUB_LOOP:
+      00001A                        112 00102$:
+                                    113 ;Bownly/states/bownlyPastelMicrogame.c:103: phasePastelLoop();
+      00001A CDrE1r02               114 	call	_phasePastelLoop
+                                    115 ;Bownly/states/bownlyPastelMicrogame.c:104: break;
+      00001D 18 0A                  116 	jr	00104$
+                                    117 ;Bownly/states/bownlyPastelMicrogame.c:105: default:  // Abort to title in the event of unexpected state
+      00001F                        118 00103$:
+                                    119 ;Bownly/states/bownlyPastelMicrogame.c:106: gamestate = STATE_TITLE;
+      00001F 21r00r00               120 	ld	hl, #_gamestate
+      000022 36 00                  121 	ld	(hl), #0x00
+                                    122 ;Bownly/states/bownlyPastelMicrogame.c:107: substate = SUB_INIT;
+      000024 21r00r00               123 	ld	hl, #_substate
+      000027 36 00                  124 	ld	(hl), #0x00
+                                    125 ;Bownly/states/bownlyPastelMicrogame.c:109: }
+      000029                        126 00104$:
+                                    127 ;Bownly/states/bownlyPastelMicrogame.c:110: prevJoypad = curJoypad;
+      000029 FAr00r00               128 	ld	a, (#_curJoypad)
+      00002C EAr00r00               129 	ld	(#_prevJoypad),a
+                                    130 ;Bownly/states/bownlyPastelMicrogame.c:111: }
+      00002F C9                     131 	ret
+                                    132 ;Bownly/states/bownlyPastelMicrogame.c:115: static void phasePastelInit()
+                                    133 ;	---------------------------------
+                                    134 ; Function phasePastelInit
+                                    135 ; ---------------------------------
+      000030                        136 _phasePastelInit:
+                                    137 ;Bownly/states/bownlyPastelMicrogame.c:118: animTick = 0U;
+      000030 21r00r00               138 	ld	hl, #_animTick
+      000033 36 00                  139 	ld	(hl), #0x00
+                                    140 ;Bownly/states/bownlyPastelMicrogame.c:119: pastelX = 336U;
+      000035 21r04r00               141 	ld	hl, #_pastelX
+      000038 3E 50                  142 	ld	a, #0x50
+      00003A 22                     143 	ld	(hl+), a
+      00003B 36 01                  144 	ld	(hl), #0x01
+                                    145 ;Bownly/states/bownlyPastelMicrogame.c:120: pastelY = 320U;
+      00003D 21r06r00               146 	ld	hl, #_pastelY
+      000040 3E 40                  147 	ld	a, #0x40
+      000042 22                     148 	ld	(hl+), a
+      000043 36 01                  149 	ld	(hl), #0x01
+                                    150 ;Bownly/states/bownlyPastelMicrogame.c:121: pastelXVel = 0U;
+      000045 21r08r00               151 	ld	hl, #_pastelXVel
+      000048 36 00                  152 	ld	(hl), #0x00
+                                    153 ;Bownly/states/bownlyPastelMicrogame.c:122: pastelYVel = 0U;
+      00004A 21r09r00               154 	ld	hl, #_pastelYVel
+      00004D 36 00                  155 	ld	(hl), #0x00
+                                    156 ;Bownly/states/bownlyPastelMicrogame.c:123: ySpeedJumping = 12U;
+      00004F 21r0Dr00               157 	ld	hl, #_ySpeedJumping
+      000052 36 0C                  158 	ld	(hl), #0x0c
+                                    159 ;Bownly/states/bownlyPastelMicrogame.c:124: jumpTimer = 0U;
+      000054 21r0Er00               160 	ld	hl, #_jumpTimer
+      000057 36 00                  161 	ld	(hl), #0x00
+                                    162 ;Bownly/states/bownlyPastelMicrogame.c:127: pastelState = AIRBORNE;
+      000059 21r0Ar00               163 	ld	hl, #_pastelState
+      00005C 36 02                  164 	ld	(hl), #0x02
+                                    165 ;Bownly/states/bownlyPastelMicrogame.c:128: pastelFlipX = FALSE;
+      00005E 21r01r00               166 	ld	hl, #_pastelFlipX
+      000061 36 00                  167 	ld	(hl), #0x00
+                                    168 ;Bownly/states/bownlyPastelMicrogame.c:129: heartCount = 0U;
+      000063 21r00r00               169 	ld	hl, #_heartCount
+      000066 36 00                  170 	ld	(hl), #0x00
+                                    171 ;Bownly/states/bownlyPastelMicrogame.c:131: jumppuffX = 0U;
+      000068 21r0Fr00               172 	ld	hl, #_jumppuffX
+      00006B 36 00                  173 	ld	(hl), #0x00
+                                    174 ;Bownly/states/bownlyPastelMicrogame.c:132: jumppuffY = 0U;
+      00006D 21r10r00               175 	ld	hl, #_jumppuffY
+      000070 36 00                  176 	ld	(hl), #0x00
+                                    177 ;Bownly/states/bownlyPastelMicrogame.c:133: jumppuffTimer = 0U;
+      000072 21r03r00               178 	ld	hl, #_jumppuffTimer
+      000075 36 00                  179 	ld	(hl), #0x00
+                                    180 ;Bownly/states/bownlyPastelMicrogame.c:135: xSpeedWalking = 6U + (mgSpeed << 1U);
+      000077 FAr00r00               181 	ld	a, (#_mgSpeed)
+      00007A 87                     182 	add	a, a
+      00007B C6 06                  183 	add	a, #0x06
+      00007D EAr0Br00               184 	ld	(#_xSpeedWalking),a
+                                    185 ;Bownly/states/bownlyPastelMicrogame.c:136: xSpeedInAir = 6U + (mgSpeed << 1U);
+      000080 EAr0Cr00               186 	ld	(#_xSpeedInAir),a
+                                    187 ;Bownly/states/bownlyPastelMicrogame.c:140: set_bkg_data(0x3FU, 30U, bownlyPastelBkgTiles);
+      000083 11r00r00               188 	ld	de, #_bownlyPastelBkgTiles
+      000086 D5                     189 	push	de
+      000087 21 3F 1E               190 	ld	hl, #0x1e3f
+      00008A E5                     191 	push	hl
+      00008B CDr00r00               192 	call	_set_bkg_data
+      00008E E8 04                  193 	add	sp, #4
+                                    194 ;Bownly/states/bownlyPastelMicrogame.c:141: for (i = 0U; i != 20U; ++i)
+      000090 21r00r00               195 	ld	hl, #_i
+      000093 36 00                  196 	ld	(hl), #0x00
+      000095                        197 00110$:
+                                    198 ;Bownly/states/bownlyPastelMicrogame.c:143: for (j = 0U; j != 18U; ++j)
+      000095 21r00r00               199 	ld	hl, #_j
+      000098 36 00                  200 	ld	(hl), #0x00
+      00009A                        201 00108$:
+                                    202 ;Bownly/states/bownlyPastelMicrogame.c:145: set_bkg_tile_xy(i, j, 0x3FU);  // Full black tile
+      00009A 3E 3F                  203 	ld	a, #0x3f
+      00009C F5                     204 	push	af
+      00009D 33                     205 	inc	sp
+      00009E FAr00r00               206 	ld	a, (#_j)
+      0000A1 67                     207 	ld	h, a
+      0000A2 FAr00r00               208 	ld	a, (#_i)
+      0000A5 6F                     209 	ld	l, a
+      0000A6 E5                     210 	push	hl
+      0000A7 CDr00r00               211 	call	_set_bkg_tile_xy
+      0000AA E8 03                  212 	add	sp, #3
+                                    213 ;Bownly/states/bownlyPastelMicrogame.c:143: for (j = 0U; j != 18U; ++j)
+      0000AC 21r00r00               214 	ld	hl, #_j
+      0000AF 34                     215 	inc	(hl)
+      0000B0 7E                     216 	ld	a, (hl)
+      0000B1 D6 12                  217 	sub	a, #0x12
+      0000B3 20 E5                  218 	jr	NZ, 00108$
+                                    219 ;Bownly/states/bownlyPastelMicrogame.c:141: for (i = 0U; i != 20U; ++i)
+      0000B5 21r00r00               220 	ld	hl, #_i
+      0000B8 34                     221 	inc	(hl)
+      0000B9 7E                     222 	ld	a, (hl)
+      0000BA D6 14                  223 	sub	a, #0x14
+      0000BC 20 D7                  224 	jr	NZ, 00110$
+                                    225 ;Bownly/states/bownlyPastelMicrogame.c:150: set_sprite_data(SPRTILE_PASTEL, bownlySprPastel_TILE_COUNT, bownlySprPastel_tiles);
+      0000BE 11r00r00               226 	ld	de, #_bownlySprPastel_tiles
+      0000C1 D5                     227 	push	de
+      0000C2 21 00 56               228 	ld	hl, #0x5600
+      0000C5 E5                     229 	push	hl
+      0000C6 CDr00r00               230 	call	_set_sprite_data
+      0000C9 E8 04                  231 	add	sp, #4
+                                    232 ;Bownly/states/bownlyPastelMicrogame.c:151: set_sprite_data(SPRTILE_JUMPPUFF, bownlySprJumppuff_TILE_COUNT, bownlySprJumppuff_tiles);
+      0000CB 11r00r00               233 	ld	de, #_bownlySprJumppuff_tiles
+      0000CE D5                     234 	push	de
+      0000CF 21 56 08               235 	ld	hl, #0x856
+      0000D2 E5                     236 	push	hl
+      0000D3 CDr00r00               237 	call	_set_sprite_data
+      0000D6 E8 04                  238 	add	sp, #4
+                                    239 ;Bownly/states/bownlyPastelMicrogame.c:152: set_bkg_data(BKGID_HEART, 1U, &bownlyPastelHeartTiles[0U]);
+      0000D8 11r00r00               240 	ld	de, #_bownlyPastelHeartTiles
+      0000DB D5                     241 	push	de
+      0000DC 21 60 01               242 	ld	hl, #0x160
+      0000DF E5                     243 	push	hl
+      0000E0 CDr00r00               244 	call	_set_bkg_data
+      0000E3 E8 04                  245 	add	sp, #4
+                                    246 ;Bownly/states/bownlyPastelMicrogame.c:153: set_bkg_data(0x70U, 42U, bownlyPastelTreeTiles);
+      0000E5 11r00r00               247 	ld	de, #_bownlyPastelTreeTiles
+      0000E8 D5                     248 	push	de
+      0000E9 21 70 2A               249 	ld	hl, #0x2a70
+      0000EC E5                     250 	push	hl
+      0000ED CDr00r00               251 	call	_set_bkg_data
+      0000F0 E8 04                  252 	add	sp, #4
+                                    253 ;Bownly/states/bownlyPastelMicrogame.c:155: switch (mgDifficulty)
+      0000F2 FAr00r00               254 	ld	a, (#_mgDifficulty)
+      0000F5 B7                     255 	or	a, a
+      0000F6 28 0E                  256 	jr	Z, 00104$
+      0000F8 FAr00r00               257 	ld	a, (#_mgDifficulty)
+      0000FB 3D                     258 	dec	a
+      0000FC 28 75                  259 	jr	Z, 00105$
+      0000FE FAr00r00               260 	ld	a, (#_mgDifficulty)
+      000101 D6 02                  261 	sub	a, #0x02
+      000103 CAr09r02               262 	jp	Z,00106$
+                                    263 ;Bownly/states/bownlyPastelMicrogame.c:158: case 0U:
+      000106                        264 00104$:
+                                    265 ;Bownly/states/bownlyPastelMicrogame.c:160: set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
+      000106 11r00r00               266 	ld	de, #_bownlyPastelBkg1Map
+      000109 D5                     267 	push	de
+      00010A 21 14 05               268 	ld	hl, #0x514
+      00010D E5                     269 	push	hl
+      00010E 21 00 0D               270 	ld	hl, #0xd00
+      000111 E5                     271 	push	hl
+      000112 CDr00r00               272 	call	_set_bkg_tiles
+      000115 E8 06                  273 	add	sp, #6
+                                    274 ;Bownly/states/bownlyPastelMicrogame.c:163: set_bkg_tiles(0U, 3U, 6U, 10U, bownlyPastelTreeMap);
+      000117 11r00r00               275 	ld	de, #_bownlyPastelTreeMap
+      00011A D5                     276 	push	de
+      00011B 21 06 0A               277 	ld	hl, #0xa06
+      00011E E5                     278 	push	hl
+      00011F 21 00 03               279 	ld	hl, #0x300
+      000122 E5                     280 	push	hl
+      000123 CDr00r00               281 	call	_set_bkg_tiles
+      000126 E8 06                  282 	add	sp, #6
+                                    283 ;Bownly/states/bownlyPastelMicrogame.c:166: set_bkg_tile_xy(6U, 8U + getRandUint8(5U), BKGID_HEART);
+      000128 3E 05                  284 	ld	a, #0x05
+      00012A F5                     285 	push	af
+      00012B 33                     286 	inc	sp
+      00012C CDr00r00               287 	call	_getRandUint8
+      00012F 33                     288 	inc	sp
+      000130 7B                     289 	ld	a, e
+      000131 C6 08                  290 	add	a, #0x08
+      000133 26 60                  291 	ld	h, #0x60
+                                    292 ;	spillPairReg hl
+                                    293 ;	spillPairReg hl
+      000135 E5                     294 	push	hl
+      000136 33                     295 	inc	sp
+      000137 67                     296 	ld	h, a
+      000138 2E 06                  297 	ld	l, #0x06
+      00013A E5                     298 	push	hl
+      00013B CDr00r00               299 	call	_set_bkg_tile_xy
+      00013E E8 03                  300 	add	sp, #3
+                                    301 ;Bownly/states/bownlyPastelMicrogame.c:167: set_bkg_tile_xy(12U, 6U + getRandUint8(6U), BKGID_HEART);
+      000140 3E 06                  302 	ld	a, #0x06
+      000142 F5                     303 	push	af
+      000143 33                     304 	inc	sp
+      000144 CDr00r00               305 	call	_getRandUint8
+      000147 33                     306 	inc	sp
+      000148 7B                     307 	ld	a, e
+      000149 C6 06                  308 	add	a, #0x06
+      00014B 26 60                  309 	ld	h, #0x60
+                                    310 ;	spillPairReg hl
+                                    311 ;	spillPairReg hl
+      00014D E5                     312 	push	hl
+      00014E 33                     313 	inc	sp
+      00014F 67                     314 	ld	h, a
+      000150 2E 0C                  315 	ld	l, #0x0c
+      000152 E5                     316 	push	hl
+      000153 CDr00r00               317 	call	_set_bkg_tile_xy
+      000156 E8 03                  318 	add	sp, #3
+                                    319 ;Bownly/states/bownlyPastelMicrogame.c:168: set_bkg_tile_xy(17U, 9U + getRandUint8(4U), BKGID_HEART);
+      000158 3E 04                  320 	ld	a, #0x04
+      00015A F5                     321 	push	af
+      00015B 33                     322 	inc	sp
+      00015C CDr00r00               323 	call	_getRandUint8
+      00015F 33                     324 	inc	sp
+      000160 7B                     325 	ld	a, e
+      000161 C6 09                  326 	add	a, #0x09
+      000163 26 60                  327 	ld	h, #0x60
+                                    328 ;	spillPairReg hl
+                                    329 ;	spillPairReg hl
+      000165 E5                     330 	push	hl
+      000166 33                     331 	inc	sp
+      000167 67                     332 	ld	h, a
+      000168 2E 11                  333 	ld	l, #0x11
+      00016A E5                     334 	push	hl
+      00016B CDr00r00               335 	call	_set_bkg_tile_xy
+      00016E E8 03                  336 	add	sp, #3
+                                    337 ;Bownly/states/bownlyPastelMicrogame.c:169: break;
+      000170 C3rD0r02               338 	jp	00107$
+                                    339 ;Bownly/states/bownlyPastelMicrogame.c:170: case 1U:
+      000173                        340 00105$:
+                                    341 ;Bownly/states/bownlyPastelMicrogame.c:172: set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
+      000173 11r00r00               342 	ld	de, #_bownlyPastelBkg1Map
+      000176 D5                     343 	push	de
+      000177 21 14 05               344 	ld	hl, #0x514
+      00017A E5                     345 	push	hl
+      00017B 21 00 0D               346 	ld	hl, #0xd00
+      00017E E5                     347 	push	hl
+      00017F CDr00r00               348 	call	_set_bkg_tiles
+      000182 E8 06                  349 	add	sp, #6
+                                    350 ;Bownly/states/bownlyPastelMicrogame.c:173: set_bkg_tiles(12U, 10U, 5U, 6U, bownlyPastelBkg2Map);
+      000184 11r00r00               351 	ld	de, #_bownlyPastelBkg2Map
+      000187 D5                     352 	push	de
+      000188 21 05 06               353 	ld	hl, #0x605
+      00018B E5                     354 	push	hl
+      00018C 21 0C 0A               355 	ld	hl, #0xa0c
+      00018F E5                     356 	push	hl
+      000190 CDr00r00               357 	call	_set_bkg_tiles
+      000193 E8 06                  358 	add	sp, #6
+                                    359 ;Bownly/states/bownlyPastelMicrogame.c:176: set_bkg_tiles(3U, 3U, 6U, 10U, bownlyPastelTreeMap);
+      000195 11r00r00               360 	ld	de, #_bownlyPastelTreeMap
+      000198 D5                     361 	push	de
+      000199 21 06 0A               362 	ld	hl, #0xa06
+      00019C E5                     363 	push	hl
+      00019D 21 03 03               364 	ld	hl, #0x303
+      0001A0 E5                     365 	push	hl
+      0001A1 CDr00r00               366 	call	_set_bkg_tiles
+      0001A4 E8 06                  367 	add	sp, #6
+                                    368 ;Bownly/states/bownlyPastelMicrogame.c:179: set_bkg_tile_xy(1U, 8U + getRandUint8(5U), BKGID_HEART);
+      0001A6 3E 05                  369 	ld	a, #0x05
+      0001A8 F5                     370 	push	af
+      0001A9 33                     371 	inc	sp
+      0001AA CDr00r00               372 	call	_getRandUint8
+      0001AD 33                     373 	inc	sp
+      0001AE 7B                     374 	ld	a, e
+      0001AF C6 08                  375 	add	a, #0x08
+      0001B1 26 60                  376 	ld	h, #0x60
+                                    377 ;	spillPairReg hl
+                                    378 ;	spillPairReg hl
+      0001B3 E5                     379 	push	hl
+      0001B4 33                     380 	inc	sp
+      0001B5 67                     381 	ld	h, a
+      0001B6 2E 01                  382 	ld	l, #0x01
+      0001B8 E5                     383 	push	hl
+      0001B9 CDr00r00               384 	call	_set_bkg_tile_xy
+      0001BC E8 03                  385 	add	sp, #3
+                                    386 ;Bownly/states/bownlyPastelMicrogame.c:180: set_bkg_tile_xy(9U, 5U + getRandUint8(4U), BKGID_HEART);
+      0001BE 3E 04                  387 	ld	a, #0x04
+      0001C0 F5                     388 	push	af
+      0001C1 33                     389 	inc	sp
+      0001C2 CDr00r00               390 	call	_getRandUint8
+      0001C5 33                     391 	inc	sp
+      0001C6 7B                     392 	ld	a, e
+      0001C7 C6 05                  393 	add	a, #0x05
+      0001C9 26 60                  394 	ld	h, #0x60
+                                    395 ;	spillPairReg hl
+                                    396 ;	spillPairReg hl
+      0001CB E5                     397 	push	hl
+      0001CC 33                     398 	inc	sp
+      0001CD 67                     399 	ld	h, a
+      0001CE 2E 09                  400 	ld	l, #0x09
+      0001D0 E5                     401 	push	hl
+      0001D1 CDr00r00               402 	call	_set_bkg_tile_xy
+      0001D4 E8 03                  403 	add	sp, #3
+                                    404 ;Bownly/states/bownlyPastelMicrogame.c:181: set_bkg_tile_xy(14U, 6U + getRandUint8(4U), BKGID_HEART);
+      0001D6 3E 04                  405 	ld	a, #0x04
+      0001D8 F5                     406 	push	af
+      0001D9 33                     407 	inc	sp
+      0001DA CDr00r00               408 	call	_getRandUint8
+      0001DD 33                     409 	inc	sp
+      0001DE 7B                     410 	ld	a, e
+      0001DF C6 06                  411 	add	a, #0x06
+      0001E1 26 60                  412 	ld	h, #0x60
+                                    413 ;	spillPairReg hl
+                                    414 ;	spillPairReg hl
+      0001E3 E5                     415 	push	hl
+      0001E4 33                     416 	inc	sp
+      0001E5 67                     417 	ld	h, a
+      0001E6 2E 0E                  418 	ld	l, #0x0e
+      0001E8 E5                     419 	push	hl
+      0001E9 CDr00r00               420 	call	_set_bkg_tile_xy
+      0001EC E8 03                  421 	add	sp, #3
+                                    422 ;Bownly/states/bownlyPastelMicrogame.c:182: set_bkg_tile_xy(18U, 9U + getRandUint8(4U), BKGID_HEART);
+      0001EE 3E 04                  423 	ld	a, #0x04
+      0001F0 F5                     424 	push	af
+      0001F1 33                     425 	inc	sp
+      0001F2 CDr00r00               426 	call	_getRandUint8
+      0001F5 33                     427 	inc	sp
+      0001F6 7B                     428 	ld	a, e
+      0001F7 C6 09                  429 	add	a, #0x09
+      0001F9 26 60                  430 	ld	h, #0x60
+                                    431 ;	spillPairReg hl
+                                    432 ;	spillPairReg hl
+      0001FB E5                     433 	push	hl
+      0001FC 33                     434 	inc	sp
+      0001FD 67                     435 	ld	h, a
+      0001FE 2E 12                  436 	ld	l, #0x12
+      000200 E5                     437 	push	hl
+      000201 CDr00r00               438 	call	_set_bkg_tile_xy
+      000204 E8 03                  439 	add	sp, #3
+                                    440 ;Bownly/states/bownlyPastelMicrogame.c:183: break;
+      000206 C3rD0r02               441 	jp	00107$
+                                    442 ;Bownly/states/bownlyPastelMicrogame.c:184: case 2U:
+      000209                        443 00106$:
+                                    444 ;Bownly/states/bownlyPastelMicrogame.c:186: set_bkg_tiles(16U, 3U, 6U, 10U, bownlyPastelTreeMap);
+      000209 01r00r00               445 	ld	bc, #_bownlyPastelTreeMap+0
+      00020C C5                     446 	push	bc
+      00020D 21 06 0A               447 	ld	hl, #0xa06
+      000210 E5                     448 	push	hl
+      000211 21 10 03               449 	ld	hl, #0x310
+      000214 E5                     450 	push	hl
+      000215 CDr00r00               451 	call	_set_bkg_tiles
+      000218 E8 06                  452 	add	sp, #6
+                                    453 ;Bownly/states/bownlyPastelMicrogame.c:189: set_bkg_tiles(0U, 13U, 20U, 5U, bownlyPastelBkg1Map);
+      00021A 11r00r00               454 	ld	de, #_bownlyPastelBkg1Map
+      00021D D5                     455 	push	de
+      00021E 21 14 05               456 	ld	hl, #0x514
+      000221 E5                     457 	push	hl
+      000222 21 00 0D               458 	ld	hl, #0xd00
+      000225 E5                     459 	push	hl
+      000226 CDr00r00               460 	call	_set_bkg_tiles
+      000229 E8 06                  461 	add	sp, #6
+                                    462 ;Bownly/states/bownlyPastelMicrogame.c:190: set_bkg_tiles(12U, 10U, 5U, 6U, bownlyPastelBkg2Map);
+      00022B 11r00r00               463 	ld	de, #_bownlyPastelBkg2Map
+      00022E D5                     464 	push	de
+      00022F 21 05 06               465 	ld	hl, #0x605
+      000232 E5                     466 	push	hl
+      000233 21 0C 0A               467 	ld	hl, #0xa0c
+      000236 E5                     468 	push	hl
+      000237 CDr00r00               469 	call	_set_bkg_tiles
+      00023A E8 06                  470 	add	sp, #6
+                                    471 ;Bownly/states/bownlyPastelMicrogame.c:191: set_bkg_tiles(4U, 7U, 4U, 6U, bownlyPastelBkg3Map);
+      00023C 11r00r00               472 	ld	de, #_bownlyPastelBkg3Map
+      00023F D5                     473 	push	de
+      000240 21 04 06               474 	ld	hl, #0x604
+      000243 E5                     475 	push	hl
+      000244 21 04 07               476 	ld	hl, #0x704
+      000247 E5                     477 	push	hl
+      000248 CDr00r00               478 	call	_set_bkg_tiles
+      00024B E8 06                  479 	add	sp, #6
+                                    480 ;Bownly/states/bownlyPastelMicrogame.c:194: set_bkg_tiles(30U, 3U, 6U, 10U, bownlyPastelTreeMap);
+      00024D C5                     481 	push	bc
+      00024E 21 06 0A               482 	ld	hl, #0xa06
+      000251 E5                     483 	push	hl
+      000252 21 1E 03               484 	ld	hl, #0x31e
+      000255 E5                     485 	push	hl
+      000256 CDr00r00               486 	call	_set_bkg_tiles
+      000259 E8 06                  487 	add	sp, #6
+                                    488 ;Bownly/states/bownlyPastelMicrogame.c:197: set_bkg_tile_xy(2U, 0U + getRandUint8(5U), BKGID_HEART);
+      00025B 3E 05                  489 	ld	a, #0x05
+      00025D F5                     490 	push	af
+      00025E 33                     491 	inc	sp
+      00025F CDr00r00               492 	call	_getRandUint8
+      000262 33                     493 	inc	sp
+      000263 7B                     494 	ld	a, e
+      000264 26 60                  495 	ld	h, #0x60
+                                    496 ;	spillPairReg hl
+                                    497 ;	spillPairReg hl
+      000266 E5                     498 	push	hl
+      000267 33                     499 	inc	sp
+      000268 67                     500 	ld	h, a
+      000269 2E 02                  501 	ld	l, #0x02
+      00026B E5                     502 	push	hl
+      00026C CDr00r00               503 	call	_set_bkg_tile_xy
+      00026F E8 03                  504 	add	sp, #3
+                                    505 ;Bownly/states/bownlyPastelMicrogame.c:198: set_bkg_tile_xy(6U, 1U + getRandUint8(5U), BKGID_HEART);
+      000271 3E 05                  506 	ld	a, #0x05
+      000273 F5                     507 	push	af
+      000274 33                     508 	inc	sp
+      000275 CDr00r00               509 	call	_getRandUint8
+      000278 33                     510 	inc	sp
+      000279 7B                     511 	ld	a, e
+      00027A 3C                     512 	inc	a
+      00027B 26 60                  513 	ld	h, #0x60
+                                    514 ;	spillPairReg hl
+                                    515 ;	spillPairReg hl
+      00027D E5                     516 	push	hl
+      00027E 33                     517 	inc	sp
+      00027F 67                     518 	ld	h, a
+      000280 2E 06                  519 	ld	l, #0x06
+      000282 E5                     520 	push	hl
+      000283 CDr00r00               521 	call	_set_bkg_tile_xy
+      000286 E8 03                  522 	add	sp, #3
+                                    523 ;Bownly/states/bownlyPastelMicrogame.c:199: set_bkg_tile_xy(9U, 2U + getRandUint8(6U), BKGID_HEART);
+      000288 3E 06                  524 	ld	a, #0x06
+      00028A F5                     525 	push	af
+      00028B 33                     526 	inc	sp
+      00028C CDr00r00               527 	call	_getRandUint8
+      00028F 33                     528 	inc	sp
+      000290 7B                     529 	ld	a, e
+      000291 C6 02                  530 	add	a, #0x02
+      000293 26 60                  531 	ld	h, #0x60
+                                    532 ;	spillPairReg hl
+                                    533 ;	spillPairReg hl
+      000295 E5                     534 	push	hl
+      000296 33                     535 	inc	sp
+      000297 67                     536 	ld	h, a
+      000298 2E 09                  537 	ld	l, #0x09
+      00029A E5                     538 	push	hl
+      00029B CDr00r00               539 	call	_set_bkg_tile_xy
+      00029E E8 03                  540 	add	sp, #3
+                                    541 ;Bownly/states/bownlyPastelMicrogame.c:200: set_bkg_tile_xy(14U, 3U + getRandUint8(6U), BKGID_HEART);
+      0002A0 3E 06                  542 	ld	a, #0x06
+      0002A2 F5                     543 	push	af
+      0002A3 33                     544 	inc	sp
+      0002A4 CDr00r00               545 	call	_getRandUint8
+      0002A7 33                     546 	inc	sp
+      0002A8 7B                     547 	ld	a, e
+      0002A9 C6 03                  548 	add	a, #0x03
+      0002AB 26 60                  549 	ld	h, #0x60
+                                    550 ;	spillPairReg hl
+                                    551 ;	spillPairReg hl
+      0002AD E5                     552 	push	hl
+      0002AE 33                     553 	inc	sp
+      0002AF 67                     554 	ld	h, a
+      0002B0 2E 0E                  555 	ld	l, #0x0e
+      0002B2 E5                     556 	push	hl
+      0002B3 CDr00r00               557 	call	_set_bkg_tile_xy
+      0002B6 E8 03                  558 	add	sp, #3
+                                    559 ;Bownly/states/bownlyPastelMicrogame.c:201: set_bkg_tile_xy(17U, 5U + getRandUint8(4U), BKGID_HEART);
+      0002B8 3E 04                  560 	ld	a, #0x04
+      0002BA F5                     561 	push	af
+      0002BB 33                     562 	inc	sp
+      0002BC CDr00r00               563 	call	_getRandUint8
+      0002BF 33                     564 	inc	sp
+      0002C0 7B                     565 	ld	a, e
+      0002C1 C6 05                  566 	add	a, #0x05
+      0002C3 26 60                  567 	ld	h, #0x60
+                                    568 ;	spillPairReg hl
+                                    569 ;	spillPairReg hl
+      0002C5 E5                     570 	push	hl
+      0002C6 33                     571 	inc	sp
+      0002C7 67                     572 	ld	h, a
+      0002C8 2E 11                  573 	ld	l, #0x11
+      0002CA E5                     574 	push	hl
+      0002CB CDr00r00               575 	call	_set_bkg_tile_xy
+      0002CE E8 03                  576 	add	sp, #3
+                                    577 ;Bownly/states/bownlyPastelMicrogame.c:203: }
+      0002D0                        578 00107$:
+                                    579 ;Bownly/states/bownlyPastelMicrogame.c:205: playSong(&bownlyVictoryLapSong);
+      0002D0 11r00r00               580 	ld	de, #_bownlyVictoryLapSong
+      0002D3 D5                     581 	push	de
+      0002D4 CDr00r00               582 	call	_playSong
+      0002D7 E1                     583 	pop	hl
+                                    584 ;Bownly/states/bownlyPastelMicrogame.c:207: fadein();
+      0002D8 CDr00r00               585 	call	_fadein
+                                    586 ;Bownly/states/bownlyPastelMicrogame.c:208: substate = SUB_LOOP;
+      0002DB 21r00r00               587 	ld	hl, #_substate
+      0002DE 36 01                  588 	ld	(hl), #0x01
+                                    589 ;Bownly/states/bownlyPastelMicrogame.c:209: }
+      0002E0 C9                     590 	ret
+                                    591 ;Bownly/states/bownlyPastelMicrogame.c:211: static void phasePastelLoop()
+                                    592 ;	---------------------------------
+                                    593 ; Function phasePastelLoop
+                                    594 ; ---------------------------------
+      0002E1                        595 _phasePastelLoop:
+                                    596 ;Bownly/states/bownlyPastelMicrogame.c:213: hide_metasprite(bownlySprPastel_metasprites[animFrame % 16U], SPRTILE_PASTEL);
+      0002E1 FAr00r00               597 	ld	a, (#_animFrame)
+      0002E4 E6 0F                  598 	and	a, #0x0f
+      0002E6 6F                     599 	ld	l, a
+                                    600 ;	spillPairReg hl
+                                    601 ;	spillPairReg hl
+      0002E7 26 00                  602 	ld	h, #0x00
+                                    603 ;	spillPairReg hl
+                                    604 ;	spillPairReg hl
+      0002E9 29                     605 	add	hl, hl
+      0002EA 11r00r00               606 	ld	de, #_bownlySprPastel_metasprites
+      0002ED 19                     607 	add	hl, de
+      0002EE 2A                     608 	ld	a, (hl+)
+      0002EF 4E                     609 	ld	c, (hl)
+                                    610 ;C:/gbdk/include/gb/metasprites.h:241: __current_metasprite = metasprite;
+      0002F0 21r00r00               611 	ld	hl, #___current_metasprite
+      0002F3 22                     612 	ld	(hl+), a
+      0002F4 71                     613 	ld	(hl), c
+                                    614 ;C:/gbdk/include/gb/metasprites.h:242: __hide_metasprite(base_sprite);
+      0002F5 AF                     615 	xor	a, a
+      0002F6 F5                     616 	push	af
+      0002F7 33                     617 	inc	sp
+      0002F8 CDr00r00               618 	call	___hide_metasprite
+      0002FB 33                     619 	inc	sp
+                                    620 ;Bownly/states/bownlyPastelMicrogame.c:214: ++animTick;
+      0002FC 21r00r00               621 	ld	hl, #_animTick
+      0002FF 34                     622 	inc	(hl)
+                                    623 ;Bownly/states/bownlyPastelMicrogame.c:216: inputsPastel();
+      000300 CDr83r03               624 	call	_inputsPastel
+                                    625 ;Bownly/states/bownlyPastelMicrogame.c:217: calcPhysics();
+      000303 CDrD3r04               626 	call	_calcPhysics
+                                    627 ;Bownly/states/bownlyPastelMicrogame.c:218: if (checkHeartCollision() == TRUE)
+      000306 CDr85r07               628 	call	_checkHeartCollision
+      000309 1D                     629 	dec	e
+      00030A 20 23                  630 	jr	NZ, 00104$
+                                    631 ;Bownly/states/bownlyPastelMicrogame.c:220: ++heartCount;
+      00030C 21r00r00               632 	ld	hl, #_heartCount
+      00030F 34                     633 	inc	(hl)
+                                    634 ;Bownly/states/bownlyPastelMicrogame.c:221: if (heartCount == mgDifficulty + 3U)
+      000310 21r00r00               635 	ld	hl, #_mgDifficulty
+      000313 4E                     636 	ld	c, (hl)
+      000314 06 00                  637 	ld	b, #0x00
+      000316 03                     638 	inc	bc
+      000317 03                     639 	inc	bc
+      000318 03                     640 	inc	bc
+      000319 21r00r00               641 	ld	hl, #_heartCount
+      00031C 5E                     642 	ld	e, (hl)
+      00031D 16 00                  643 	ld	d, #0x00
+      00031F 7B                     644 	ld	a, e
+      000320 91                     645 	sub	a, c
+      000321 20 09                  646 	jr	NZ, 00102$
+      000323 7A                     647 	ld	a, d
+      000324 90                     648 	sub	a, b
+      000325 20 05                  649 	jr	NZ, 00102$
+                                    650 ;Bownly/states/bownlyPastelMicrogame.c:222: mgStatus = WON;
+      000327 21r00r00               651 	ld	hl, #_mgStatus
+      00032A 36 02                  652 	ld	(hl), #0x02
+      00032C                        653 00102$:
+                                    654 ;Bownly/states/bownlyPastelMicrogame.c:223: playDingSfx();
+      00032C CDr00r00               655 	call	_playDingSfx
+      00032F                        656 00104$:
+                                    657 ;Bownly/states/bownlyPastelMicrogame.c:226: animatePastel();
+      00032F CDr67r08               658 	call	_animatePastel
+                                    659 ;Bownly/states/bownlyPastelMicrogame.c:227: animateHearts();
+      000332 CDr49r08               660 	call	_animateHearts
+                                    661 ;Bownly/states/bownlyPastelMicrogame.c:230: if (jumppuffTimer == JUMPPUFF_DURATION)
+      000335 FAr03r00               662 	ld	a, (#_jumppuffTimer)
+      000338 D6 07                  663 	sub	a, #0x07
+      00033A 20 15                  664 	jr	NZ, 00106$
+                                    665 ;Bownly/states/bownlyPastelMicrogame.c:231: hide_metasprite(bownlySprJumppuff_metasprites[0U], SPRID_JUPMPUFF);
+      00033C 21r00r00               666 	ld	hl, #_bownlySprJumppuff_metasprites
+      00033F 2A                     667 	ld	a, (hl+)
+      000340 4F                     668 	ld	c, a
+      000341 7E                     669 	ld	a, (hl)
+                                    670 ;C:/gbdk/include/gb/metasprites.h:241: __current_metasprite = metasprite;
+      000342 21r00r00               671 	ld	hl, #___current_metasprite
+      000345 71                     672 	ld	(hl), c
+      000346 23                     673 	inc	hl
+      000347 77                     674 	ld	(hl), a
+                                    675 ;C:/gbdk/include/gb/metasprites.h:242: __hide_metasprite(base_sprite);
+      000348 3E 0A                  676 	ld	a, #0x0a
+      00034A F5                     677 	push	af
+      00034B 33                     678 	inc	sp
+      00034C CDr00r00               679 	call	___hide_metasprite
+      00034F 33                     680 	inc	sp
+                                    681 ;Bownly/states/bownlyPastelMicrogame.c:231: hide_metasprite(bownlySprJumppuff_metasprites[0U], SPRID_JUPMPUFF);
+      000350 C9                     682 	ret
+      000351                        683 00106$:
+                                    684 ;Bownly/states/bownlyPastelMicrogame.c:234: move_metasprite(bownlySprJumppuff_metasprites[jumppuffTimer], SPRTILE_JUMPPUFF, SPRID_JUPMPUFF, jumppuffX, jumppuffY);
+      000351 21r10r00               685 	ld	hl, #_jumppuffY
+      000354 46                     686 	ld	b, (hl)
+      000355 21r0Fr00               687 	ld	hl, #_jumppuffX
+      000358 4E                     688 	ld	c, (hl)
+      000359 11r00r00               689 	ld	de, #_bownlySprJumppuff_metasprites+0
+      00035C 21r03r00               690 	ld	hl, #_jumppuffTimer
+      00035F 6E                     691 	ld	l, (hl)
+                                    692 ;	spillPairReg hl
+                                    693 ;	spillPairReg hl
+      000360 26 00                  694 	ld	h, #0x00
+                                    695 ;	spillPairReg hl
+                                    696 ;	spillPairReg hl
+      000362 29                     697 	add	hl, hl
+      000363 19                     698 	add	hl, de
+      000364 2A                     699 	ld	a, (hl+)
+      000365 6E                     700 	ld	l, (hl)
+                                    701 ;	spillPairReg hl
+                                    702 ;C:/gbdk/include/gb/metasprites.h:138: __current_metasprite = metasprite;
+      000366 5F                     703 	ld	e, a
+      000367 55                     704 	ld	d, l
+      000368 21r00r00               705 	ld	hl, #___current_metasprite
+      00036B 7B                     706 	ld	a, e
+      00036C 22                     707 	ld	(hl+), a
+      00036D 72                     708 	ld	(hl), d
+                                    709 ;C:/gbdk/include/gb/metasprites.h:139: __current_base_tile = base_tile;
+      00036E 21r00r00               710 	ld	hl, #___current_base_tile
+      000371 36 56                  711 	ld	(hl), #0x56
+                                    712 ;C:/gbdk/include/gb/metasprites.h:140: return __move_metasprite(base_sprite, x, y);
+      000373 C5                     713 	push	bc
+      000374 33                     714 	inc	sp
+      000375 61                     715 	ld	h, c
+      000376 2E 0A                  716 	ld	l, #0x0a
+      000378 E5                     717 	push	hl
+      000379 CDr00r00               718 	call	___move_metasprite
+      00037C E8 03                  719 	add	sp, #3
+                                    720 ;Bownly/states/bownlyPastelMicrogame.c:235: ++jumppuffTimer;
+      00037E 21r03r00               721 	ld	hl, #_jumppuffTimer
+      000381 34                     722 	inc	(hl)
+                                    723 ;Bownly/states/bownlyPastelMicrogame.c:237: }
+      000382 C9                     724 	ret
+                                    725 ;Bownly/states/bownlyPastelMicrogame.c:241: static void inputsPastel()
+                                    726 ;	---------------------------------
+                                    727 ; Function inputsPastel
+                                    728 ; ---------------------------------
+      000383                        729 _inputsPastel:
+      000383 3B                     730 	dec	sp
+      000384 3B                     731 	dec	sp
+                                    732 ;Bownly/states/bownlyPastelMicrogame.c:244: if (curJoypad & J_LEFT)
+      000385 21r00r00               733 	ld	hl, #_curJoypad
+      000388 4E                     734 	ld	c, (hl)
+                                    735 ;Bownly/states/bownlyPastelMicrogame.c:248: switch (pastelState)
+      000389 FAr0Ar00               736 	ld	a, (#_pastelState)
+      00038C B7                     737 	or	a, a
+      00038D 3E 01                  738 	ld	a, #0x01
+      00038F 28 01                  739 	jr	Z, 00235$
+      000391 AF                     740 	xor	a, a
+      000392                        741 00235$:
+      000392 47                     742 	ld	b, a
+      000393 FAr0Ar00               743 	ld	a, (#_pastelState)
+      000396 3D                     744 	dec	a
+      000397 3E 01                  745 	ld	a, #0x01
+      000399 28 01                  746 	jr	Z, 00237$
+      00039B AF                     747 	xor	a, a
+      00039C                        748 00237$:
+      00039C 5F                     749 	ld	e, a
+      00039D FAr0Ar00               750 	ld	a, (#_pastelState)
+      0003A0 D6 02                  751 	sub	a, #0x02
+      0003A2 3E 01                  752 	ld	a, #0x01
+      0003A4 28 01                  753 	jr	Z, 00239$
+      0003A6 AF                     754 	xor	a, a
+      0003A7                        755 00239$:
+      0003A7 57                     756 	ld	d, a
+                                    757 ;Bownly/states/bownlyPastelMicrogame.c:244: if (curJoypad & J_LEFT)
+      0003A8 CB 49                  758 	bit	1, c
+      0003AA 28 34                  759 	jr	Z, 00122$
+                                    760 ;Bownly/states/bownlyPastelMicrogame.c:246: if (pastelX != LEFT_BOUND)
+      0003AC 21r04r00               761 	ld	hl, #_pastelX
+      0003AF 2A                     762 	ld	a, (hl+)
+      0003B0 D6 30                  763 	sub	a, #0x30
+      0003B2 B6                     764 	or	a, (hl)
+      0003B3 CAr33r04               765 	jp	Z,00123$
+                                    766 ;Bownly/states/bownlyPastelMicrogame.c:248: switch (pastelState)
+      0003B6 78                     767 	ld	a, b
+      0003B7 B7                     768 	or	a,a
+      0003B8 20 08                  769 	jr	NZ, 00102$
+      0003BA B3                     770 	or	a,e
+      0003BB 20 05                  771 	jr	NZ, 00102$
+      0003BD B2                     772 	or	a,d
+      0003BE 20 11                  773 	jr	NZ, 00103$
+      0003C0 18 17                  774 	jr	00104$
+                                    775 ;Bownly/states/bownlyPastelMicrogame.c:251: case WALKING:
+      0003C2                        776 00102$:
+                                    777 ;Bownly/states/bownlyPastelMicrogame.c:252: pastelState = WALKING;
+      0003C2 21r0Ar00               778 	ld	hl, #_pastelState
+      0003C5 36 01                  779 	ld	(hl), #0x01
+                                    780 ;Bownly/states/bownlyPastelMicrogame.c:253: pastelXVel = -xSpeedWalking;
+      0003C7 AF                     781 	xor	a, a
+      0003C8 21r0Br00               782 	ld	hl, #_xSpeedWalking
+      0003CB 96                     783 	sub	a, (hl)
+      0003CC EAr08r00               784 	ld	(#_pastelXVel),a
+                                    785 ;Bownly/states/bownlyPastelMicrogame.c:254: break;
+      0003CF 18 08                  786 	jr	00104$
+                                    787 ;Bownly/states/bownlyPastelMicrogame.c:255: case AIRBORNE:
+      0003D1                        788 00103$:
+                                    789 ;Bownly/states/bownlyPastelMicrogame.c:256: pastelXVel = -xSpeedInAir;
+      0003D1 AF                     790 	xor	a, a
+      0003D2 21r0Cr00               791 	ld	hl, #_xSpeedInAir
+      0003D5 96                     792 	sub	a, (hl)
+      0003D6 EAr08r00               793 	ld	(#_pastelXVel),a
+                                    794 ;Bownly/states/bownlyPastelMicrogame.c:258: }
+      0003D9                        795 00104$:
+                                    796 ;Bownly/states/bownlyPastelMicrogame.c:259: pastelFlipX = TRUE;
+      0003D9 21r01r00               797 	ld	hl, #_pastelFlipX
+      0003DC 36 01                  798 	ld	(hl), #0x01
+      0003DE 18 53                  799 	jr	00123$
+      0003E0                        800 00122$:
+                                    801 ;Bownly/states/bownlyPastelMicrogame.c:262: else if (curJoypad & J_RIGHT)
+      0003E0 79                     802 	ld	a, c
+      0003E1 E6 01                  803 	and	a, #0x01
+      0003E3 6F                     804 	ld	l, a
+                                    805 ;	spillPairReg hl
+                                    806 ;	spillPairReg hl
+      0003E4 26 00                  807 	ld	h, #0x00
+                                    808 ;	spillPairReg hl
+                                    809 ;	spillPairReg hl
+      0003E6 7C                     810 	ld	a, h
+      0003E7 B5                     811 	or	a, l
+      0003E8 28 34                  812 	jr	Z, 00119$
+                                    813 ;Bownly/states/bownlyPastelMicrogame.c:264: if (pastelX != RIGHT_BOUND)
+      0003EA 21r04r00               814 	ld	hl, #_pastelX
+      0003ED 7E                     815 	ld	a, (hl)
+      0003EE D6 8C                  816 	sub	a, #0x8c
+      0003F0 20 06                  817 	jr	NZ, 00242$
+      0003F2 23                     818 	inc	hl
+      0003F3 7E                     819 	ld	a, (hl)
+      0003F4 D6 02                  820 	sub	a, #0x02
+      0003F6 28 3B                  821 	jr	Z, 00123$
+      0003F8                        822 00242$:
+                                    823 ;Bownly/states/bownlyPastelMicrogame.c:266: switch (pastelState)
+      0003F8 78                     824 	ld	a, b
+      0003F9 B7                     825 	or	a,a
+      0003FA 20 08                  826 	jr	NZ, 00108$
+      0003FC B3                     827 	or	a,e
+      0003FD 20 05                  828 	jr	NZ, 00108$
+      0003FF B2                     829 	or	a,d
+      000400 20 0F                  830 	jr	NZ, 00109$
+      000402 18 13                  831 	jr	00110$
+                                    832 ;Bownly/states/bownlyPastelMicrogame.c:269: case WALKING:
+      000404                        833 00108$:
+                                    834 ;Bownly/states/bownlyPastelMicrogame.c:270: pastelState = WALKING;
+      000404 21r0Ar00               835 	ld	hl, #_pastelState
+      000407 36 01                  836 	ld	(hl), #0x01
+                                    837 ;Bownly/states/bownlyPastelMicrogame.c:271: pastelXVel = xSpeedWalking;
+      000409 FAr0Br00               838 	ld	a, (#_xSpeedWalking)
+      00040C EAr08r00               839 	ld	(#_pastelXVel),a
+                                    840 ;Bownly/states/bownlyPastelMicrogame.c:272: break;
+      00040F 18 06                  841 	jr	00110$
+                                    842 ;Bownly/states/bownlyPastelMicrogame.c:273: case AIRBORNE:
+      000411                        843 00109$:
+                                    844 ;Bownly/states/bownlyPastelMicrogame.c:274: pastelXVel = xSpeedInAir;
+      000411 FAr0Cr00               845 	ld	a, (#_xSpeedInAir)
+      000414 EAr08r00               846 	ld	(#_pastelXVel),a
+                                    847 ;Bownly/states/bownlyPastelMicrogame.c:276: }
+      000417                        848 00110$:
+                                    849 ;Bownly/states/bownlyPastelMicrogame.c:277: pastelFlipX = FALSE;
+      000417 21r01r00               850 	ld	hl, #_pastelFlipX
+      00041A 36 00                  851 	ld	(hl), #0x00
+      00041C 18 15                  852 	jr	00123$
+      00041E                        853 00119$:
+                                    854 ;Bownly/states/bownlyPastelMicrogame.c:280: else if (!(curJoypad & J_RIGHT) && !(curJoypad & J_RIGHT))
+      00041E 7C                     855 	ld	a, h
+      00041F B5                     856 	or	a, l
+      000420 20 11                  857 	jr	NZ, 00123$
+      000422 7C                     858 	ld	a, h
+                                    859 ;Bownly/states/bownlyPastelMicrogame.c:282: if (pastelState == WALKING)
+      000423 B5                     860 	or	a,l
+      000424 20 0D                  861 	jr	NZ, 00123$
+      000426 B3                     862 	or	a,e
+      000427 28 05                  863 	jr	Z, 00114$
+                                    864 ;Bownly/states/bownlyPastelMicrogame.c:283: pastelState = IDLE;
+      000429 21r0Ar00               865 	ld	hl, #_pastelState
+      00042C 36 00                  866 	ld	(hl), #0x00
+      00042E                        867 00114$:
+                                    868 ;Bownly/states/bownlyPastelMicrogame.c:284: pastelXVel = 0;
+      00042E 21r08r00               869 	ld	hl, #_pastelXVel
+      000431 36 00                  870 	ld	(hl), #0x00
+      000433                        871 00123$:
+                                    872 ;Bownly/states/bownlyPastelMicrogame.c:248: switch (pastelState)
+      000433 FAr0Ar00               873 	ld	a, (#_pastelState)
+      000436 D6 02                  874 	sub	a, #0x02
+      000438 3E 01                  875 	ld	a, #0x01
+      00043A 28 01                  876 	jr	Z, 00244$
+      00043C AF                     877 	xor	a, a
+      00043D                        878 00244$:
+      00043D 5F                     879 	ld	e, a
+                                    880 ;Bownly/states/bownlyPastelMicrogame.c:288: if (curJoypad & J_A)
+      00043E CB 61                  881 	bit	4, c
+      000440 CArC6r04               882 	jp	Z,00135$
+                                    883 ;Bownly/states/bownlyPastelMicrogame.c:292: ++jumpTimer;
+      000443 21r0Er00               884 	ld	hl, #_jumpTimer
+      000446 4E                     885 	ld	c, (hl)
+      000447 0C                     886 	inc	c
+                                    887 ;Bownly/states/bownlyPastelMicrogame.c:293: pastelYVel = -ySpeedJumping;
+      000448 AF                     888 	xor	a, a
+      000449 21r0Dr00               889 	ld	hl, #_ySpeedJumping
+      00044C 96                     890 	sub	a, (hl)
+      00044D F8 01                  891 	ldhl	sp,	#1
+      00044F 77                     892 	ld	(hl), a
+                                    893 ;Bownly/states/bownlyPastelMicrogame.c:290: if ((pastelState == IDLE || pastelState == WALKING) && !(prevJoypad & J_A))  // Start jump
+      000450 21r0Ar00               894 	ld	hl, #_pastelState
+      000453 7E                     895 	ld	a, (hl)
+      000454 B7                     896 	or	a, a
+      000455 28 04                  897 	jr	Z, 00131$
+      000457 7E                     898 	ld	a, (hl)
+      000458 3D                     899 	dec	a
+      000459 20 52                  900 	jr	NZ, 00128$
+      00045B                        901 00131$:
+      00045B FAr00r00               902 	ld	a, (#_prevJoypad)
+      00045E CB 67                  903 	bit	4, a
+      000460 20 4B                  904 	jr	NZ, 00128$
+                                    905 ;Bownly/states/bownlyPastelMicrogame.c:292: ++jumpTimer;
+      000462 21r0Er00               906 	ld	hl, #_jumpTimer
+      000465 71                     907 	ld	(hl), c
+                                    908 ;Bownly/states/bownlyPastelMicrogame.c:293: pastelYVel = -ySpeedJumping;
+      000466 F8 01                  909 	ldhl	sp,	#1
+      000468 7E                     910 	ld	a, (hl)
+      000469 EAr09r00               911 	ld	(#_pastelYVel),a
+                                    912 ;Bownly/states/bownlyPastelMicrogame.c:294: pastelState = AIRBORNE;
+      00046C 21r0Ar00               913 	ld	hl, #_pastelState
+      00046F 36 02                  914 	ld	(hl), #0x02
+                                    915 ;Bownly/states/bownlyPastelMicrogame.c:295: jumppuffTimer = 0U;
+      000471 21r03r00               916 	ld	hl, #_jumppuffTimer
+      000474 36 00                  917 	ld	(hl), #0x00
+                                    918 ;Bownly/states/bownlyPastelMicrogame.c:296: jumppuffX = pastelX >> 2U;
+      000476 21r04r00               919 	ld	hl, #_pastelX
+      000479 2A                     920 	ld	a, (hl+)
+      00047A 4F                     921 	ld	c, a
+      00047B 46                     922 	ld	b, (hl)
+      00047C CB 38                  923 	srl	b
+      00047E CB 19                  924 	rr	c
+      000480 CB 38                  925 	srl	b
+      000482 CB 19                  926 	rr	c
+      000484 21r0Fr00               927 	ld	hl, #_jumppuffX
+      000487 71                     928 	ld	(hl), c
+                                    929 ;Bownly/states/bownlyPastelMicrogame.c:297: jumppuffY = ((pastelY + PASTEL_BOTTOM_OFFSET + 4U) >> 2U) + 10U;
+      000488 21r06r00               930 	ld	hl, #_pastelY
+      00048B 2A                     931 	ld	a, (hl+)
+      00048C 5F                     932 	ld	e, a
+      00048D 56                     933 	ld	d, (hl)
+      00048E 21 34 00               934 	ld	hl, #0x0034
+      000491 19                     935 	add	hl, de
+      000492 33                     936 	inc	sp
+      000493 33                     937 	inc	sp
+      000494 4D                     938 	ld	c, l
+      000495 44                     939 	ld	b, h
+      000496 C5                     940 	push	bc
+      000497 CB 38                  941 	srl	b
+      000499 CB 19                  942 	rr	c
+      00049B CB 38                  943 	srl	b
+      00049D CB 19                  944 	rr	c
+      00049F 79                     945 	ld	a, c
+      0004A0 C6 0A                  946 	add	a, #0x0a
+      0004A2 21r10r00               947 	ld	hl, #_jumppuffY
+      0004A5 77                     948 	ld	(hl), a
+                                    949 ;Bownly/states/bownlyPastelMicrogame.c:298: playBleepSfx();
+      0004A6 33                     950 	inc	sp
+      0004A7 33                     951 	inc	sp
+      0004A8 C3r00r00               952 	jp	_playBleepSfx
+      0004AB 18 23                  953 	jr	00137$
+      0004AD                        954 00128$:
+                                    955 ;Bownly/states/bownlyPastelMicrogame.c:300: else if (pastelState == AIRBORNE && jumpTimer != JUMP_DURATION)  // Continue jump
+      0004AD 7B                     956 	ld	a, e
+      0004AE B7                     957 	or	a, a
+      0004AF 28 1F                  958 	jr	Z, 00137$
+      0004B1 FAr0Er00               959 	ld	a, (#_jumpTimer)
+      0004B4 21r02r00               960 	ld	hl, #_JUMP_DURATION
+      0004B7 96                     961 	sub	a, (hl)
+      0004B8 28 16                  962 	jr	Z, 00137$
+                                    963 ;Bownly/states/bownlyPastelMicrogame.c:302: ++jumpTimer;
+      0004BA 21r0Er00               964 	ld	hl, #_jumpTimer
+      0004BD 71                     965 	ld	(hl), c
+                                    966 ;Bownly/states/bownlyPastelMicrogame.c:303: pastelYVel = -ySpeedJumping;
+      0004BE F8 01                  967 	ldhl	sp,	#1
+      0004C0 7E                     968 	ld	a, (hl)
+      0004C1 EAr09r00               969 	ld	(#_pastelYVel),a
+      0004C4 18 0A                  970 	jr	00137$
+      0004C6                        971 00135$:
+                                    972 ;Bownly/states/bownlyPastelMicrogame.c:306: else if (pastelState == AIRBORNE)
+      0004C6 7B                     973 	ld	a, e
+      0004C7 B7                     974 	or	a, a
+      0004C8 28 06                  975 	jr	Z, 00137$
+                                    976 ;Bownly/states/bownlyPastelMicrogame.c:308: jumpTimer = JUMP_DURATION;
+      0004CA FAr02r00               977 	ld	a, (#_JUMP_DURATION)
+      0004CD EAr0Er00               978 	ld	(#_jumpTimer),a
+      0004D0                        979 00137$:
+                                    980 ;Bownly/states/bownlyPastelMicrogame.c:310: }
+      0004D0 33                     981 	inc	sp
+      0004D1 33                     982 	inc	sp
+      0004D2 C9                     983 	ret
+                                    984 ;Bownly/states/bownlyPastelMicrogame.c:314: static void calcPhysics()
+                                    985 ;	---------------------------------
+                                    986 ; Function calcPhysics
+                                    987 ; ---------------------------------
+      0004D3                        988 _calcPhysics:
+      0004D3 3B                     989 	dec	sp
+                                    990 ;Bownly/states/bownlyPastelMicrogame.c:317: x = pastelX + pastelXVel;
+      0004D4 FAr08r00               991 	ld	a, (#_pastelXVel)
+      0004D7 4F                     992 	ld	c, a
+      0004D8 07                     993 	rlca
+      0004D9 9F                     994 	sbc	a, a
+      0004DA 47                     995 	ld	b, a
+      0004DB FAr04r00               996 	ld	a, (#_pastelX)
+      0004DE 81                     997 	add	a, c
+      0004DF EAr00r00               998 	ld	(#_x),a
+      0004E2 FAr05r00               999 	ld	a, (#_pastelX + 1)
+      0004E5 88                    1000 	adc	a, b
+      0004E6 EAr01r00              1001 	ld	(#_x + 1),a
+                                   1002 ;Bownly/states/bownlyPastelMicrogame.c:318: y = pastelY + pastelYVel;
+      0004E9 FAr09r00              1003 	ld	a, (#_pastelYVel)
+      0004EC 4F                    1004 	ld	c, a
+      0004ED 07                    1005 	rlca
+      0004EE 9F                    1006 	sbc	a, a
+      0004EF 47                    1007 	ld	b, a
+      0004F0 FAr06r00              1008 	ld	a, (#_pastelY)
+      0004F3 81                    1009 	add	a, c
+      0004F4 EAr02r00              1010 	ld	(#_y),a
+      0004F7 FAr07r00              1011 	ld	a, (#_pastelY + 1)
+      0004FA 88                    1012 	adc	a, b
+      0004FB EAr03r00              1013 	ld	(#_y + 1),a
+                                   1014 ;Bownly/states/bownlyPastelMicrogame.c:320: INT8 pastelBottomBound = (pastelY + PASTEL_BOTTOM_OFFSET) >> 5U;
+      0004FE 21r06r00              1015 	ld	hl, #_pastelY
+      000501 2A                    1016 	ld	a, (hl+)
+      000502 C6 30                 1017 	add	a, #0x30
+      000504 4F                    1018 	ld	c, a
+      000505 7E                    1019 	ld	a, (hl)
+      000506 CE 00                 1020 	adc	a, #0x00
+      000508 47                    1021 	ld	b, a
+      000509 CB 38                 1022 	srl	b
+      00050B CB 19                 1023 	rr	c
+      00050D CB 38                 1024 	srl	b
+      00050F CB 19                 1025 	rr	c
+      000511 CB 38                 1026 	srl	b
+      000513 CB 19                 1027 	rr	c
+      000515 CB 38                 1028 	srl	b
+      000517 CB 19                 1029 	rr	c
+      000519 CB 38                 1030 	srl	b
+      00051B CB 19                 1031 	rr	c
+                                   1032 ;Bownly/states/bownlyPastelMicrogame.c:321: INT8 pastelLeftBound = (x - 32U - PASTEL_LEFT_OFFSET) >> 5U;
+      00051D 21r00r00              1033 	ld	hl, #_x
+      000520 2A                    1034 	ld	a, (hl+)
+      000521 C6 D4                 1035 	add	a, #0xd4
+      000523 5F                    1036 	ld	e, a
+                                   1037 ;Bownly/states/bownlyPastelMicrogame.c:322: INT8 pastelRightBound = (x - 32U + PASTEL_RIGHT_OFFSET) >> 5U;
+      000524 3A                    1038 	ld	a, (hl-)
+      000525 CE FF                 1039 	adc	a, #0xff
+      000527 57                    1040 	ld	d, a
+      000528 CB 3A                 1041 	srl	d
+      00052A CB 1B                 1042 	rr	e
+      00052C CB 3A                 1043 	srl	d
+      00052E CB 1B                 1044 	rr	e
+      000530 CB 3A                 1045 	srl	d
+      000532 CB 1B                 1046 	rr	e
+      000534 CB 3A                 1047 	srl	d
+      000536 CB 1B                 1048 	rr	e
+      000538 CB 3A                 1049 	srl	d
+      00053A CB 1B                 1050 	rr	e
+      00053C 2A                    1051 	ld	a, (hl+)
+      00053D C6 EC                 1052 	add	a, #0xec
+      00053F 57                    1053 	ld	d, a
+                                   1054 ;Bownly/states/bownlyPastelMicrogame.c:324: UINT8 collided = TRUE;
+                                   1055 ;Bownly/states/bownlyPastelMicrogame.c:325: if (x < LEFT_BOUND)
+      000540 3A                    1056 	ld	a, (hl-)
+      000541 CE FF                 1057 	adc	a, #0xff
+      000543 47                    1058 	ld	b, a
+      000544 CB 38                 1059 	srl	b
+      000546 CB 1A                 1060 	rr	d
+      000548 CB 38                 1061 	srl	b
+      00054A CB 1A                 1062 	rr	d
+      00054C CB 38                 1063 	srl	b
+      00054E CB 1A                 1064 	rr	d
+      000550 CB 38                 1065 	srl	b
+      000552 CB 1A                 1066 	rr	d
+      000554 CB 38                 1067 	srl	b
+      000556 CB 1A                 1068 	rr	d
+      000558 06 01                 1069 	ld	b, #0x01
+      00055A 2A                    1070 	ld	a, (hl+)
+      00055B D6 30                 1071 	sub	a, #0x30
+      00055D 7E                    1072 	ld	a, (hl)
+      00055E DE 00                 1073 	sbc	a, #0x00
+      000560 30 0A                 1074 	jr	NC, 00108$
+                                   1075 ;Bownly/states/bownlyPastelMicrogame.c:327: x = LEFT_BOUND;
+      000562 2B                    1076 	dec	hl
+      000563 3E 30                 1077 	ld	a, #0x30
+      000565 22                    1078 	ld	(hl+), a
+      000566 AF                    1079 	xor	a, a
+      000567 77                    1080 	ld	(hl), a
+                                   1081 ;Bownly/states/bownlyPastelMicrogame.c:328: collided = TRUE;
+      000568 06 01                 1082 	ld	b, #0x01
+      00056A 18 44                 1083 	jr	00109$
+      00056C                       1084 00108$:
+                                   1085 ;Bownly/states/bownlyPastelMicrogame.c:333: l = get_bkg_tile_xy(pastelLeftBound, pastelBottomBound);
+      00056C D5                    1086 	push	de
+      00056D 51                    1087 	ld	d, c
+      00056E D5                    1088 	push	de
+      00056F CDr00r00              1089 	call	_get_bkg_tile_xy
+      000572 E1                    1090 	pop	hl
+      000573 7B                    1091 	ld	a, e
+      000574 D1                    1092 	pop	de
+      000575 21r00r00              1093 	ld	hl, #_l
+                                   1094 ;Bownly/states/bownlyPastelMicrogame.c:334: l >>= 4U;
+      000578 77                    1095 	ld	(hl), a
+      000579 CB 2F                 1096 	sra	a
+      00057B CB 2F                 1097 	sra	a
+      00057D CB 2F                 1098 	sra	a
+      00057F CB 2F                 1099 	sra	a
+                                   1100 ;Bownly/states/bownlyPastelMicrogame.c:335: if (l != 4U && l != 5U)  // ~Top left pixel can move left
+      000581 77                    1101 	ld	(hl), a
+      000582 D6 04                 1102 	sub	a, #0x04
+      000584 28 2A                 1103 	jr	Z, 00109$
+      000586 FAr00r00              1104 	ld	a, (#_l)
+      000589 D6 05                 1105 	sub	a, #0x05
+      00058B 28 23                 1106 	jr	Z, 00109$
+                                   1107 ;Bownly/states/bownlyPastelMicrogame.c:337: l = get_bkg_tile_xy(pastelLeftBound, pastelBottomBound);
+      00058D D5                    1108 	push	de
+      00058E 51                    1109 	ld	d, c
+      00058F D5                    1110 	push	de
+      000590 CDr00r00              1111 	call	_get_bkg_tile_xy
+      000593 E1                    1112 	pop	hl
+      000594 7B                    1113 	ld	a, e
+      000595 D1                    1114 	pop	de
+      000596 21r00r00              1115 	ld	hl, #_l
+                                   1116 ;Bownly/states/bownlyPastelMicrogame.c:338: l >>= 4U;
+      000599 77                    1117 	ld	(hl), a
+      00059A CB 2F                 1118 	sra	a
+      00059C CB 2F                 1119 	sra	a
+      00059E CB 2F                 1120 	sra	a
+      0005A0 CB 2F                 1121 	sra	a
+                                   1122 ;Bownly/states/bownlyPastelMicrogame.c:339: if (l != 4U && l != 5U)  // ~Bottom left pixel can move left
+      0005A2 77                    1123 	ld	(hl), a
+      0005A3 D6 04                 1124 	sub	a, #0x04
+      0005A5 28 09                 1125 	jr	Z, 00109$
+      0005A7 FAr00r00              1126 	ld	a, (#_l)
+      0005AA D6 05                 1127 	sub	a, #0x05
+      0005AC 28 02                 1128 	jr	Z, 00109$
+                                   1129 ;Bownly/states/bownlyPastelMicrogame.c:341: collided = FALSE;
+      0005AE 06 00                 1130 	ld	b, #0x00
+      0005B0                       1131 00109$:
+                                   1132 ;Bownly/states/bownlyPastelMicrogame.c:345: if (collided == TRUE)
+      0005B0 78                    1133 	ld	a, b
+      0005B1 3D                    1134 	dec	a
+      0005B2 20 07                 1135 	jr	NZ, 00120$
+                                   1136 ;Bownly/states/bownlyPastelMicrogame.c:347: pastelXVel = 0U;
+      0005B4 21r08r00              1137 	ld	hl, #_pastelXVel
+      0005B7 36 00                 1138 	ld	(hl), #0x00
+      0005B9 18 72                 1139 	jr	00121$
+      0005BB                       1140 00120$:
+                                   1141 ;Bownly/states/bownlyPastelMicrogame.c:349: else if (x > RIGHT_BOUND)
+      0005BB 21r00r00              1142 	ld	hl, #_x
+      0005BE 3E 8C                 1143 	ld	a, #0x8c
+      0005C0 96                    1144 	sub	a, (hl)
+      0005C1 23                    1145 	inc	hl
+      0005C2 3E 02                 1146 	ld	a, #0x02
+      0005C4 9E                    1147 	sbc	a, (hl)
+      0005C5 30 0C                 1148 	jr	NC, 00117$
+                                   1149 ;Bownly/states/bownlyPastelMicrogame.c:351: x = RIGHT_BOUND;
+      0005C7 21r00r00              1150 	ld	hl, #_x
+      0005CA 3E 8C                 1151 	ld	a, #0x8c
+      0005CC 22                    1152 	ld	(hl+), a
+      0005CD 36 02                 1153 	ld	(hl), #0x02
+                                   1154 ;Bownly/states/bownlyPastelMicrogame.c:352: collided = TRUE;
+      0005CF 06 01                 1155 	ld	b, #0x01
+      0005D1 18 5A                 1156 	jr	00121$
+      0005D3                       1157 00117$:
+                                   1158 ;Bownly/states/bownlyPastelMicrogame.c:356: collided = TRUE;
+      0005D3 06 01                 1159 	ld	b, #0x01
+                                   1160 ;Bownly/states/bownlyPastelMicrogame.c:358: l = get_bkg_tile_xy(pastelRightBound, pastelBottomBound);
+      0005D5 D5                    1161 	push	de
+      0005D6 79                    1162 	ld	a, c
+      0005D7 F5                    1163 	push	af
+      0005D8 33                    1164 	inc	sp
+      0005D9 D5                    1165 	push	de
+      0005DA 33                    1166 	inc	sp
+      0005DB CDr00r00              1167 	call	_get_bkg_tile_xy
+      0005DE E1                    1168 	pop	hl
+      0005DF 7B                    1169 	ld	a, e
+      0005E0 D1                    1170 	pop	de
+      0005E1 21r00r00              1171 	ld	hl, #_l
+                                   1172 ;Bownly/states/bownlyPastelMicrogame.c:359: l >>= 4U;
+      0005E4 77                    1173 	ld	(hl), a
+      0005E5 CB 2F                 1174 	sra	a
+      0005E7 CB 2F                 1175 	sra	a
+      0005E9 CB 2F                 1176 	sra	a
+      0005EB CB 2F                 1177 	sra	a
+                                   1178 ;Bownly/states/bownlyPastelMicrogame.c:360: if (l != 4U && l != 5U)  // ~Top right pixel can move right
+      0005ED 77                    1179 	ld	(hl), a
+      0005EE D6 04                 1180 	sub	a, #0x04
+      0005F0 28 3B                 1181 	jr	Z, 00121$
+      0005F2 FAr00r00              1182 	ld	a, (#_l)
+      0005F5 D6 05                 1183 	sub	a, #0x05
+      0005F7 28 34                 1184 	jr	Z, 00121$
+                                   1185 ;Bownly/states/bownlyPastelMicrogame.c:362: l = get_bkg_tile_xy(pastelRightBound, pastelBottomBound);
+      0005F9 79                    1186 	ld	a, c
+      0005FA F5                    1187 	push	af
+      0005FB 33                    1188 	inc	sp
+      0005FC D5                    1189 	push	de
+      0005FD 33                    1190 	inc	sp
+      0005FE CDr00r00              1191 	call	_get_bkg_tile_xy
+      000601 E1                    1192 	pop	hl
+      000602 21r00r00              1193 	ld	hl, #_l
+      000605 73                    1194 	ld	(hl), e
+                                   1195 ;Bownly/states/bownlyPastelMicrogame.c:363: l >>= 4U;
+      000606 7E                    1196 	ld	a, (hl)
+      000607 CB 2F                 1197 	sra	a
+      000609 CB 2F                 1198 	sra	a
+      00060B CB 2F                 1199 	sra	a
+      00060D CB 2F                 1200 	sra	a
+                                   1201 ;Bownly/states/bownlyPastelMicrogame.c:364: if (l != 4U && l != 5U)  // ~Bottom right pixel can move right
+      00060F 77                    1202 	ld	(hl), a
+      000610 D6 04                 1203 	sub	a, #0x04
+      000612 28 19                 1204 	jr	Z, 00121$
+      000614 FAr00r00              1205 	ld	a, (#_l)
+      000617 D6 05                 1206 	sub	a, #0x05
+      000619 28 12                 1207 	jr	Z, 00121$
+                                   1208 ;Bownly/states/bownlyPastelMicrogame.c:366: collided = FALSE;
+      00061B 06 00                 1209 	ld	b, #0x00
+                                   1210 ;Bownly/states/bownlyPastelMicrogame.c:367: pastelX += pastelXVel;
+      00061D FAr08r00              1211 	ld	a, (#_pastelXVel)
+      000620 5F                    1212 	ld	e, a
+      000621 07                    1213 	rlca
+      000622 9F                    1214 	sbc	a, a
+      000623 57                    1215 	ld	d, a
+      000624 21r04r00              1216 	ld	hl, #_pastelX
+      000627 7E                    1217 	ld	a, (hl)
+      000628 83                    1218 	add	a, e
+      000629 22                    1219 	ld	(hl+), a
+      00062A 7E                    1220 	ld	a, (hl)
+      00062B 8A                    1221 	adc	a, d
+      00062C 77                    1222 	ld	(hl), a
+      00062D                       1223 00121$:
+                                   1224 ;Bownly/states/bownlyPastelMicrogame.c:371: if (collided == TRUE)
+      00062D 05                    1225 	dec	b
+      00062E 20 05                 1226 	jr	NZ, 00123$
+                                   1227 ;Bownly/states/bownlyPastelMicrogame.c:373: pastelXVel = 0U;
+      000630 21r08r00              1228 	ld	hl, #_pastelXVel
+      000633 36 00                 1229 	ld	(hl), #0x00
+      000635                       1230 00123$:
+                                   1231 ;Bownly/states/bownlyPastelMicrogame.c:376: x = pastelX;
+      000635 FAr04r00              1232 	ld	a, (#_pastelX)
+      000638 EAr00r00              1233 	ld	(#_x),a
+      00063B FAr05r00              1234 	ld	a, (#_pastelX + 1)
+      00063E 21r01r00              1235 	ld	hl, #_x + 1
+                                   1236 ;Bownly/states/bownlyPastelMicrogame.c:377: pastelLeftBound = (x - 32U - (PASTEL_LEFT_OFFSET >> 1U)) >> 5U;
+      000641 32                    1237 	ld	(hl-), a
+      000642 2A                    1238 	ld	a, (hl+)
+      000643 C6 DA                 1239 	add	a, #0xda
+      000645 5F                    1240 	ld	e, a
+      000646 7E                    1241 	ld	a, (hl)
+      000647 CE FF                 1242 	adc	a, #0xff
+      000649 57                    1243 	ld	d, a
+      00064A CB 3A                 1244 	srl	d
+      00064C CB 1B                 1245 	rr	e
+      00064E CB 3A                 1246 	srl	d
+      000650 CB 1B                 1247 	rr	e
+      000652 CB 3A                 1248 	srl	d
+      000654 CB 1B                 1249 	rr	e
+      000656 CB 3A                 1250 	srl	d
+      000658 CB 1B                 1251 	rr	e
+      00065A CB 3A                 1252 	srl	d
+      00065C CB 1B                 1253 	rr	e
+      00065E F8 00                 1254 	ldhl	sp,	#0
+      000660 73                    1255 	ld	(hl), e
+                                   1256 ;Bownly/states/bownlyPastelMicrogame.c:378: pastelRightBound = (x - 32U + (PASTEL_RIGHT_OFFSET >> 1U)) >> 5U;
+      000661 21r00r00              1257 	ld	hl, #_x
+      000664 2A                    1258 	ld	a, (hl+)
+      000665 C6 E6                 1259 	add	a, #0xe6
+      000667 5F                    1260 	ld	e, a
+      000668 7E                    1261 	ld	a, (hl)
+      000669 CE FF                 1262 	adc	a, #0xff
+      00066B 57                    1263 	ld	d, a
+      00066C CB 3A                 1264 	srl	d
+      00066E CB 1B                 1265 	rr	e
+      000670 CB 3A                 1266 	srl	d
+      000672 CB 1B                 1267 	rr	e
+      000674 CB 3A                 1268 	srl	d
+      000676 CB 1B                 1269 	rr	e
+      000678 CB 3A                 1270 	srl	d
+      00067A CB 1B                 1271 	rr	e
+      00067C CB 3A                 1272 	srl	d
+      00067E CB 1B                 1273 	rr	e
+      000680 53                    1274 	ld	d, e
+                                   1275 ;Bownly/states/bownlyPastelMicrogame.c:379: if (pastelState == AIRBORNE)
+      000681 FAr0Ar00              1276 	ld	a, (#_pastelState)
+      000684 D6 02                 1277 	sub	a, #0x02
+      000686 C2r2Cr07              1278 	jp	NZ,00143$
+                                   1279 ;Bownly/states/bownlyPastelMicrogame.c:382: collided = TRUE;
+      000689 06 01                 1280 	ld	b, #0x01
+                                   1281 ;Bownly/states/bownlyPastelMicrogame.c:383: l = get_bkg_tile_xy(pastelRightBound, pastelBottomBound);
+      00068B 79                    1282 	ld	a, c
+      00068C F5                    1283 	push	af
+      00068D 33                    1284 	inc	sp
+      00068E D5                    1285 	push	de
+      00068F 33                    1286 	inc	sp
+      000690 CDr00r00              1287 	call	_get_bkg_tile_xy
+      000693 E1                    1288 	pop	hl
+      000694 21r00r00              1289 	ld	hl, #_l
+      000697 73                    1290 	ld	(hl), e
+                                   1291 ;Bownly/states/bownlyPastelMicrogame.c:384: l >>= 4U;
+      000698 7E                    1292 	ld	a, (hl)
+      000699 CB 2F                 1293 	sra	a
+      00069B CB 2F                 1294 	sra	a
+      00069D CB 2F                 1295 	sra	a
+      00069F CB 2F                 1296 	sra	a
+                                   1297 ;Bownly/states/bownlyPastelMicrogame.c:385: if (l != 4U && l != 5U)  // Right foot can move down
+      0006A1 77                    1298 	ld	(hl), a
+      0006A2 D6 04                 1299 	sub	a, #0x04
+      0006A4 28 5A                 1300 	jr	Z, 00130$
+      0006A6 FAr00r00              1301 	ld	a, (#_l)
+      0006A9 D6 05                 1302 	sub	a, #0x05
+      0006AB 28 53                 1303 	jr	Z, 00130$
+                                   1304 ;Bownly/states/bownlyPastelMicrogame.c:387: l = get_bkg_tile_xy(pastelLeftBound, pastelBottomBound);
+      0006AD 79                    1305 	ld	a, c
+      0006AE F5                    1306 	push	af
+      0006AF 33                    1307 	inc	sp
+      0006B0 F8 01                 1308 	ldhl	sp,	#1
+      0006B2 7E                    1309 	ld	a, (hl)
+      0006B3 F5                    1310 	push	af
+      0006B4 33                    1311 	inc	sp
+      0006B5 CDr00r00              1312 	call	_get_bkg_tile_xy
+      0006B8 E1                    1313 	pop	hl
+      0006B9 21r00r00              1314 	ld	hl, #_l
+      0006BC 73                    1315 	ld	(hl), e
+                                   1316 ;Bownly/states/bownlyPastelMicrogame.c:388: l >>= 4U;
+      0006BD 7E                    1317 	ld	a, (hl)
+      0006BE CB 2F                 1318 	sra	a
+      0006C0 CB 2F                 1319 	sra	a
+      0006C2 CB 2F                 1320 	sra	a
+      0006C4 CB 2F                 1321 	sra	a
+                                   1322 ;Bownly/states/bownlyPastelMicrogame.c:389: if (l != 4U && l != 5U)  // Left foot can move down
+      0006C6 77                    1323 	ld	(hl), a
+      0006C7 D6 04                 1324 	sub	a, #0x04
+      0006C9 28 35                 1325 	jr	Z, 00130$
+      0006CB FAr00r00              1326 	ld	a, (#_l)
+      0006CE D6 05                 1327 	sub	a, #0x05
+      0006D0 28 2E                 1328 	jr	Z, 00130$
+                                   1329 ;Bownly/states/bownlyPastelMicrogame.c:391: pastelY = y;
+      0006D2 FAr02r00              1330 	ld	a, (#_y)
+      0006D5 EAr06r00              1331 	ld	(#_pastelY),a
+      0006D8 FAr03r00              1332 	ld	a, (#_y + 1)
+      0006DB EAr07r00              1333 	ld	(#_pastelY + 1),a
+                                   1334 ;Bownly/states/bownlyPastelMicrogame.c:392: collided = FALSE;
+      0006DE 06 00                 1335 	ld	b, #0x00
+                                   1336 ;Bownly/states/bownlyPastelMicrogame.c:394: pastelYVel += 1;  // Gravity
+      0006E0 21r09r00              1337 	ld	hl, #_pastelYVel
+      0006E3 34                    1338 	inc	(hl)
+                                   1339 ;Bownly/states/bownlyPastelMicrogame.c:395: if (pastelYVel > PASTEL_MAX_YVEL)
+      0006E4 5E                    1340 	ld	e, (hl)
+      0006E5 3E 20                 1341 	ld	a,#0x20
+      0006E7 57                    1342 	ld	d,a
+      0006E8 96                    1343 	sub	a, (hl)
+      0006E9 CB 7B                 1344 	bit	7, e
+      0006EB 28 07                 1345 	jr	Z, 00285$
+      0006ED CB 7A                 1346 	bit	7, d
+      0006EF 20 08                 1347 	jr	NZ, 00286$
+      0006F1 BF                    1348 	cp	a, a
+      0006F2 18 05                 1349 	jr	00286$
+      0006F4                       1350 00285$:
+      0006F4 CB 7A                 1351 	bit	7, d
+      0006F6 28 01                 1352 	jr	Z, 00286$
+      0006F8 37                    1353 	scf
+      0006F9                       1354 00286$:
+      0006F9 30 05                 1355 	jr	NC, 00130$
+                                   1356 ;Bownly/states/bownlyPastelMicrogame.c:396: pastelYVel = PASTEL_MAX_YVEL;
+      0006FB 21r09r00              1357 	ld	hl, #_pastelYVel
+      0006FE 36 20                 1358 	ld	(hl), #0x20
+      000700                       1359 00130$:
+                                   1360 ;Bownly/states/bownlyPastelMicrogame.c:399: if (collided == TRUE)
+      000700 05                    1361 	dec	b
+      000701 C2r83r07              1362 	jp	NZ,00145$
+                                   1363 ;Bownly/states/bownlyPastelMicrogame.c:401: pastelState = IDLE;
+      000704 21r0Ar00              1364 	ld	hl, #_pastelState
+      000707 36 00                 1365 	ld	(hl), #0x00
+                                   1366 ;Bownly/states/bownlyPastelMicrogame.c:402: jumpTimer = 0U;
+      000709 21r0Er00              1367 	ld	hl, #_jumpTimer
+      00070C 36 00                 1368 	ld	(hl), #0x00
+                                   1369 ;Bownly/states/bownlyPastelMicrogame.c:403: pastelXVel = 0U;
+      00070E 21r08r00              1370 	ld	hl, #_pastelXVel
+      000711 36 00                 1371 	ld	(hl), #0x00
+                                   1372 ;Bownly/states/bownlyPastelMicrogame.c:404: pastelY = ((pastelBottomBound << 5U) - PASTEL_BOTTOM_OFFSET - 12U);
+      000713 79                    1373 	ld	a, c
+      000714 07                    1374 	rlca
+      000715 9F                    1375 	sbc	a, a
+      000716 69                    1376 	ld	l, c
+                                   1377 ;	spillPairReg hl
+                                   1378 ;	spillPairReg hl
+      000717 67                    1379 	ld	h, a
+                                   1380 ;	spillPairReg hl
+                                   1381 ;	spillPairReg hl
+      000718 29                    1382 	add	hl, hl
+      000719 29                    1383 	add	hl, hl
+      00071A 29                    1384 	add	hl, hl
+      00071B 29                    1385 	add	hl, hl
+      00071C 29                    1386 	add	hl, hl
+      00071D 4D                    1387 	ld	c, l
+      00071E 44                    1388 	ld	b, h
+      00071F 79                    1389 	ld	a, c
+      000720 C6 C4                 1390 	add	a, #0xc4
+      000722 21r06r00              1391 	ld	hl, #_pastelY
+      000725 22                    1392 	ld	(hl+), a
+      000726 78                    1393 	ld	a, b
+      000727 CE FF                 1394 	adc	a, #0xff
+      000729 77                    1395 	ld	(hl), a
+      00072A 18 57                 1396 	jr	00145$
+      00072C                       1397 00143$:
+                                   1398 ;Bownly/states/bownlyPastelMicrogame.c:407: else if (pastelState == WALKING)
+      00072C FAr0Ar00              1399 	ld	a, (#_pastelState)
+      00072F 3D                    1400 	dec	a
+      000730 20 51                 1401 	jr	NZ, 00145$
+                                   1402 ;Bownly/states/bownlyPastelMicrogame.c:410: l = get_bkg_tile_xy(pastelRightBound, pastelBottomBound + 1U);
+      000732 41                    1403 	ld	b, c
+      000733 04                    1404 	inc	b
+      000734 C5                    1405 	push	bc
+      000735 33                    1406 	inc	sp
+      000736 D5                    1407 	push	de
+      000737 33                    1408 	inc	sp
+      000738 CDr00r00              1409 	call	_get_bkg_tile_xy
+      00073B E1                    1410 	pop	hl
+      00073C 21r00r00              1411 	ld	hl, #_l
+      00073F 73                    1412 	ld	(hl), e
+                                   1413 ;Bownly/states/bownlyPastelMicrogame.c:411: l >>= 4U;
+      000740 7E                    1414 	ld	a, (hl)
+      000741 CB 2F                 1415 	sra	a
+      000743 CB 2F                 1416 	sra	a
+      000745 CB 2F                 1417 	sra	a
+      000747 CB 2F                 1418 	sra	a
+                                   1419 ;Bownly/states/bownlyPastelMicrogame.c:412: if (l != 4U && l != 5U)  // Right foot can move down
+      000749 77                    1420 	ld	(hl), a
+      00074A D6 04                 1421 	sub	a, #0x04
+      00074C 28 35                 1422 	jr	Z, 00145$
+      00074E FAr00r00              1423 	ld	a, (#_l)
+      000751 D6 05                 1424 	sub	a, #0x05
+      000753 28 2E                 1425 	jr	Z, 00145$
+                                   1426 ;Bownly/states/bownlyPastelMicrogame.c:414: l = get_bkg_tile_xy(pastelLeftBound, pastelBottomBound + 1U);
+      000755 C5                    1427 	push	bc
+      000756 33                    1428 	inc	sp
+      000757 F8 01                 1429 	ldhl	sp,	#1
+      000759 7E                    1430 	ld	a, (hl)
+      00075A F5                    1431 	push	af
+      00075B 33                    1432 	inc	sp
+      00075C CDr00r00              1433 	call	_get_bkg_tile_xy
+      00075F E1                    1434 	pop	hl
+      000760 21r00r00              1435 	ld	hl, #_l
+      000763 73                    1436 	ld	(hl), e
+                                   1437 ;Bownly/states/bownlyPastelMicrogame.c:415: l >>= 4U;
+      000764 7E                    1438 	ld	a, (hl)
+      000765 CB 2F                 1439 	sra	a
+      000767 CB 2F                 1440 	sra	a
+      000769 CB 2F                 1441 	sra	a
+      00076B CB 2F                 1442 	sra	a
+                                   1443 ;Bownly/states/bownlyPastelMicrogame.c:416: if (l != 4U && l != 5U)  // Left foot can move down
+      00076D 77                    1444 	ld	(hl), a
+      00076E D6 04                 1445 	sub	a, #0x04
+      000770 28 11                 1446 	jr	Z, 00145$
+      000772 FAr00r00              1447 	ld	a, (#_l)
+      000775 D6 05                 1448 	sub	a, #0x05
+      000777 28 0A                 1449 	jr	Z, 00145$
+                                   1450 ;Bownly/states/bownlyPastelMicrogame.c:418: pastelState = AIRBORNE;
+      000779 21r0Ar00              1451 	ld	hl, #_pastelState
+      00077C 36 02                 1452 	ld	(hl), #0x02
+                                   1453 ;Bownly/states/bownlyPastelMicrogame.c:419: pastelYVel = 0;
+      00077E 21r09r00              1454 	ld	hl, #_pastelYVel
+      000781 36 00                 1455 	ld	(hl), #0x00
+      000783                       1456 00145$:
+                                   1457 ;Bownly/states/bownlyPastelMicrogame.c:423: }
+      000783 33                    1458 	inc	sp
+      000784 C9                    1459 	ret
+                                   1460 ;Bownly/states/bownlyPastelMicrogame.c:425: static UINT8 checkHeartCollision()
+                                   1461 ;	---------------------------------
+                                   1462 ; Function checkHeartCollision
+                                   1463 ; ---------------------------------
+      000785                       1464 _checkHeartCollision:
+                                   1465 ;Bownly/states/bownlyPastelMicrogame.c:427: y = (pastelY >> 5U) - 1U;  // Her top tiles
+      000785 21r06r00              1466 	ld	hl, #_pastelY
+      000788 2A                    1467 	ld	a, (hl+)
+      000789 4F                    1468 	ld	c, a
+      00078A 46                    1469 	ld	b, (hl)
+      00078B CB 38                 1470 	srl	b
+      00078D CB 19                 1471 	rr	c
+      00078F CB 38                 1472 	srl	b
+      000791 CB 19                 1473 	rr	c
+      000793 CB 38                 1474 	srl	b
+      000795 CB 19                 1475 	rr	c
+      000797 CB 38                 1476 	srl	b
+      000799 CB 19                 1477 	rr	c
+      00079B CB 38                 1478 	srl	b
+      00079D CB 19                 1479 	rr	c
+      00079F 79                    1480 	ld	a, c
+      0007A0 C6 FF                 1481 	add	a, #0xff
+      0007A2 21r02r00              1482 	ld	hl, #_y
+      0007A5 22                    1483 	ld	(hl+), a
+      0007A6 78                    1484 	ld	a, b
+      0007A7 CE FF                 1485 	adc	a, #0xff
+      0007A9 77                    1486 	ld	(hl), a
+                                   1487 ;Bownly/states/bownlyPastelMicrogame.c:428: INT8 pastelLeftBound = (pastelX - 32U - PASTEL_LEFT_OFFSET) >> 5U;
+      0007AA 21r04r00              1488 	ld	hl, #_pastelX
+      0007AD 2A                    1489 	ld	a, (hl+)
+      0007AE C6 D4                 1490 	add	a, #0xd4
+      0007B0 4F                    1491 	ld	c, a
+                                   1492 ;Bownly/states/bownlyPastelMicrogame.c:429: INT8 pastelRightBound = (pastelX - 32U + PASTEL_RIGHT_OFFSET) >> 5U;
+      0007B1 3A                    1493 	ld	a, (hl-)
+      0007B2 CE FF                 1494 	adc	a, #0xff
+      0007B4 47                    1495 	ld	b, a
+      0007B5 CB 38                 1496 	srl	b
+      0007B7 CB 19                 1497 	rr	c
+      0007B9 CB 38                 1498 	srl	b
+      0007BB CB 19                 1499 	rr	c
+      0007BD CB 38                 1500 	srl	b
+      0007BF CB 19                 1501 	rr	c
+      0007C1 CB 38                 1502 	srl	b
+      0007C3 CB 19                 1503 	rr	c
+      0007C5 CB 38                 1504 	srl	b
+      0007C7 CB 19                 1505 	rr	c
+      0007C9 2A                    1506 	ld	a, (hl+)
+      0007CA C6 EC                 1507 	add	a, #0xec
+      0007CC 47                    1508 	ld	b, a
+      0007CD 7E                    1509 	ld	a, (hl)
+      0007CE CE FF                 1510 	adc	a, #0xff
+      0007D0 5F                    1511 	ld	e, a
+      0007D1 CB 3B                 1512 	srl	e
+      0007D3 CB 18                 1513 	rr	b
+      0007D5 CB 3B                 1514 	srl	e
+      0007D7 CB 18                 1515 	rr	b
+      0007D9 CB 3B                 1516 	srl	e
+      0007DB CB 18                 1517 	rr	b
+      0007DD CB 3B                 1518 	srl	e
+      0007DF CB 18                 1519 	rr	b
+      0007E1 CB 3B                 1520 	srl	e
+      0007E3 CB 18                 1521 	rr	b
+                                   1522 ;Bownly/states/bownlyPastelMicrogame.c:431: for (j = 0U; j != 3U; ++j)
+      0007E5 21r00r00              1523 	ld	hl, #_j
+      0007E8 36 00                 1524 	ld	(hl), #0x00
+      0007EA                       1525 00106$:
+                                   1526 ;Bownly/states/bownlyPastelMicrogame.c:433: l = get_bkg_tile_xy(pastelRightBound, y + j);
+      0007EA FAr02r00              1527 	ld	a, (#_y)
+      0007ED 21r00r00              1528 	ld	hl, #_j
+      0007F0 86                    1529 	add	a, (hl)
+      0007F1 F5                    1530 	push	af
+      0007F2 33                    1531 	inc	sp
+      0007F3 C5                    1532 	push	bc
+      0007F4 33                    1533 	inc	sp
+      0007F5 CDr00r00              1534 	call	_get_bkg_tile_xy
+      0007F8 E1                    1535 	pop	hl
+      0007F9 21r00r00              1536 	ld	hl, #_l
+      0007FC 73                    1537 	ld	(hl), e
+      0007FD FAr02r00              1538 	ld	a, (#_y)
+                                   1539 ;Bownly/states/bownlyPastelMicrogame.c:436: set_bkg_tile_xy(pastelRightBound, y + j, 0x3FU);
+      000800 21r00r00              1540 	ld	hl, #_j
+      000803 86                    1541 	add	a, (hl)
+      000804 57                    1542 	ld	d, a
+                                   1543 ;Bownly/states/bownlyPastelMicrogame.c:434: if (l == BKGID_HEART)
+      000805 FAr00r00              1544 	ld	a, (#_l)
+      000808 D6 60                 1545 	sub	a, #0x60
+      00080A 20 0E                 1546 	jr	NZ, 00102$
+                                   1547 ;Bownly/states/bownlyPastelMicrogame.c:436: set_bkg_tile_xy(pastelRightBound, y + j, 0x3FU);
+      00080C 3E 3F                 1548 	ld	a, #0x3f
+      00080E F5                    1549 	push	af
+      00080F 33                    1550 	inc	sp
+      000810 58                    1551 	ld	e, b
+      000811 D5                    1552 	push	de
+      000812 CDr00r00              1553 	call	_set_bkg_tile_xy
+      000815 E8 03                 1554 	add	sp, #3
+                                   1555 ;Bownly/states/bownlyPastelMicrogame.c:437: return TRUE;
+      000817 1E 01                 1556 	ld	e, #0x01
+      000819 C9                    1557 	ret
+      00081A                       1558 00102$:
+                                   1559 ;Bownly/states/bownlyPastelMicrogame.c:439: l = get_bkg_tile_xy(pastelLeftBound, y + j);
+      00081A 59                    1560 	ld	e, c
+      00081B D5                    1561 	push	de
+      00081C CDr00r00              1562 	call	_get_bkg_tile_xy
+      00081F E1                    1563 	pop	hl
+      000820 21r00r00              1564 	ld	hl, #_l
+      000823 73                    1565 	ld	(hl), e
+                                   1566 ;Bownly/states/bownlyPastelMicrogame.c:440: if (l == BKGID_HEART)
+      000824 7E                    1567 	ld	a, (hl)
+      000825 D6 60                 1568 	sub	a, #0x60
+      000827 20 15                 1569 	jr	NZ, 00107$
+                                   1570 ;Bownly/states/bownlyPastelMicrogame.c:442: set_bkg_tile_xy(pastelLeftBound, y + j, 0x3FU);
+      000829 FAr02r00              1571 	ld	a, (#_y)
+      00082C 21r00r00              1572 	ld	hl, #_j
+      00082F 86                    1573 	add	a, (hl)
+      000830 26 3F                 1574 	ld	h, #0x3f
+                                   1575 ;	spillPairReg hl
+                                   1576 ;	spillPairReg hl
+      000832 E5                    1577 	push	hl
+      000833 33                    1578 	inc	sp
+      000834 47                    1579 	ld	b, a
+      000835 C5                    1580 	push	bc
+      000836 CDr00r00              1581 	call	_set_bkg_tile_xy
+      000839 E8 03                 1582 	add	sp, #3
+                                   1583 ;Bownly/states/bownlyPastelMicrogame.c:443: return TRUE;
+      00083B 1E 01                 1584 	ld	e, #0x01
+      00083D C9                    1585 	ret
+      00083E                       1586 00107$:
+                                   1587 ;Bownly/states/bownlyPastelMicrogame.c:431: for (j = 0U; j != 3U; ++j)
+      00083E 21r00r00              1588 	ld	hl, #_j
+      000841 34                    1589 	inc	(hl)
+      000842 7E                    1590 	ld	a, (hl)
+                                   1591 ;Bownly/states/bownlyPastelMicrogame.c:446: return FALSE;
+      000843 D6 03                 1592 	sub	a,#0x03
+      000845 20 A3                 1593 	jr	NZ, 00106$
+      000847 5F                    1594 	ld	e,a
+                                   1595 ;Bownly/states/bownlyPastelMicrogame.c:447: }
+      000848 C9                    1596 	ret
+                                   1597 ;Bownly/states/bownlyPastelMicrogame.c:451: static void animateHearts()
+                                   1598 ;	---------------------------------
+                                   1599 ; Function animateHearts
+                                   1600 ; ---------------------------------
+      000849                       1601 _animateHearts:
+                                   1602 ;Bownly/states/bownlyPastelMicrogame.c:453: set_bkg_data(BKGID_HEART, 1U, &bownlyPastelHeartTiles[((animTick >> 3U) % 2U) << 4U]);
+      000849 01r00r00              1603 	ld	bc, #_bownlyPastelHeartTiles+0
+      00084C FAr00r00              1604 	ld	a, (#_animTick)
+      00084F CB 37                 1605 	swap	a
+      000851 07                    1606 	rlca
+      000852 E6 01                 1607 	and	a, #0x1
+      000854 6F                    1608 	ld	l, a
+                                   1609 ;	spillPairReg hl
+                                   1610 ;	spillPairReg hl
+      000855 26 00                 1611 	ld	h, #0x00
+                                   1612 ;	spillPairReg hl
+                                   1613 ;	spillPairReg hl
+      000857 29                    1614 	add	hl, hl
+      000858 29                    1615 	add	hl, hl
+      000859 29                    1616 	add	hl, hl
+      00085A 29                    1617 	add	hl, hl
+      00085B 09                    1618 	add	hl, bc
+      00085C E5                    1619 	push	hl
+      00085D 21 60 01              1620 	ld	hl, #0x160
+      000860 E5                    1621 	push	hl
+      000861 CDr00r00              1622 	call	_set_bkg_data
+      000864 E8 04                 1623 	add	sp, #4
+                                   1624 ;Bownly/states/bownlyPastelMicrogame.c:454: }
+      000866 C9                    1625 	ret
+                                   1626 ;Bownly/states/bownlyPastelMicrogame.c:456: static void animatePastel()
+                                   1627 ;	---------------------------------
+                                   1628 ; Function animatePastel
+                                   1629 ; ---------------------------------
+      000867                       1630 _animatePastel:
+                                   1631 ;Bownly/states/bownlyPastelMicrogame.c:458: switch (pastelState)
+      000867 FAr0Ar00              1632 	ld	a, (#_pastelState)
+      00086A B7                    1633 	or	a, a
+      00086B 28 0D                 1634 	jr	Z, 00102$
+      00086D FAr0Ar00              1635 	ld	a, (#_pastelState)
+      000870 3D                    1636 	dec	a
+      000871 28 13                 1637 	jr	Z, 00103$
+      000873 FAr0Ar00              1638 	ld	a, (#_pastelState)
+      000876 D6 02                 1639 	sub	a, #0x02
+      000878 28 24                 1640 	jr	Z, 00106$
+                                   1641 ;Bownly/states/bownlyPastelMicrogame.c:461: default:
+      00087A                       1642 00102$:
+                                   1643 ;Bownly/states/bownlyPastelMicrogame.c:462: animFrame = (animTick >> 4U) % 2U;
+      00087A FAr00r00              1644 	ld	a, (#_animTick)
+      00087D CB 37                 1645 	swap	a
+      00087F E6 01                 1646 	and	a, #0x1
+                                   1647 ;	spillPairReg hl
+                                   1648 ;	spillPairReg hl
+      000881 EAr00r00              1649 	ld	(_animFrame), a
+                                   1650 ;Bownly/states/bownlyPastelMicrogame.c:463: break;
+      000884 18 2B                 1651 	jr	00110$
+                                   1652 ;Bownly/states/bownlyPastelMicrogame.c:464: case WALKING:
+      000886                       1653 00103$:
+                                   1654 ;Bownly/states/bownlyPastelMicrogame.c:465: animFrame = ((animTick >> 3U) % 4U) + 3U;
+      000886 FAr00r00              1655 	ld	a, (#_animTick)
+      000889 CB 37                 1656 	swap	a
+      00088B 07                    1657 	rlca
+      00088C E6 03                 1658 	and	a, #0x3
+      00088E C6 03                 1659 	add	a, #0x03
+                                   1660 ;Bownly/states/bownlyPastelMicrogame.c:466: if (animFrame == 6U)
+      000890 EAr00r00              1661 	ld	(#_animFrame),a
+      000893 D6 06                 1662 	sub	a, #0x06
+      000895 20 1A                 1663 	jr	NZ, 00110$
+                                   1664 ;Bownly/states/bownlyPastelMicrogame.c:467: animFrame = 4U;
+      000897 21r00r00              1665 	ld	hl, #_animFrame
+      00089A 36 04                 1666 	ld	(hl), #0x04
+                                   1667 ;Bownly/states/bownlyPastelMicrogame.c:468: break;
+      00089C 18 13                 1668 	jr	00110$
+                                   1669 ;Bownly/states/bownlyPastelMicrogame.c:469: case AIRBORNE:
+      00089E                       1670 00106$:
+                                   1671 ;Bownly/states/bownlyPastelMicrogame.c:470: if (pastelYVel < 0)
+      00089E FAr09r00              1672 	ld	a, (#_pastelYVel)
+      0008A1 CB 7F                 1673 	bit	7, a
+      0008A3 28 07                 1674 	jr	Z, 00108$
+                                   1675 ;Bownly/states/bownlyPastelMicrogame.c:471: animFrame = 10U;
+      0008A5 21r00r00              1676 	ld	hl, #_animFrame
+      0008A8 36 0A                 1677 	ld	(hl), #0x0a
+      0008AA 18 05                 1678 	jr	00110$
+      0008AC                       1679 00108$:
+                                   1680 ;Bownly/states/bownlyPastelMicrogame.c:473: animFrame = 11U;
+      0008AC 21r00r00              1681 	ld	hl, #_animFrame
+      0008AF 36 0B                 1682 	ld	(hl), #0x0b
+                                   1683 ;Bownly/states/bownlyPastelMicrogame.c:475: }
+      0008B1                       1684 00110$:
+                                   1685 ;Bownly/states/bownlyPastelMicrogame.c:477: move_metasprite_vflip(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+      0008B1 21r06r00              1686 	ld	hl, #_pastelY
+      0008B4 2A                    1687 	ld	a, (hl+)
+      0008B5 47                    1688 	ld	b, a
+      0008B6 4E                    1689 	ld	c, (hl)
+      0008B7 CB 39                 1690 	srl	c
+      0008B9 CB 18                 1691 	rr	b
+      0008BB CB 39                 1692 	srl	c
+      0008BD CB 18                 1693 	rr	b
+      0008BF 21r04r00              1694 	ld	hl, #_pastelX
+      0008C2 2A                    1695 	ld	a, (hl+)
+      0008C3 5F                    1696 	ld	e, a
+      0008C4 56                    1697 	ld	d, (hl)
+      0008C5 CB 3A                 1698 	srl	d
+      0008C7 CB 1B                 1699 	rr	e
+      0008C9 CB 3A                 1700 	srl	d
+      0008CB CB 1B                 1701 	rr	e
+      0008CD 21r00r00              1702 	ld	hl, #_animFrame
+      0008D0 6E                    1703 	ld	l, (hl)
+                                   1704 ;	spillPairReg hl
+                                   1705 ;	spillPairReg hl
+      0008D1 26 00                 1706 	ld	h, #0x00
+                                   1707 ;	spillPairReg hl
+                                   1708 ;	spillPairReg hl
+      0008D3 4B                    1709 	ld	c, e
+      0008D4 29                    1710 	add	hl, hl
+      0008D5 5D                    1711 	ld	e, l
+      0008D6 54                    1712 	ld	d, h
+                                   1713 ;Bownly/states/bownlyPastelMicrogame.c:476: if (pastelFlipX == TRUE)
+      0008D7 FAr01r00              1714 	ld	a, (#_pastelFlipX)
+      0008DA 3D                    1715 	dec	a
+      0008DB 20 22                 1716 	jr	NZ, 00112$
+                                   1717 ;Bownly/states/bownlyPastelMicrogame.c:477: move_metasprite_vflip(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+      0008DD 21r00r00              1718 	ld	hl, #_bownlySprPastel_metasprites
+      0008E0 19                    1719 	add	hl, de
+      0008E1 2A                    1720 	ld	a, (hl+)
+      0008E2 6E                    1721 	ld	l, (hl)
+                                   1722 ;	spillPairReg hl
+                                   1723 ;C:/gbdk/include/gb/metasprites.h:167: __current_metasprite = metasprite;
+      0008E3 5F                    1724 	ld	e, a
+      0008E4 55                    1725 	ld	d, l
+      0008E5 21r00r00              1726 	ld	hl, #___current_metasprite
+      0008E8 7B                    1727 	ld	a, e
+      0008E9 22                    1728 	ld	(hl+), a
+      0008EA 72                    1729 	ld	(hl), d
+                                   1730 ;C:/gbdk/include/gb/metasprites.h:168: __current_base_tile = base_tile;
+      0008EB 21r00r00              1731 	ld	hl, #___current_base_tile
+      0008EE 36 00                 1732 	ld	(hl), #0x00
+                                   1733 ;C:/gbdk/include/gb/metasprites.h:169: return __move_metasprite_vflip(base_sprite, x - 8, y);
+      0008F0 79                    1734 	ld	a, c
+      0008F1 C6 F8                 1735 	add	a, #0xf8
+      0008F3 C5                    1736 	push	bc
+      0008F4 33                    1737 	inc	sp
+      0008F5 67                    1738 	ld	h, a
+      0008F6 2E 00                 1739 	ld	l, #0x00
+      0008F8 E5                    1740 	push	hl
+      0008F9 CDr00r00              1741 	call	___move_metasprite_vflip
+      0008FC E8 03                 1742 	add	sp, #3
+                                   1743 ;Bownly/states/bownlyPastelMicrogame.c:477: move_metasprite_vflip(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+      0008FE C9                    1744 	ret
+      0008FF                       1745 00112$:
+                                   1746 ;Bownly/states/bownlyPastelMicrogame.c:479: move_metasprite(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+      0008FF 21r00r00              1747 	ld	hl, #_bownlySprPastel_metasprites
+      000902 19                    1748 	add	hl, de
+      000903 2A                    1749 	ld	a,	(hl+)
+      000904 66                    1750 	ld	h, (hl)
+                                   1751 ;	spillPairReg hl
+                                   1752 ;	spillPairReg hl
+                                   1753 ;	spillPairReg hl
+                                   1754 ;C:/gbdk/include/gb/metasprites.h:138: __current_metasprite = metasprite;
+      000905 5F                    1755 	ld	e, a
+      000906 54                    1756 	ld	d, h
+      000907 21r00r00              1757 	ld	hl, #___current_metasprite
+      00090A 7B                    1758 	ld	a, e
+      00090B 22                    1759 	ld	(hl+), a
+      00090C 72                    1760 	ld	(hl), d
+                                   1761 ;C:/gbdk/include/gb/metasprites.h:139: __current_base_tile = base_tile;
+      00090D 21r00r00              1762 	ld	hl, #___current_base_tile
+      000910 36 00                 1763 	ld	(hl), #0x00
+                                   1764 ;C:/gbdk/include/gb/metasprites.h:140: return __move_metasprite(base_sprite, x, y);
+      000912 C5                    1765 	push	bc
+      000913 33                    1766 	inc	sp
+      000914 61                    1767 	ld	h, c
+      000915 2E 00                 1768 	ld	l, #0x00
+      000917 E5                    1769 	push	hl
+      000918 CDr00r00              1770 	call	___move_metasprite
+      00091B E8 03                 1771 	add	sp, #3
+                                   1772 ;Bownly/states/bownlyPastelMicrogame.c:479: move_metasprite(bownlySprPastel_metasprites[animFrame], SPRTILE_PASTEL, SPRID_PASTEL, pastelX >> 2U, pastelY >> 2U);
+                                   1773 ;Bownly/states/bownlyPastelMicrogame.c:480: }
+      00091D C9                    1774 	ret
+                                   1775 	.area _CODE_2
+                                   1776 	.area _INITIALIZER
+      000000                       1777 __xinit__heartCount:
+      000000 00                    1778 	.db #0x00	; 0
+      000001                       1779 __xinit__pastelFlipX:
+      000001 00                    1780 	.db #0x00	; 0
+      000002                       1781 __xinit__JUMP_DURATION:
+      000002 08                    1782 	.db #0x08	; 8
+      000003                       1783 __xinit__jumppuffTimer:
+      000003 07                    1784 	.db #0x07	; 7
+                                   1785 	.area _CABS (ABS)

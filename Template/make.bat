@@ -12,3 +12,4 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFace2Map.o Template/res/m
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Template/o/templateTwilightDriveSong.o Template/res/audio/templateTwilightDriveSong.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFaceMicrogame.o Template/states/templateFaceMicrogame.c
+
