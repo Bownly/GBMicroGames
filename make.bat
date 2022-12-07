@@ -7,6 +7,7 @@ call joaomakesgames\make.bat
 call oshf\make.bat
 call AdrianJG\make.bat
 call SynchingFeeling\make.bat
+call bbbbbr\make.bat
 
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/main.o main.c
 C:\gbdk\bin\lcc -Wl-yt3 -Wl-yoA -Wl-ya4 -o GBMicroGames.gb ^
@@ -19,6 +20,7 @@ C:\gbdk\bin\lcc -Wl-yt3 -Wl-yoA -Wl-ya4 -o GBMicroGames.gb ^
     oshf/o/*.o ^
     AdrianJG/o/*.o ^
     SynchingFeeling/o/*.o SynchingFeeling/res/sprites/*.c ^
-    Template/o/*.o 
+    Template/o/*.o ^
+    bbbbbr/o/*.o
 
 exit 0
