@@ -9,10 +9,10 @@ else
 fi
 
 mkdir -p bbbbbr/o
-rm -rf bbbbbr/o/*.o
-rm -rf bbbbbr/o/*.lst
-rm -rf bbbbbr/o/*.asm
-rm -rf bbbbbr/o/*.sym
+rm -f bbbbbr/o/*.o
+rm -f bbbbbr/o/*.lst
+rm -f bbbbbr/o/*.asm
+rm -f bbbbbr/o/*.sym
 
 # No music for now
 # $GBDK_DIR/bin/lcc -Wa-l -Wf-bo13 -c -o bbbbbr/o/bbbbbrSomeSong.o bbbbbr/res/audio/bbbbbrSomeSong.c
