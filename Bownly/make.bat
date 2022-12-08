@@ -72,6 +72,7 @@ C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprCarrot.png -spr8x8 -b 9 -map -
 C:\gbdk\bin\png2asset Bownly/res/sprites/bownlySprBeron.png -spr8x8 -sw 16 -sh 16 -b 9 -py 0 -px 0
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyKnotAnywhere1Song.o Bownly/res/audio/bownlyKnotAnywhere1Song.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlySloopygoopMarioEsqueSong.o Bownly/res/audio/bownlySloopygoopMarioEsqueSong.c
 
 @REM C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyKillerDrillerMicrogame.o Bownly/states/bownlyKillerDrillerMicrogame.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyCarrotMicrogame.o Bownly/states/bownlyCarrotMicrogame.c
@@ -88,11 +89,6 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly
 
 @REM Thingy TODO:
 @REM Sfx
-@REM Music
-
-@REM Flappy Beron TODO:
-@REM Animate falling crown
-@REM Sfx (flap/collision)
 @REM Music
 
 @REM Killer Driller TODO:

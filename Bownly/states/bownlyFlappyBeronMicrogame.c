@@ -17,7 +17,7 @@
 #include "../res/maps/bownlyBeronStalkUpMap.h"
 #include "../res/maps/bownlyBeronStalkDownMap.h"
 
-extern const hUGESong_t bownlyKnotAnywhere1Song;
+extern const hUGESong_t bownlySloopygoopMarioEsqueSong;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -46,6 +46,10 @@ BERONSTATE beronState;
 #define BERON_X 40U
 static UINT16 beronY;
 static INT8 beronYVel;
+static UINT8 crownX;
+static UINT8 crownY;
+#define CROWN_X_VEL 1U
+static INT8 crownYVel;
 #define GRAVITY 1U
 #define MAX_Y_VEL 24U
 
@@ -75,7 +79,8 @@ UINT8 checkBeronCollided();
 static void drawBeronSprites();
 
 /* SFX METHODS */
-// static void sfxNibble();
+static void sfxCollision();
+static void sfxFlap();
 
 
 void bownlyFlappyBeronMicrogameMain()
@@ -112,6 +117,9 @@ static void phaseFlappyBeronInit()
     beronLowerBound = 0U;
     beronLeftBound = 0U;
     beronRightBound = 0U;
+    crownX = 0U;
+    crownY = 0U;
+    crownYVel = 0U;
     flapAnimTick = 0U;
     gameTick = 0U;
     gameTickTarget = 60U + (mgSpeed * 30U);
@@ -127,6 +135,9 @@ static void phaseFlappyBeronInit()
 
     // Setting up the sprites
     set_sprite_data(SPRTILE_BERON, bownlySprBeron_TILE_COUNT, bownlySprBeron_tiles);
+    set_sprite_data(SPRTILE_BERON + bownlySprBeron_TILE_COUNT, 1U, bownlyBeronCrownTiles);
+    set_sprite_tile(5U, SPRTILE_BERON + bownlySprBeron_TILE_COUNT);  // Crown
+    move_sprite(5U, 0U, 0U);
 
     // Setting up the Mushrooms
     set_bkg_data(0x30U, 53U, bownlyBeronMushTiles);
@@ -186,7 +197,7 @@ static void phaseFlappyBeronInit()
 
     substate = SUB_LOOP;
 
-    // playSong(&bownlyKnotAnywhere1Song);
+    playSong(&bownlySloopygoopMarioEsqueSong);
 
     fadein();
     // fadein() sets the sprites to a palette that I don't want to use here
@@ -202,7 +213,6 @@ static void phaseFlappyBeronLoop()
     if (beronYVel == MAX_Y_VEL)
         --beronYVel;
     beronY += (beronYVel >> 3U);
-
     if (beronY > 160U)
         beronY = 160U;
 
@@ -229,13 +239,29 @@ static void phaseFlappyBeronLoop()
         {
             mgStatus = LOST;
             beronState = DYING;
-            // you died sfx
+
+            crownX = BERON_X + 5U;
+            crownY = beronY;
+            crownYVel = -16;
+
+            sfxCollision();
         }
 
     }
     else
     {
         // Animate falling crown
+        crownYVel += GRAVITY;
+        if (crownYVel == MAX_Y_VEL)
+            --crownYVel;
+        crownY += (crownYVel >> 3U);
+
+        if (crownY > 160U)
+            crownY = 160U;
+
+        crownX -= CROWN_X_VEL;
+
+        move_sprite(5U, crownX, crownY);
     }
 
     drawBeronSprites();
@@ -250,7 +276,7 @@ static void inputsFlappyBeron()
         beronYVel = -16;
         flapAnimTick = 0U;
         beronState = FLAPPING;
-//         sfxNibble();
+        sfxFlap();
     }
 }
 
@@ -265,18 +291,6 @@ UINT8 checkBeronCollided()
 
     beronLeftBound %= 0x1FU;
     beronRightBound %= 0x1FU;
-
-    // set_bkg_tile_xy(3,0,SCX_REG/100);
-    // set_bkg_tile_xy(4,0,(SCX_REG/10)%10);
-    // set_bkg_tile_xy(5,0,SCX_REG%10);
-
-    // set_bkg_tile_xy(3,2,beronLeftBound/100);
-    // set_bkg_tile_xy(4,2,(beronLeftBound/0x10)%0x10);
-    // set_bkg_tile_xy(5,2,beronLeftBound%0x10);
-
-    // set_bkg_tile_xy(3,3,beronUpperBound/100);
-    // set_bkg_tile_xy(4,3,(beronUpperBound/10)%10);
-    // set_bkg_tile_xy(5,3,beronUpperBound%10);
 
     l = get_bkg_tile_xy(beronLeftBound, beronUpperBound);
     if (l != 0x64U)  // 0x64U is the full light grey tile
@@ -307,20 +321,9 @@ static void drawBeronSprites()
             break;
         case FLAPPING:
             if (flapAnimTick == 0U || flapAnimTick == 2U || flapAnimTick == 3U)
-            {
-                // set_win_tile_xy(0,0,0x0A);
                 animFrame = 4U;
-            }
-            // else if (flapAnimTick == 4U || flapAnimTick == 5U || flapAnimTick == 6U)
-            // {
-            //     // set_win_tile_xy(0,0,0x0B);
-            //     animFrame = 4U;
-            // }
             else
-            {
-                // set_win_tile_xy(0,0,0x0C);
                 animFrame = 5U;
-            }
             ++flapAnimTick;
             break;
         case DYING:
@@ -334,10 +337,18 @@ static void drawBeronSprites()
 
 
 /********************************** SFX METHODS **********************************/
-// static void sfxNibble()
-// {
-//     NR41_REG = 0x1FU;
-//     NR42_REG = 0xF1U;
-//     NR43_REG = 0x20U;
-//     NR44_REG = 0xC0U;
-// }
+static void sfxCollision()
+{
+    NR41_REG = 0x03U;
+    NR42_REG = 0xF0U;
+    NR43_REG = 0x5FU;
+    NR44_REG = 0xC0U;
+}
+
+static void sfxFlap()
+{
+    NR41_REG = 0x1FU;
+    NR42_REG = 0xF1U;
+    NR43_REG = 0x20U;
+    NR44_REG = 0xC0U;
+}

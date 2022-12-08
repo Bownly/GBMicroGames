@@ -234,13 +234,13 @@ static void phasePastelLoop()
     {
         inputsPastel();
         calcPhysics();
-    }
 
-    if (checkBeeCollision() == TRUE)
-    {
-        mgStatus = LOST;
-        pastelState = DEAD;
-        sfxHurt();
+        if (checkBeeCollision() == TRUE)
+        {
+            mgStatus = LOST;
+            pastelState = DEAD;
+            sfxHurt();
+        }
     }
 
     animateBees();
