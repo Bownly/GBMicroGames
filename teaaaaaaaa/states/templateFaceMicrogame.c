@@ -36,43 +36,82 @@ extern UINT8 substate;
 extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
+extern UINT16 mgTimeRemaining;
+extern UINT8 mgTimerTickSpeed;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
 UINT8 teaaaPlayableSpriteX;
-UINT8 teaaaPlayableSpriteY;
+UINT16 teaaaPlayableSpriteY;
+UINT8 teaaaPlayableSpriteSpeed;
+UINT8 teaaaDownshiftedPlayableSpriteY;
+INT8 teaaaYVelocity;
 UINT8 teaaaflipSprite;
 UINT8 teaaaAnimationState;
 UINT8 teaaaAnimationSpeed;
-UINT8 teaaaSpriteY;
 UINT8 teaaaSprite1X;
 UINT8 teaaaSprite2X;
 UINT8 teaaaSprite3X;
+UINT8 teaaaSprite1Y;
+UINT8 teaaaSprite2Y;
+UINT8 teaaaSprite3Y;
 UINT8 teaaaStoredFrame;
 UINT8 teaaaFrameIndex;
 UINT8 teaaaSpriteMemory;
 UINT8 teaaaStoredSpriteX;
+UINT8 teaaaStoredSpriteY;
+UINT8 getTile1;
+UINT8 getTile2;
+UINT8 getTile3;
+UINT8 getTile4;
 UINT8 numberOfMoles;
+
+const unsigned char teaaaaSpriteXPositions[] =
+{
+20,80,140,0,
+20,80,150,0,
+20,88,155,0,
+70,90,40
+};
+
+const unsigned char teaaaaSpriteYPositions[] =
+{
+88,88,88,0,
+48,88,64,0,
+88,64,48,0,
+};
 
 void whackMolesinitialize() BANKED
 {
 set_bkg_data(48,21,WMBGgraphics);
-set_bkg_submap(0,0,20,18,whackMolesBG,20);
+set_bkg_submap(0,0,20,18,whackMolesBG + (mgDifficulty * (18 * 20)),20);
 numberOfMoles = 3;
-teaaaSpriteY = 88;
 WMMoleFrameData[0] = 0;
 WMMoleFrameData[1] = 0;
 WMMoleFrameData[2] = 0;
 WMMoleFrameData[3] = 0;
-teaaaSprite1X = 20;
-teaaaSprite2X = 80;
-teaaaSprite3X = 140;
+if (mgSpeed < 2)
+{
+teaaaPlayableSpriteSpeed = 2;
+}
+else
+{
+teaaaPlayableSpriteSpeed = 3;
+}
+teaaaSprite1X = teaaaaSpriteXPositions[(mgDifficulty << 2)];
+teaaaSprite2X = teaaaaSpriteXPositions[(mgDifficulty << 2) + 1];
+teaaaSprite3X = teaaaaSpriteXPositions[(mgDifficulty << 2) + 2];
+teaaaSprite1Y = teaaaaSpriteYPositions[(mgDifficulty << 2)];
+teaaaSprite2Y = teaaaaSpriteYPositions[(mgDifficulty << 2) + 1];
+teaaaSprite3Y = teaaaaSpriteYPositions[(mgDifficulty << 2) + 2];
+teaaaYVelocity = 0;
 teaaaAnimationSpeed = 6;
 animFrame = 0;
 animTick = 6;
-teaaaPlayableSpriteY = 104;
-teaaaPlayableSpriteX = 70;
+teaaaDownshiftedPlayableSpriteY = 104;
+teaaaPlayableSpriteY = teaaaDownshiftedPlayableSpriteY << 4;
+teaaaPlayableSpriteX = teaaaaSpriteXPositions[mgDifficulty + 12];
 teaaaAnimationState = 0;
 fadein();
 playSong(&whackMolesMusic);
@@ -82,7 +121,7 @@ substate = SUB_LOOP;
 
 void WhackMolesUpdateSprite() BANKED
 {
-if (teaaaStoredSpriteX > teaaaPlayableSpriteX - 16 & teaaaStoredSpriteX < teaaaPlayableSpriteX + 20)
+if (teaaaStoredSpriteX > teaaaPlayableSpriteX - 16 & teaaaStoredSpriteX < teaaaPlayableSpriteX + 20 & teaaaStoredSpriteY < teaaaDownshiftedPlayableSpriteY + 16 & teaaaStoredSpriteY > teaaaDownshiftedPlayableSpriteY - 32)
 {
 if (animFrame == 36 & teaaaStoredFrame == 0)
 {
@@ -103,21 +142,25 @@ set_sprite_tile(teaaaSpriteMemory + 2,WMMoleTileData[teaaaStoredFrame + 2]);
 set_sprite_tile(teaaaSpriteMemory + 3,WMMoleTileData[teaaaStoredFrame + 3]);
 set_sprite_tile(teaaaSpriteMemory + 4,WMMoleTileData[teaaaStoredFrame + 4]);
 set_sprite_tile(teaaaSpriteMemory + 5,WMMoleTileData[teaaaStoredFrame + 5]);
-move_sprite(teaaaSpriteMemory,teaaaStoredSpriteX - 8,teaaaSpriteY);
-move_sprite(teaaaSpriteMemory + 1,teaaaStoredSpriteX,teaaaSpriteY);
-move_sprite(teaaaSpriteMemory + 2,teaaaStoredSpriteX - 8,teaaaSpriteY + 8);
-move_sprite(teaaaSpriteMemory + 3,teaaaStoredSpriteX,teaaaSpriteY + 8);
-move_sprite(teaaaSpriteMemory + 4,teaaaStoredSpriteX - 8,teaaaSpriteY + 16);
-move_sprite(teaaaSpriteMemory + 5,teaaaStoredSpriteX,teaaaSpriteY + 16);
+move_sprite(teaaaSpriteMemory,teaaaStoredSpriteX - 8,teaaaStoredSpriteY);
+move_sprite(teaaaSpriteMemory + 1,teaaaStoredSpriteX,teaaaStoredSpriteY);
+move_sprite(teaaaSpriteMemory + 2,teaaaStoredSpriteX - 8,teaaaStoredSpriteY + 8);
+move_sprite(teaaaSpriteMemory + 3,teaaaStoredSpriteX,teaaaStoredSpriteY + 8);
+move_sprite(teaaaSpriteMemory + 4,teaaaStoredSpriteX - 8,teaaaStoredSpriteY + 16);
+move_sprite(teaaaSpriteMemory + 5,teaaaStoredSpriteX,teaaaStoredSpriteY + 16);
 }
 
 void whackMolesLoop() BANKED
 {
 curJoypad = joypad();
 animTick --;
+if (teaaaYVelocity < 40)
+{
+teaaaYVelocity += 3;
+}
 if (curJoypad & J_RIGHT)
 {
-if (teaaaAnimationState < 1 & teaaaPlayableSpriteX < 159)
+if (teaaaAnimationState < 1 & teaaaPlayableSpriteX < 157)
 {
 if (teaaaflipSprite == S_FLIPX)
 {
@@ -128,7 +171,7 @@ teaaaAnimationSpeed = 4;
 }
 else
 {
-teaaaPlayableSpriteX += 2;
+teaaaPlayableSpriteX += teaaaPlayableSpriteSpeed;
 teaaaAnimationSpeed = 6;
 }
 }
@@ -146,7 +189,7 @@ teaaaAnimationSpeed = 4;
 }
 else
 {
-teaaaPlayableSpriteX -= 2;
+teaaaPlayableSpriteX -= teaaaPlayableSpriteSpeed;
 teaaaAnimationSpeed = 6;
 }
 }
@@ -156,15 +199,43 @@ if (!(curJoypad & J_RIGHT) & !(curJoypad & J_LEFT) & teaaaAnimationState < 1)
 animTick = 6;
 animFrame = 0;
 }
-if (curJoypad & J_A)
+if (curJoypad & J_B)
 {
-if (!(prevJoypad & J_A))
+if (!(prevJoypad & J_B))
 {
 animTick = 3;
 teaaaAnimationSpeed = 3;
 animFrame = 18;
 teaaaAnimationState = 1;
 }
+}
+getTile1 = get_bkg_tile_xy(teaaaPlayableSpriteX >> 3,(teaaaDownshiftedPlayableSpriteY >> 3) - 1);
+getTile2 = get_bkg_tile_xy((teaaaPlayableSpriteX >> 3) - 1,(teaaaDownshiftedPlayableSpriteY >> 3) - 1);
+getTile3 = get_bkg_tile_xy((teaaaPlayableSpriteX >> 3) - 2,(teaaaDownshiftedPlayableSpriteY >> 3) - 1);
+if (teaaaYVelocity >= 0)
+{
+if (getTile1 == 62 || getTile2 == 62 || getTile3 == 62)
+{
+teaaaYVelocity = 0;
+teaaaPlayableSpriteY = (((teaaaPlayableSpriteY >> 4) >> 3) << 7);
+}
+}
+if (curJoypad & J_A)
+{
+if (!(prevJoypad & J_A))
+{
+if (getTile1 == 62 || getTile2 == 62 || getTile3 == 62)
+{
+if (teaaaYVelocity == 0)
+teaaaYVelocity = -45;
+}
+}
+}
+teaaaPlayableSpriteY += teaaaYVelocity;
+teaaaDownshiftedPlayableSpriteY = teaaaPlayableSpriteY >> 4;
+if (teaaaDownshiftedPlayableSpriteY > 144)
+{
+mgTimeRemaining = mgTimerTickSpeed;
 }
 if (animTick == 0)
 {
@@ -211,16 +282,19 @@ teaaaStoredFrame = WMMoleFrameData[0];
 teaaaFrameIndex = 0;
 teaaaSpriteMemory = 9;
 teaaaStoredSpriteX = teaaaSprite1X;
+teaaaStoredSpriteY = teaaaSprite1Y;
 WhackMolesUpdateSprite();
 teaaaStoredFrame = WMMoleFrameData[1];
 teaaaFrameIndex = 1;
 teaaaSpriteMemory = 15;
 teaaaStoredSpriteX = teaaaSprite2X;
+teaaaStoredSpriteY = teaaaSprite2Y;
 WhackMolesUpdateSprite();
 teaaaStoredFrame = WMMoleFrameData[2];
 teaaaFrameIndex = 2;
 teaaaSpriteMemory = 21;
 teaaaStoredSpriteX = teaaaSprite3X;
+teaaaStoredSpriteY = teaaaSprite3Y;
 WhackMolesUpdateSprite();
 if (numberOfMoles == 0)
 {
@@ -228,27 +302,27 @@ mgStatus = WON;
 }
 if (teaaaflipSprite == 0)
 {
-move_sprite(0,teaaaPlayableSpriteX - 16,teaaaPlayableSpriteY - 16);
-move_sprite(1,teaaaPlayableSpriteX - 8,teaaaPlayableSpriteY - 16);
-move_sprite(2,teaaaPlayableSpriteX,teaaaPlayableSpriteY - 16);
-move_sprite(3,teaaaPlayableSpriteX - 8,teaaaPlayableSpriteY - 8);
-move_sprite(4,teaaaPlayableSpriteX,teaaaPlayableSpriteY - 8);
-move_sprite(5,teaaaPlayableSpriteX - 16,teaaaPlayableSpriteY);
-move_sprite(6,teaaaPlayableSpriteX - 8,teaaaPlayableSpriteY);
-move_sprite(7,teaaaPlayableSpriteX,teaaaPlayableSpriteY);
-move_sprite(8,teaaaPlayableSpriteX + 8,teaaaPlayableSpriteY);
+move_sprite(0,teaaaPlayableSpriteX - 16,teaaaDownshiftedPlayableSpriteY - 16);
+move_sprite(1,teaaaPlayableSpriteX - 8,teaaaDownshiftedPlayableSpriteY - 16);
+move_sprite(2,teaaaPlayableSpriteX,teaaaDownshiftedPlayableSpriteY - 16);
+move_sprite(3,teaaaPlayableSpriteX - 8,teaaaDownshiftedPlayableSpriteY - 8);
+move_sprite(4,teaaaPlayableSpriteX,teaaaDownshiftedPlayableSpriteY - 8);
+move_sprite(5,teaaaPlayableSpriteX - 16,teaaaDownshiftedPlayableSpriteY);
+move_sprite(6,teaaaPlayableSpriteX - 8,teaaaDownshiftedPlayableSpriteY);
+move_sprite(7,teaaaPlayableSpriteX,teaaaDownshiftedPlayableSpriteY);
+move_sprite(8,teaaaPlayableSpriteX + 8,teaaaDownshiftedPlayableSpriteY);
 }
 else
 {
-move_sprite(0,teaaaPlayableSpriteX + 12,teaaaPlayableSpriteY - 16);
-move_sprite(1,teaaaPlayableSpriteX + 4,teaaaPlayableSpriteY - 16);
-move_sprite(2,teaaaPlayableSpriteX - 4,teaaaPlayableSpriteY - 16);
-move_sprite(3,teaaaPlayableSpriteX + 4,teaaaPlayableSpriteY - 8);
-move_sprite(4,teaaaPlayableSpriteX - 4,teaaaPlayableSpriteY - 8);
-move_sprite(5,teaaaPlayableSpriteX + 12,teaaaPlayableSpriteY);
-move_sprite(6,teaaaPlayableSpriteX + 4,teaaaPlayableSpriteY);
-move_sprite(7,teaaaPlayableSpriteX - 4,teaaaPlayableSpriteY);
-move_sprite(8,teaaaPlayableSpriteX - 12,teaaaPlayableSpriteY);
+move_sprite(0,teaaaPlayableSpriteX + 12,teaaaDownshiftedPlayableSpriteY - 16);
+move_sprite(1,teaaaPlayableSpriteX + 4,teaaaDownshiftedPlayableSpriteY - 16);
+move_sprite(2,teaaaPlayableSpriteX - 4,teaaaDownshiftedPlayableSpriteY - 16);
+move_sprite(3,teaaaPlayableSpriteX + 4,teaaaDownshiftedPlayableSpriteY - 8);
+move_sprite(4,teaaaPlayableSpriteX - 4,teaaaDownshiftedPlayableSpriteY - 8);
+move_sprite(5,teaaaPlayableSpriteX + 12,teaaaDownshiftedPlayableSpriteY);
+move_sprite(6,teaaaPlayableSpriteX + 4,teaaaDownshiftedPlayableSpriteY);
+move_sprite(7,teaaaPlayableSpriteX - 4,teaaaDownshiftedPlayableSpriteY);
+move_sprite(8,teaaaPlayableSpriteX - 12,teaaaDownshiftedPlayableSpriteY);
 }
 prevJoypad = curJoypad;
 }
