@@ -38,11 +38,25 @@ extern UINT8 mgStatus;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-// static UINT8 rabbitX;
-// static UINT8 rabbitY;
+static UINT8 gameTick;
+static UINT8 gameTickTarget;
+static UINT8 flapAnimTick;
 
-#define BERON_X 64U
+BERONSTATE beronState;
+#define BERON_X 40U
 static UINT16 beronY;
+static INT8 beronYVel;
+#define GRAVITY 1U
+#define MAX_Y_VEL 24U
+
+UINT8 beronUpperBound;
+UINT8 beronLowerBound;
+UINT16 beronLeftBound;
+UINT16 beronRightBound;
+#define BERON_LEFT_PAD 5U
+#define BERON_WIDTH 7U
+#define BERON_TOP_PAD 5U
+#define BERON_HEIGHT 8U
 
 #define SPRID_BERON 0U
 #define SPRTILE_BERON 0U
@@ -52,13 +66,13 @@ static void phaseFlappyBeronInit();
 static void phaseFlappyBeronLoop();
 
 /* INPUT METHODS */
-// static void inputsEat();
+static void inputsFlappyBeron();
 
 /* HELPER METHODS */
+UINT8 checkBeronCollided();
 
-/* DISPLAY METHODS */
-// static void drawGrass();
-// static void updateCarrots();
+/* DISPLAY METHODS */   
+static void drawBeronSprites();
 
 /* SFX METHODS */
 // static void sfxNibble();
@@ -89,34 +103,86 @@ void bownlyFlappyBeronMicrogameMain()
 static void phaseFlappyBeronInit()
 {
     // Initializations
+    mgStatus = WON;
     init_bkg(0x64U);
     animTick = 0U;
+    beronState = FALLING;
+    beronYVel = 0U;
+    beronUpperBound = 0U;
+    beronLowerBound = 0U;
+    beronLeftBound = 0U;
+    beronRightBound = 0U;
+    flapAnimTick = 0U;
+    gameTick = 0U;
+    gameTickTarget = 60U + (mgSpeed * 30U);
 
-    // rabbitX = 150U;
-    beronY = 50U;
-    // eatCount = 0U;
+    // Spikes
+    for (i = 0U; i != 32U; ++i)
+    {
+        set_bkg_tile_xy(i, 0U, 99U);
+        set_bkg_tile_xy(i, 17U, 98U);
+    }
+
+    beronY = 72U;
 
     // Setting up the sprites
     set_sprite_data(SPRTILE_BERON, bownlySprBeron_TILE_COUNT, bownlySprBeron_tiles);
 
-
-
-    // Setup Mushrooms
+    // Setting up the Mushrooms
     set_bkg_data(0x30U, 53U, bownlyBeronMushTiles);
-    // m = getRandUint8(9U);  // m = height of top mushroom
-    // n = m + 5U - mgDifficulty;
-    set_bkg_tiles(10U, 9U, 6U, 3U, bownlyBeronCapDownMap);
-    set_bkg_tiles(12U, 0U, 2U, 9U, bownlyBeronStalkDownMap);
-    // set_bkg_tiles(10U, 9U, 6U, 3U, bownlyBeronCapUpMap);
-    // set_bkg_tiles(12U, 0U, 2U, 9U, bownlyBeronStalkUpMap);
-    set_bkg_tiles(20U, 8U, 6U, 3U, bownlyBeronCapUpMap);
-    set_bkg_tiles(22U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
+    r = getRandUint8(2U);
+    j = getRandUint8(9U);
 
-    set_bkg_tiles(0U, 9U, 6U, 3U, bownlyBeronCapDownMap);
-    set_bkg_tiles(2U, 0U, 2U, 9U, bownlyBeronStalkDownMap);
+    switch (mgDifficulty)
+    {
+        case 2U:
+            // First mushroom
+            if (r == 0U)
+            {
+                set_bkg_tiles(14U, 8U, 4U, 3U, bownlyBeronCapUpMap);
+                set_bkg_tiles(15U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
 
-    // for (i = m; i != n; i += 3U)
-    //     set_bkg_tiles(i, CARROT_Y, 3U, 3U, bownlySprCarrot_map);
+            }
+            else
+            {
+                set_bkg_tiles(14U, 6U, 4U, 3U, bownlyBeronCapDownMap);
+                set_bkg_tiles(15U, 29U, 2U, 9U, bownlyBeronStalkDownMap);
+            }
+
+            // Second (set of) mushroom(s)
+            set_bkg_tiles(27U, j + 8U, 4U, 3U, bownlyBeronCapUpMap);
+            set_bkg_tiles(28U, j + 11U, 2U, 9U, bownlyBeronStalkUpMap);
+            set_bkg_tiles(27U, j, 4U, 3U, bownlyBeronCapDownMap);
+            set_bkg_tiles(28U, j - 9U, 2U, 9U, bownlyBeronStalkDownMap);
+
+            break;
+        case 1U:
+            if (r == 1U)
+            {
+                set_bkg_tiles(27U, 8U, 4U, 3U, bownlyBeronCapUpMap);
+                set_bkg_tiles(28U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
+            }
+            else
+            {
+                set_bkg_tiles(27U, 8U, 4U, 3U, bownlyBeronCapDownMap);
+                set_bkg_tiles(28U, 31U, 2U, 9U, bownlyBeronStalkDownMap);
+            }
+        case 0U:
+            if (r == 0U)
+            {
+                set_bkg_tiles(14U, 8U, 4U, 3U, bownlyBeronCapUpMap);
+                set_bkg_tiles(15U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
+            }
+            else
+            {
+                set_bkg_tiles(14U, 8U, 4U, 3U, bownlyBeronCapDownMap);
+                set_bkg_tiles(15U, 31U, 2U, 9U, bownlyBeronStalkDownMap);
+            }
+
+        default:
+    
+            break;
+    }
 
     substate = SUB_LOOP;
 
@@ -130,114 +196,141 @@ static void phaseFlappyBeronInit()
 static void phaseFlappyBeronLoop()
 {
     ++animTick;
-    animFrame = (animTick >> 4U) % 4U;
-    if (animFrame == 3U)
-        animFrame = 1U;
 
-    move_metasprite(bownlySprBeron_metasprites[animFrame], SPRTILE_BERON, SPRID_BERON, BERON_X, beronY);
+    // Downward accelerative force
+    beronYVel += GRAVITY;
+    if (beronYVel == MAX_Y_VEL)
+        --beronYVel;
+    beronY += (beronYVel >> 3U);
 
-    scroll_bkg(1, 0U);
+    if (beronY > 160U)
+        beronY = 160U;
 
-    // if (mgStatus == PLAYING)
-    //     inputsEat();
-    // else if (mgStatus == WON)
-    // {
-    //     animFrame = (animTick >> 5U) % 2U;
-    //     set_bkg_tiles(8U, 8U, 4U, 4U, bownlySprRabbit_map + ((animFrame + 3U) << 4U));
-    // }
+    ++gameTick;
+    if (mgSpeed != 0U)
+    {
+        if (gameTick % (2U - mgSpeed) == 0U)
+        {
+            scroll_bkg(1, 0U);
+        }
+    }
+
+    if (mgStatus != LOST)
+    {
+        inputsFlappyBeron();
+        
+        if (beronYVel > 0)
+            beronState = FALLING;
+
+        scroll_bkg(1, 0U);
+    
+        // Collision check
+        if (checkBeronCollided() == TRUE)
+        {
+            mgStatus = LOST;
+            beronState = DYING;
+            // you died sfx
+        }
+
+    }
+    else
+    {
+        // Animate falling crown
+    }
+
+    drawBeronSprites();
 }
 
 
 /******************************** INPUT METHODS *********************************/
-// static void inputsEat()
-// {
-//     if (curJoypad & J_A && !(prevJoypad & J_A))
-//     {
-//         updateCarrots();  // Updating these before updating eatCount because it simplifies the math
-
-//         ++eatCount;
-//         animFrame = eatCount % 2U;
-//         if (animFrame == 1U)
-//             animFrame = 2U;
-
+static void inputsFlappyBeron()
+{
+    if (curJoypad & J_A && !(prevJoypad & J_A))
+    {
+        beronYVel = -16;
+        flapAnimTick = 0U;
+        beronState = FLAPPING;
 //         sfxNibble();
-
-//         set_bkg_tiles(8U, 8U, 4U, 4U, bownlySprRabbit_map + (animFrame << 4U));
-
-//         if (eatCount == eatGoal)
-//         {
-//             mgStatus = WON;
-//             animTick = 0U;
-//         }
-//     }
-// }
+    }
+}
 
 
 /******************************** HELPER METHODS *********************************/
+UINT8 checkBeronCollided()
+{
+    beronUpperBound = (beronY + BERON_TOP_PAD - 16U) >> 3U;
+    beronLowerBound = (beronY + BERON_TOP_PAD - 16U + BERON_HEIGHT) >> 3U;
+    beronLeftBound = (BERON_X + BERON_LEFT_PAD + SCX_REG - 8U) >> 3U;
+    beronRightBound = (BERON_X + BERON_LEFT_PAD + SCX_REG - 8U + BERON_WIDTH) >> 3U;
 
+    beronLeftBound %= 0x1FU;
+    beronRightBound %= 0x1FU;
+
+    // set_bkg_tile_xy(3,0,SCX_REG/100);
+    // set_bkg_tile_xy(4,0,(SCX_REG/10)%10);
+    // set_bkg_tile_xy(5,0,SCX_REG%10);
+
+    // set_bkg_tile_xy(3,2,beronLeftBound/100);
+    // set_bkg_tile_xy(4,2,(beronLeftBound/0x10)%0x10);
+    // set_bkg_tile_xy(5,2,beronLeftBound%0x10);
+
+    // set_bkg_tile_xy(3,3,beronUpperBound/100);
+    // set_bkg_tile_xy(4,3,(beronUpperBound/10)%10);
+    // set_bkg_tile_xy(5,3,beronUpperBound%10);
+
+    l = get_bkg_tile_xy(beronLeftBound, beronUpperBound);
+    if (l != 0x64U)  // 0x64U is the full light grey tile
+        return TRUE;
+    l = get_bkg_tile_xy(beronLeftBound, beronLowerBound);
+    if (l != 0x64U)  // 0x64U is the full light grey tile
+        return TRUE;
+    l = get_bkg_tile_xy(beronRightBound, beronUpperBound);
+    if (l != 0x64U)  // 0x64U is the full light grey tile
+        return TRUE;
+    l = get_bkg_tile_xy(beronRightBound, beronLowerBound);
+    if (l != 0x64U)  // 0x64U is the full light grey tile
+        return TRUE;
+    
+    return FALSE;
+}
 
 /******************************** DISPLAY METHODS ********************************/
-// static void drawGrass()
-// {
-//     // Manually placed in aesprite, so enjoy all of these magic numbers
-//     if (getRandUint8(2U) == 0U)
-//         set_bkg_tile_xy(13U,11U, 0x70U);
-//     if (getRandUint8(2U) == 0U)
-//         set_bkg_tile_xy(5U, 12U, 0x70U);
-//     if (getRandUint8(2U) == 0U)
-//         set_bkg_tile_xy(8U, 12U, 0x70U);
-//     if (getRandUint8(2U) == 0U)
-//         set_bkg_tile_xy(9U, 14U, 0x70U);
+static void drawBeronSprites()
+{
+    switch (beronState)
+    {
+        default:
+        case FALLING:
+            animFrame = (animTick >> 4U) % 4U;
+            if (animFrame == 3U)
+                animFrame = 1U;
+            break;
+        case FLAPPING:
+            if (flapAnimTick == 0U || flapAnimTick == 2U || flapAnimTick == 3U)
+            {
+                // set_win_tile_xy(0,0,0x0A);
+                animFrame = 4U;
+            }
+            // else if (flapAnimTick == 4U || flapAnimTick == 5U || flapAnimTick == 6U)
+            // {
+            //     // set_win_tile_xy(0,0,0x0B);
+            //     animFrame = 4U;
+            // }
+            else
+            {
+                // set_win_tile_xy(0,0,0x0C);
+                animFrame = 5U;
+            }
+            ++flapAnimTick;
+            break;
+        case DYING:
+            animFrame = 6U;
+            break;
+    }
 
-//     if (getRandUint8(2U) == 0U)
-//     {
-//         set_bkg_tile_xy( 4U, 10U, 0x71U);
-//         set_bkg_tile_xy( 5U, 10U, 0x72U);
-//     }
-//     if (getRandUint8(2U) == 0U)
-//     {
-//         set_bkg_tile_xy(10U, 13U, 0x71U);
-//         set_bkg_tile_xy(11U, 13U, 0x72U);
-//     }
-    
-//     if (getRandUint8(2U) == 0U)
-//     {
-//         set_bkg_tile_xy( 6U, 11U, 0x73U);
-//         set_bkg_tile_xy( 7U, 11U, 0x74U);
-//     }
-//     if (getRandUint8(2U) == 0U)
-//     {
-//         set_bkg_tile_xy(11U, 12U, 0x73U);
-//         set_bkg_tile_xy(12U, 12U, 0x74U);
-//     }
-//     if (getRandUint8(2U) == 0U)
-//     {
-//         set_bkg_tile_xy( 7U, 13U, 0x73U);
-//         set_bkg_tile_xy( 8U, 13U, 0x74U);
-//     }
-//     if (getRandUint8(2U) == 0U)
-//     {
-//         set_bkg_tile_xy(13U, 13U, 0x73U);
-//         set_bkg_tile_xy(14U, 13U, 0x74U);
-//     }
-// }
+    move_metasprite(bownlySprBeron_metasprites[animFrame], SPRTILE_BERON, SPRID_BERON, BERON_X, beronY);
+}
 
-// static void updateCarrots()
-// {
-//     switch (mgDifficulty)
-//     {
-//         default:
-//         case 0U:
-//             set_bkg_tiles(2U + (eatCount * 3U), CARROT_Y, 3U, 3U, bownlySprCarrot_map + 36U);  // Empty map
-//             break;
-//         case 1U:
-//             set_bkg_tiles(4U + ((eatCount / 2U) * 3U), CARROT_Y, 3U, 3U, bownlySprCarrot_map + 18U + (18U * (eatCount % 2U)));
-//             break;
-//         case 2U:
-//             set_bkg_tiles(5U + ((eatCount / 4U) * 3U), CARROT_Y, 3U, 3U, bownlySprCarrot_map + 9U + (9U * (eatCount % 4U)));
-//             break;
-//     }
-// }
 
 
 /********************************** SFX METHODS **********************************/

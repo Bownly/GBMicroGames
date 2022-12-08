@@ -91,11 +91,7 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly
 @REM Music
 
 @REM Flappy Beron TODO:
-@REM Spawn mushrooms
-@REM Scoll mushrooms/respawn when off screen
-@REM Add gravity to Beron
-@REM Flap input
-@REM Collision -> LOSE
+@REM Animate falling crown
 @REM Sfx (flap/collision)
 @REM Music
 

@@ -15,6 +15,12 @@ typedef enum {
 } PASTELSTATE;
 
 typedef enum {
+    FALLING,
+    FLAPPING,
+    DYING
+} BERONSTATE;
+
+typedef enum {
     // Sacrificing comprehension for funny names here
     FILLING, // FILLING = able to be shot
     DRILLING
@@ -23,5 +29,6 @@ typedef enum {
 extern ARROWSTATE arrowstate;
 extern PASTELSTATE pastelstate;
 extern DRILLSTATE drillstate;
+extern BERONSTATE beronstate;
  
 #endif

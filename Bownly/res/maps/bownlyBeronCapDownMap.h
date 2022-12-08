@@ -7,7 +7,7 @@
  Info:
    Section       : 
    Bank          : 0
-   Map size      : 6 x 3
+   Map size      : 4 x 3
    Tile set      : C:\Projects\Gameboy\GBMicroGames\Bownly\res\raw tiles\bownlyBeronMushTiles.gbr
    Plane count   : 1 plane (8 bits)
    Plane order   : Tiles are continues
@@ -20,7 +20,7 @@
 #ifndef __bownlyBeronCapDownMap_h_INCLUDE
 #define __bownlyBeronCapDownMap_h_INCLUDE
 
-#define bownlyBeronCapDownMapWidth 6
+#define bownlyBeronCapDownMapWidth 4
 #define bownlyBeronCapDownMapHeight 3
 #define bownlyBeronCapDownMapBank 0
 
