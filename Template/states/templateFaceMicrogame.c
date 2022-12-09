@@ -19,7 +19,7 @@
 #include "../res/maps/templateFace1Map.h"
 #include "../res/maps/templateFace2Map.h"
 
-extern const hUGESong_t templateTwilightDriveSong;
+extern const hUGESong_t templateSloopygoopMinuteWaltz;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -38,6 +38,8 @@ extern UINT8 mgStatus;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
+
+static UINT8 screenShakeTick;
 
 static UINT8 facesGrid[4U][5U];
 static UINT8 sadCount;  // The number of currently sad faces
@@ -58,7 +60,11 @@ static void inputsFace();
 
 /* DISPLAY METHODS */
 static void animateCursor();
+static void tryShakeScreen();
 static void updateCursorLocation();
+
+/* SFX METHODS */
+static void lostSfx();
 
 
 void templateFaceMicrogameMain()
@@ -90,6 +96,7 @@ static void phaseFaceInit()
     animTick = 0U;
     m = 0U;  // Used as the X index for the cursor, uses faces as the unit of measurement
     n = 0U;  // Used as the Y index for the cursor, uses faces as the unit of measurement
+    screenShakeTick = 0U;
 
     // Integrate mgDifficulty into the game
     sadCount = mgDifficulty + 2U;  // Range of 2, 3 or 4
@@ -134,7 +141,7 @@ static void phaseFaceInit()
     }
 
     // Play music
-    playSong(&templateTwilightDriveSong);
+    playSong(&templateSloopygoopMinuteWaltz);
 
     fadein();
     substate = SUB_LOOP;
@@ -149,6 +156,8 @@ static void phaseFaceLoop()
         inputsFace();
         animateCursor();  
     }
+
+    tryShakeScreen();
 }
 
 /******************************** INPUT METHODS *********************************/
@@ -189,13 +198,14 @@ static void inputsFace()
         if (facesGrid[n][m] == HAPPY)
         {
             mgStatus = LOST;
-            // Play sad fx/music
+            lostSfx();
 
             // Make all faces sad
             for (i = 0U; i != 5U; ++i)
             {
                 for (j = 0U; j != 4U; ++j)
                 {
+                    screenShakeTick = 1U;
                     facesGrid[j][i] = SAD;
                     set_bkg_tiles(facesXAnchor + (i * 3U), facesYAnchor + (j * 3U), 2U, 2U, templateFace2Map);
                 }
@@ -209,7 +219,6 @@ static void inputsFace()
             if (--sadCount == 0U)
             {
                 mgStatus = WON;
-                // Play happy sfx/music
             }
         }
     }
@@ -230,13 +239,54 @@ static void animateCursor()
     set_sprite_tile(0U, animFrame);
 }
 
+static void tryShakeScreen()
+{
+    if (screenShakeTick != 0U)
+    {
+        if (screenShakeTick != 26U)
+        {
+            ++screenShakeTick;
+            switch (screenShakeTick)
+            {
+                case 5U:
+                    scroll_bkg(1, 0);
+                    break;
+                case 10U:
+                    scroll_bkg(-2, 0);
+                    break;
+                case 15U:
+                    scroll_bkg(0, 1);
+                    break;
+                case 20U:
+                    scroll_bkg(0, -2);
+                    break;
+                case 25U:
+                    move_bkg(0, 0);
+                    screenShakeTick = 0U;
+                    break;
+            }
+        }
+    }
+}
+
+
 static void updateCursorLocation()
 {
     // facesXAnchor's unit of measurement is tiles, sprites operate on the unit of pixels
     // The "<< 3U" is there to convert from tiles to pixels
     // The "+ 13U" and "+ 9U" are to center the cursor over the faces
-    i = ((facesXAnchor + (m * 3U)) << 3U) + 12U;
+    i = ((facesXAnchor + (m * 3U)) << 3U) + 13U;
     j = ((facesYAnchor + (n * 3U)) << 3U) + 9U;
 
     move_sprite(0U, i, j);
+}
+
+
+/********************************** SFX METHODS **********************************/
+static void lostSfx()
+{
+    NR41_REG = 0x03U;
+    NR42_REG = 0xF0U;
+    NR43_REG = 0x5FU;
+    NR44_REG = 0xC0U;
 }

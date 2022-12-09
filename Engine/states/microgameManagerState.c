@@ -151,7 +151,7 @@ void phaseInitMicrogameManager()
 
     stopSong();
 
-    loadNewMG(MG_BOWNLY_FLAPPY_BERON);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG(MG_TEMPLATE_FACE);  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }

@@ -20,10 +20,6 @@ $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFaceTiles.o Template/re
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFace1Map.o Template/res/maps/templateFace1Map.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFace2Map.o Template/res/maps/templateFace2Map.c
 
-$GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Template/o/templateTwilightDriveSong.o Template/res/audio/templateTwilightDriveSong.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Template/o/templateSloopygoopMinuteWaltz.o Template/res/audio/templateSloopygoopMinuteWaltz.c
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Template/o/templateFaceMicrogame.o Template/states/templateFaceMicrogame.c
-
-# @REM TODO:
-# @REM Screenshake?
-# @REM sfx
