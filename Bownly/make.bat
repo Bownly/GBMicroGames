@@ -7,6 +7,7 @@ del Bownly\o\*.sym
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/sfx.o Bownly/sfx.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTheWhiteSong.o Bownly/res/audio/bownlyTheWhiteSong.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTheWhite2Song.o Bownly/res/audio/bownlyTheWhite2Song.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlySloopygoopBallerinaSong.o Bownly/res/audio/bownlySloopygoopBallerinaSong.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyBowBkgTiles.o Bownly/res/tiles/bownlyBowBkgTiles.c 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5DiceTiles.o Bownly/res/tiles/bownlyMP5DiceTiles.c
@@ -83,13 +84,6 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly
 @REM Template face TODO:
 @REM Replace music
 @REM Add sfx maybe
-
-@REM Pastel Hearts TODO:
-@REM Swap out song
-
-@REM Thingy TODO:
-@REM Sfx
-@REM Music
 
 @REM Killer Driller TODO:
 @REM Animate drill

@@ -8,6 +8,7 @@ extern UINT8 mgSpeed;
 
 void playSong(const hUGESong_t * song)
 {
+    NR12_REG = NR22_REG = NR32_REG = NR42_REG = 0;
     remove_VBL(hUGE_dosound);
     add_VBL(hUGE_dosound);
     

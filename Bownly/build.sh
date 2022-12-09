@@ -19,6 +19,7 @@ $GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/sfx.o Bownly/sfx.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/sfx.o Bownly/sfx.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTheWhiteSong.o Bownly/res/audio/bownlyTheWhiteSong.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyTheWhite2Song.o Bownly/res/audio/bownlyTheWhite2Song.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlySloopygoopBallerinaSong.o Bownly/res/audio/bownlySloopygoopBallerinaSong.c
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyBowBkgTiles.o Bownly/res/tiles/bownlyBowBkgTiles.c 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo2 -c -o Bownly/o/bownlyMP5DiceTiles.o Bownly/res/tiles/bownlyMP5DiceTiles.c

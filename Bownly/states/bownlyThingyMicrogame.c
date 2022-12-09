@@ -11,6 +11,8 @@
 #include "../res/sprites/bownlySprBanana.h"
 #include "../res/sprites/bownlySprThingy.h"
 
+extern const hUGESong_t bownlySloopygoopBallerinaSong;
+
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
 extern UINT8 i;  // Used mostly for loops
@@ -190,7 +192,7 @@ static void phaseThingyInit()
     bananaY = 100U + (j * 400U);
     move_metasprite(bownlySprBanana_metasprites[0U], SPRTILE_BANANA, SPRID_BANANA, bananaX >> 2U, bananaY >> 2U);
 
-    // playSong(&bownlyVictoryLapSong);
+    playSong(&bownlySloopygoopBallerinaSong);
 
     fadein();
     OBP0_REG = 0xE4;  // 11 10 01 00
