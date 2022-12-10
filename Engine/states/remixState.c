@@ -1,9 +1,14 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "../../Engine/common.h"
-#include "../../Engine/enums.h"
-#include "../../Engine/fade.h"
+// #include "../../Engine/common.h"
+// #include "../../Engine/enums.h"
+// #include "../../Engine/fade.h"
+#include "../common.h"
+#include "../enums.h"
+#include "../fade.h"
+
+#include "../res/sprites/engineCartArts.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -25,8 +30,8 @@ extern UINT8 animFrame;
 
 
 /* SUBSTATE METHODS */
-void phaseTitleInit();
-void phaseTitleLoop();
+void phaseRemixInit();
+void phaseRemixLoop();
 
 /* INPUT METHODS */
 
@@ -35,19 +40,19 @@ void phaseTitleLoop();
 /* DISPLAY METHODS */
 
 
-void titleStateMain()
+void remixStateMain()
 {
     curJoypad = joypad();
 
     switch (substate)
     {
         case SUB_INIT:
-            phaseTitleInit();
+            phaseRemixInit();
             break;
         case SUB_LOOP:
-            phaseTitleLoop();
+            phaseRemixLoop();
             break;
-        default:  // Abort to... uh, itself in the event of unexpected state
+        default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
             substate = SUB_INIT;
             break;
@@ -57,38 +62,45 @@ void titleStateMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseTitleInit()
+void phaseRemixInit()
 {
     // Initializations
     init_bkg(0xFFU);
+    // init_bkg(0x01U);
     animTick = 0U;
     HIDE_WIN;
   
-    scroll_bkg(-4, 0U);  // For centering the text
+    drawPopupWindow(2U, 0U, 15U, 12U);
+    for (i = 0U; i != 20U; ++i)
+    {
+        set_bkg_tile_xy(i, 13U, 0xF1U);
+        // set_bkg_tile_xy(i, 12, 0xF6U);
+    }
 
-    printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
-    printLine(4U, 4U, "TOTALLY NOT", FALSE);
-    printLine(5U, 6U, "WARIOWARE", FALSE);
-    printLine(1U, 8U, "COMMUNITY EDITION", FALSE);
-    printLine(4U, 13U, "PRESS START", FALSE);
+    set_bkg_data(0x40, engineCartArts_TILE_COUNT, engineCartArts_tiles);
+    for (i = 0U; i != 5U; ++i)
+    {
+        for (j = 0U; j != 4U; ++j)
+            set_bkg_tiles(3U + i * 3U, 1U + j * 3U, 2U, 2U, engineCartArts_map + (i+j*5U) *4U);
+    }
 
     substate = SUB_LOOP;
-    // fadein();
+    fadein();
 }
 
-void phaseTitleLoop()
+void phaseRemixLoop()
 {
     ++animTick;
     
-    if ((animTick % 64U) / 48U == 0U)
-    {
-        printLine(4U, 13U, "PRESS START", FALSE);
-    }
-    else
-    {
-        for (i = 4U; i != 15U; ++i)
-            set_bkg_tile_xy(i, 13U, 0xFFU);
-    }
+    // if ((animTick % 64U) / 48U == 0U)
+    // {
+    //     printLine(4U, 13U, "PRESS START", FALSE);
+    // }
+    // else
+    // {
+    //     for (i = 4U; i != 15U; ++i)
+    //         set_bkg_tile_xy(i, 13U, 0xFFU);
+    // }
 
     if (curJoypad & J_START && !(prevJoypad & J_START))
     {
@@ -99,15 +111,6 @@ void phaseTitleLoop()
         gamestate = STATE_MICROGAME_MANAGER;
         substate = SUB_INIT;
         mgStatus = PLAYING;
-    }  
-    // TODO DELETE ME TEMP TEST STUFF
-    else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
-    {
-        fadeout();
-        move_bkg(0U, 0U);
-
-        gamestate = STATE_REMIX;
-        substate = SUB_INIT;
     }  
 }
 

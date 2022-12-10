@@ -12,6 +12,10 @@
  * @param instructions     Instructions for the game
  */
 
+#ifndef MICROGAME_COUNT
+#define MICROGAME_COUNT 19U
+#endif
+
 #ifdef MICROGAME
 MICROGAME(MG_TEMPLATE_FACE, templateFaceMicrogameMain, 1U, 3U, "FACE GAME", "TEMPLATE DEV", "CHEER UP!")
 MICROGAME(MG_BOWNLY_BOW, bownlyBowMicrogameMain, 2U, 4U, "BOW", "BOWNLY", "SHOOT!")

@@ -80,11 +80,6 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyCarrotMicrogame.o Bownly/stat
 C:\gbdk\bin\lcc -Wa-l -Wf-bo9 -c -o Bownly/o/bownlyFlappyBeronMicrogame.o Bownly/states/bownlyFlappyBeronMicrogame.c
 
 
-
-@REM Template face TODO:
-@REM Replace music
-@REM Add sfx maybe
-
 @REM Killer Driller TODO:
 @REM Animate drill
 @REM Render wheels and animate them (stretch goal)

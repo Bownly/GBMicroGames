@@ -7,9 +7,11 @@
 #include "Engine/ram.h"
 
 #include "Engine/structs/Microgame.h"
-#include "Engine/states/microgameManagerState.h"
-#include "Engine/states/titleState.h"
+
 #include "Engine/states/gameoverState.h"
+#include "Engine/states/microgameManagerState.h"
+#include "Engine/states/remixState.h"
+#include "Engine/states/titleState.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char fontTiles[];
@@ -31,6 +33,7 @@ UINT8 r;  // Used for randomization stuff
 
 UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
+UINT8 oldBank;
 UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
@@ -78,10 +81,15 @@ void main()
             case STATE_MAIN_MENU:
                 break;
             case STATE_MICROGAME_MANAGER:
+                // SWITCH_ROM(0U);
                 microgameManagerStateMain();
                 break;
             case STATE_MICROGAME:
                 microgameManagerGameLoop();
+                break;
+            case STATE_REMIX:
+                SWITCH_ROM(4U);
+                remixStateMain();
                 break;
             case STATE_GAMEOVER:
                 SWITCH_ROM(4U);

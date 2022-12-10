@@ -4,6 +4,10 @@
 #include "common.h"
 #include "enums.h"
 
+extern const hUGESong_t premgJingle;
+extern const hUGESong_t wonJingle;
+extern const hUGESong_t lostJingle;
+
 extern UINT8 mgSpeed;
 
 void playSong(const hUGESong_t * song)
@@ -27,6 +31,26 @@ void playSong(const hUGESong_t * song)
     modifiedSong.waves = song->waves;
 
     hUGE_init(&modifiedSong);
+}
+
+void playOutsideSong(UINT8 songName)
+{
+    switch (songName)
+    {
+        default:
+        case WON_JINGLE_1:
+            SWITCH_ROM(14U);
+            playSong(&wonJingle);
+            break;
+        case LOST_JINGLE_1:
+            SWITCH_ROM(14U);
+            playSong(&lostJingle);
+            break;
+        case PRE_MG_JINGLE_1:
+            SWITCH_ROM(14U);
+            playSong(&premgJingle);
+            break;
+    }
 }
 
 void stopSong()

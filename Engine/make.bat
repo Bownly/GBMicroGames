@@ -14,9 +14,9 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat2Map.o Engine/res/maps/
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat3Map.o Engine/res/maps/engineDMGBat3Map.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat4Map.o Engine/res/maps/engineDMGBat4Map.c
 
-C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo1 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo1 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo1 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -Wf-bo14 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c
 
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/common.o Engine/common.c
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/fade.o Engine/fade.c
@@ -37,17 +37,41 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/gameoverState.o Engine/states/gameo
 c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 
 
-@REM During/post gamejam TODO broadstrokes:
-@REM Beautify lobby screen
-@REM    Score increment animation
-@REM    Lives/losing lives animation
-@REM    Speed up/difficulty up animations
-@REM    Transition animation between microgames
-@REM    Make all of the above faster for higher mgSpeed levels
-@REM Title screen
-@REM Saving/loading
-@REM "Overworld map" thingy where you can select MG groups
-@REM Select individual MG screen (grid of MGs, with an icon and byline for each one)
-@REM Maybe: store for unlocking new MGs a la SSBM trophy lottery
-@REM Maybe: if above, a way to earn currency
-@REM Add pausing
+@REM Post-jam TODO:
+@REM ✖️ Title screen
+@REM ✖️ Main menu screen
+@REM    ✖️ Main play mode
+@REM    ✖️ Custom play
+@REM    ✖️ Credits
+@REM ✖️ Lobby screen
+@REM    ✖️ Add score increment animation
+@REM    ✖️ Add speed up/difficulty up animations
+@REM    ✖️ Make all of the above faster for higher mgSpeed levels
+@REM    ✖️ Multiple random options for pre MG jingle
+@REM    ✖️ Refine algorithm for increasing speed/difficulty
+@REM    ✖️ Factor out microgameManagerGameLoop and other stuff
+@REM    ◯ Add algorithm to avoid the same MG twice in a row (history queue of microgame_count/2 size)
+@REM ✖️ Saving/loading
+@REM    ✖️ Main play mode high score
+@REM    ✖️ Individual MG scores
+@REM ✖️ Custom mix screen
+@REM    ✖️ Microgames grid
+@REM        ◯ 5 x 4 grid
+@REM        △ Cursor movement + wrapping
+@REM        ✖️ Play remix button will be to the right and will remember vert index 
+@REM    ✖️ A to play individual MG
+@REM    ✖️ Select to toggle an individual MG on/off
+@REM    ✖️ Play remix button
+@REM    ✖️ Hover over MG -> display name, author, info, score
+@REM    ✖️ Question icon/pause menu option that explains the controls
+@REM ✖️ Game over screen
+@REM    ✖️ Pretty up the art/presentation
+@REM    ✖️ Score score and high score
+@REM ✖️ Add pausing
+@REM ✖️ Add option to wipe all save data
+@REM ✖️ Fix bugs and stuff
+@REM    ✖️ Music glitches out again (after 24 points?)
+
+@REM ◯ = done
+@REM △ = wip or next in line
+@REM ✖️ = not yet started
