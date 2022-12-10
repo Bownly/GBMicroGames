@@ -16,7 +16,7 @@
 #include "../res/assets/dovesamBallSprite.h"
 #include "../res/maps/dovesamPaddleArena.h"
 
-//extern const hUGESong_t dovesamTwilightDriveSong;
+extern const hUGESong_t SloopygoopTrickyStartSong;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -156,7 +156,7 @@ static void phaseTestInit()
     }
 
     // Play music
-    //playSong(&dovesamTwilightDriveSong);
+    playSong(&SloopygoopTrickyStartSong);
 
     fadein();
     substate = SUB_LOOP;
