@@ -7,6 +7,7 @@ C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/borderTiles.o Engine/res/tiles/borderTiles.
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/fontTiles.o Engine/res/tiles/fontTiles.c
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/timerTiles.o Engine/res/tiles/timerTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGTiles.o Engine/res/tiles/engineDMGTiles.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineCursorTiles.o Engine/res/tiles/engineCursorTiles.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat0Map.o Engine/res/maps/engineDMGBat0Map.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat1Map.o Engine/res/maps/engineDMGBat1Map.c
@@ -50,25 +51,27 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Multiple random options for pre MG jingle
 @REM    ✖️ Refine algorithm for increasing speed/difficulty
 @REM    ✖️ Factor out microgameManagerGameLoop and other stuff
+@REM    ✖️ Change palette on instruction test
 @REM    ◯ Add algorithm to avoid the same MG twice in a row (history queue of microgame_count/2 size)
+@REM    ✖️ Change the level up algorithm for individual MG play sessions
 @REM ✖️ Saving/loading
-@REM    ✖️ Main play mode high score
+@REM    △ Main play mode high score
 @REM    ✖️ Individual MG scores
+@REM    ✖️ Add option to wipe all save data
 @REM ✖️ Custom mix screen
 @REM    ✖️ Microgames grid
 @REM        ◯ 5 x 4 grid
-@REM        △ Cursor movement + wrapping
+@REM        ◯ Cursor movement + wrapping
 @REM        ✖️ Play remix button will be to the right and will remember vert index 
-@REM    ✖️ A to play individual MG
+@REM    ◯ A to play individual MG
 @REM    ✖️ Select to toggle an individual MG on/off
 @REM    ✖️ Play remix button
-@REM    ✖️ Hover over MG -> display name, author, info, score
-@REM    ✖️ Question icon/pause menu option that explains the controls
+@REM    △ Hover over MG -> display name, author, info, score
+@REM    ✖️ ? game shows instructions, but doubles as a random pick
 @REM ✖️ Game over screen
 @REM    ✖️ Pretty up the art/presentation
 @REM    ✖️ Score score and high score
 @REM ✖️ Add pausing
-@REM ✖️ Add option to wipe all save data
 @REM ✖️ Fix bugs and stuff
 @REM    ✖️ Music glitches out again (after 24 points?)
 

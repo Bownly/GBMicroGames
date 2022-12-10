@@ -4,6 +4,7 @@
 #include "../../Engine/common.h"
 #include "../../Engine/enums.h"
 #include "../../Engine/fade.h"
+#include "../database/microgameData.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -19,6 +20,7 @@ extern UINT8 substate;
 extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
+extern Microgame mgCurrentMG;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -63,6 +65,7 @@ void phaseTitleInit()
     init_bkg(0xFFU);
     animTick = 0U;
     HIDE_WIN;
+    mgCurrentMG.id = 0xFF;
   
     scroll_bkg(-4, 0U);  // For centering the text
 
@@ -97,7 +100,7 @@ void phaseTitleLoop()
         move_bkg(0U, 0U);
 
         gamestate = STATE_MICROGAME_MANAGER;
-        substate = SUB_INIT;
+        substate = MGM_INIT_ALL;
         mgStatus = PLAYING;
     }  
     // TODO DELETE ME TEMP TEST STUFF

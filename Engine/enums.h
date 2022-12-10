@@ -19,6 +19,9 @@ typedef enum {
 typedef enum {
     SUB_INIT,
     SUB_LOOP,
+    MGM_INIT_SINGLE,
+    MGM_INIT_ALL,
+    MGM_INIT_REMIX,
     MGM_INIT_LOBBY  // The transition screen between microgames
 } SUBSTATE;
 
@@ -38,7 +41,7 @@ typedef enum {
 typedef enum {
     ALL,
     SINGLE,
-    CUSTOM
+    REMIX
 } MGPOOLTYPE;
 
 extern GAMESTATE gamestate;

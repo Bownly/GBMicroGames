@@ -100,7 +100,7 @@ static void phaseFaceInit()
 
     // Integrate mgDifficulty into the game
     sadCount = mgDifficulty + 2U;  // Range of 2, 3 or 4
-    // This particular microgame doesn't impement mgSpeed. Not all microgames necessarily need to.
+    // This particular microgame doesn't implement mgSpeed. Not all microgames necessarily need to.
     // (But every microgame DOES need to account for all 3 levels of mgDifficulty.)
     // The timer moves faster with each level of mgSpeed by default, so even microgames like this one will speed up.
     // If you want to see an example of mgSpeed integration, check out the Bownly/Bow microgame.

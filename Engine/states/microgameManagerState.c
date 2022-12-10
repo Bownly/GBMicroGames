@@ -89,7 +89,10 @@ void microgameManagerStateMain()
     switch (substate)
     {
         case SUB_INIT:
-            phaseInitMicrogameManager();
+        case MGM_INIT_SINGLE:
+        case MGM_INIT_ALL:
+        case MGM_INIT_REMIX:
+             phaseInitMicrogameManager();
             break;
         case MGM_INIT_LOBBY:
             phaseMicrogameManagerInitLobby();
@@ -171,22 +174,34 @@ void phaseInitMicrogameManager()
     mgDifficulty = 0U;
     mgSpeed = 0U;
 
-k = ALL;  // TODO TEMP TEST LINE
-    mgPoolType = k;  // Using k here, because why would I want to write safe code?
+    switch (substate)
+    {
+        default:
+        case MGM_INIT_SINGLE:
+            mgPoolType = SINGLE;
+            break;
+        case MGM_INIT_ALL:
+            mgPoolType = ALL;
+            break;
+        case MGM_INIT_REMIX:
+            mgPoolType = REMIX;
+            break;
+    }
+
     switch (mgPoolType)
     {
+        default:
         case ALL:
             mgHistoryLogSize = MICROGAME_COUNT >> 1U;
             mgPoolSize = MICROGAME_COUNT;
             for (i = 0U; i != MICROGAME_COUNT; ++i)
                 mgPool[i] = i;
             break;
-        // default:
-        // case SINGLE:
-        //     mgHistoryLogSize = 0U;
-        //     mgPoolSize = 1U;
-        //     mgPool[0U] = theselectedgmgidsomehow;
-        //     break;
+        case SINGLE:
+            mgHistoryLogSize = 1U;
+            mgPoolSize = 1U;
+            mgPool[0U] = mgCurrentMG.id;
+            break;
         // case CUSTOM:
         //     mgHistoryLogSize = get val from RAM >> 1U;
         //     break;
@@ -335,7 +350,7 @@ static void inputsGameLoop()
 static void inputsPaused()
 {
     // Up/Down to select menu options
-    // If continue
+    // If continue or start
     // //   Redraw timer line, move window to appropriate position (handled by below line?)
     //   state = STATE_MICROGAME
     // If exit
@@ -384,20 +399,25 @@ void mgHistoryLogPush(UINT8 mgId)
 
 void loadNewMG()
 {
-    l = FALSE;
-    while (l == FALSE)
+    if (mgPoolSize != 1U)
     {
-        // r = getRandUint8(mgPoolSize);
-        r = getRandUint8(MICROGAME_COUNT);
-        r = mgPool[r];
-
-        l = TRUE;
-        for (i = 0U; i != mgHistoryLogSize; ++i)
+        l = FALSE;
+        while (l == FALSE)
         {
-            if (mgHistoryLog[i] == r)
-                l = FALSE;
+            r = getRandUint8(mgPoolSize);
+            r = mgPool[r];
+
+            l = TRUE;
+            for (i = 0U; i != mgHistoryLogSize; ++i)
+            {
+                if (mgHistoryLog[i] == r)
+                    l = FALSE;
+            }
         }
+        mgHistoryLogPush(r);
     }
+    else
+        r = mgCurrentMG.id;
 
     mgCurrentMG.id = r;
     mgCurrentMG.bankId = microgameDex[r].bankId;
@@ -405,8 +425,6 @@ void loadNewMG()
     mgCurrentMG.bylinePtr = microgameDex[r].bylinePtr;
     mgCurrentMG.instructionsPtr = microgameDex[r].instructionsPtr;
     mgCurrentMG.duration = microgameDex[r].duration;
-
-    mgHistoryLogPush(mgCurrentMG.id);
 }
 
 void startMG()
