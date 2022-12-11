@@ -7,12 +7,15 @@
 #include <gbdk/metasprites.h>
 
 #define engineGBCart_TILE_ORIGIN 64
+#define engineGBCart_TILE_W 8
 #define engineGBCart_TILE_H 8
 #define engineGBCart_WIDTH 8
 #define engineGBCart_HEIGHT 8
 #define engineGBCart_TILE_COUNT 70
+#define engineGBCart_PALETTE_COUNT 1
+#define engineGBCart_COLORS_PER_PALETTE 4
+#define engineGBCart_TOTAL_COLORS 4
 #define engineGBCart_MAP_ATTRIBUTES 0
-#define engineGBCart_TILE_PALS engineGBCart_tile_pals
 
 BANKREF_EXTERN(engineGBCart)
 
@@ -20,6 +23,5 @@ extern const palette_color_t engineGBCart_palettes[4];
 extern const uint8_t engineGBCart_tiles[1120];
 
 extern const unsigned char engineGBCart_map[288];
-extern const unsigned char* engineGBCart_tile_pals[70];
 
 #endif

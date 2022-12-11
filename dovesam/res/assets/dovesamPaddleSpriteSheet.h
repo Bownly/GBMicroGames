@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define dovesamPaddleSpriteSheet_TILE_ORIGIN 0
+#define dovesamPaddleSpriteSheet_TILE_W 8
 #define dovesamPaddleSpriteSheet_TILE_H 8
 #define dovesamPaddleSpriteSheet_WIDTH 32
 #define dovesamPaddleSpriteSheet_HEIGHT 8
 #define dovesamPaddleSpriteSheet_TILE_COUNT 3
+#define dovesamPaddleSpriteSheet_PALETTE_COUNT 1
+#define dovesamPaddleSpriteSheet_COLORS_PER_PALETTE 4
+#define dovesamPaddleSpriteSheet_TOTAL_COLORS 4
 #define dovesamPaddleSpriteSheet_PIVOT_X 16
 #define dovesamPaddleSpriteSheet_PIVOT_Y 4
 #define dovesamPaddleSpriteSheet_PIVOT_W 32

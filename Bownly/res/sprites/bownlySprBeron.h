@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprBeron_TILE_ORIGIN 0
+#define bownlySprBeron_TILE_W 8
 #define bownlySprBeron_TILE_H 8
 #define bownlySprBeron_WIDTH 16
 #define bownlySprBeron_HEIGHT 16
 #define bownlySprBeron_TILE_COUNT 28
+#define bownlySprBeron_PALETTE_COUNT 1
+#define bownlySprBeron_COLORS_PER_PALETTE 4
+#define bownlySprBeron_TOTAL_COLORS 4
 #define bownlySprBeron_PIVOT_X 0
 #define bownlySprBeron_PIVOT_Y 0
 #define bownlySprBeron_PIVOT_W 16

@@ -7,12 +7,15 @@
 #include <gbdk/metasprites.h>
 
 #define engineGBPrintout_TILE_ORIGIN 144
+#define engineGBPrintout_TILE_W 8
 #define engineGBPrintout_TILE_H 8
 #define engineGBPrintout_WIDTH 8
 #define engineGBPrintout_HEIGHT 8
 #define engineGBPrintout_TILE_COUNT 45
+#define engineGBPrintout_PALETTE_COUNT 1
+#define engineGBPrintout_COLORS_PER_PALETTE 4
+#define engineGBPrintout_TOTAL_COLORS 4
 #define engineGBPrintout_MAP_ATTRIBUTES 0
-#define engineGBPrintout_TILE_PALS engineGBPrintout_tile_pals
 
 BANKREF_EXTERN(engineGBPrintout)
 
@@ -20,6 +23,5 @@ extern const palette_color_t engineGBPrintout_palettes[4];
 extern const uint8_t engineGBPrintout_tiles[720];
 
 extern const unsigned char engineGBPrintout_map[651];
-extern const unsigned char* engineGBPrintout_tile_pals[45];
 
 #endif

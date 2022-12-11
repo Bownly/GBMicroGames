@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprThingy_TILE_ORIGIN 0
+#define bownlySprThingy_TILE_W 8
 #define bownlySprThingy_TILE_H 8
 #define bownlySprThingy_WIDTH 24
 #define bownlySprThingy_HEIGHT 24
 #define bownlySprThingy_TILE_COUNT 24
+#define bownlySprThingy_PALETTE_COUNT 1
+#define bownlySprThingy_COLORS_PER_PALETTE 4
+#define bownlySprThingy_TOTAL_COLORS 4
 #define bownlySprThingy_PIVOT_X 12
 #define bownlySprThingy_PIVOT_Y 0
 #define bownlySprThingy_PIVOT_W 24

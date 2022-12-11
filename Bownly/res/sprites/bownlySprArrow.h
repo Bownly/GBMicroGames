@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprArrow_TILE_ORIGIN 0
+#define bownlySprArrow_TILE_W 8
 #define bownlySprArrow_TILE_H 8
 #define bownlySprArrow_WIDTH 32
 #define bownlySprArrow_HEIGHT 8
 #define bownlySprArrow_TILE_COUNT 3
+#define bownlySprArrow_PALETTE_COUNT 1
+#define bownlySprArrow_COLORS_PER_PALETTE 4
+#define bownlySprArrow_TOTAL_COLORS 4
 #define bownlySprArrow_PIVOT_X 16
 #define bownlySprArrow_PIVOT_Y 4
 #define bownlySprArrow_PIVOT_W 32

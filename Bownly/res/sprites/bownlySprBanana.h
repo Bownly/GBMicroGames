@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprBanana_TILE_ORIGIN 0
+#define bownlySprBanana_TILE_W 8
 #define bownlySprBanana_TILE_H 8
 #define bownlySprBanana_WIDTH 16
 #define bownlySprBanana_HEIGHT 16
 #define bownlySprBanana_TILE_COUNT 4
+#define bownlySprBanana_PALETTE_COUNT 1
+#define bownlySprBanana_COLORS_PER_PALETTE 4
+#define bownlySprBanana_TOTAL_COLORS 4
 #define bownlySprBanana_PIVOT_X 8
 #define bownlySprBanana_PIVOT_Y 0
 #define bownlySprBanana_PIVOT_W 16

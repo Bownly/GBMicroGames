@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define synchingFeelingEyeSpr_TILE_ORIGIN 0
+#define synchingFeelingEyeSpr_TILE_W 8
 #define synchingFeelingEyeSpr_TILE_H 8
 #define synchingFeelingEyeSpr_WIDTH 16
 #define synchingFeelingEyeSpr_HEIGHT 16
 #define synchingFeelingEyeSpr_TILE_COUNT 14
+#define synchingFeelingEyeSpr_PALETTE_COUNT 1
+#define synchingFeelingEyeSpr_COLORS_PER_PALETTE 4
+#define synchingFeelingEyeSpr_TOTAL_COLORS 4
 #define synchingFeelingEyeSpr_PIVOT_X 8
 #define synchingFeelingEyeSpr_PIVOT_Y 8
 #define synchingFeelingEyeSpr_PIVOT_W 16

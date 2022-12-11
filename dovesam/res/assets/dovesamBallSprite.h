@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define dovesamBallSprite_TILE_ORIGIN 0
+#define dovesamBallSprite_TILE_W 8
 #define dovesamBallSprite_TILE_H 8
 #define dovesamBallSprite_WIDTH 8
 #define dovesamBallSprite_HEIGHT 8
 #define dovesamBallSprite_TILE_COUNT 1
+#define dovesamBallSprite_PALETTE_COUNT 1
+#define dovesamBallSprite_COLORS_PER_PALETTE 4
+#define dovesamBallSprite_TOTAL_COLORS 4
 #define dovesamBallSprite_PIVOT_X 4
 #define dovesamBallSprite_PIVOT_Y 4
 #define dovesamBallSprite_PIVOT_W 8

@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define synchingFeelingEggSpr_TILE_ORIGIN 0
+#define synchingFeelingEggSpr_TILE_W 8
 #define synchingFeelingEggSpr_TILE_H 8
 #define synchingFeelingEggSpr_WIDTH 16
 #define synchingFeelingEggSpr_HEIGHT 16
 #define synchingFeelingEggSpr_TILE_COUNT 14
+#define synchingFeelingEggSpr_PALETTE_COUNT 1
+#define synchingFeelingEggSpr_COLORS_PER_PALETTE 4
+#define synchingFeelingEggSpr_TOTAL_COLORS 4
 #define synchingFeelingEggSpr_PIVOT_X 8
 #define synchingFeelingEggSpr_PIVOT_Y 8
 #define synchingFeelingEggSpr_PIVOT_W 16
