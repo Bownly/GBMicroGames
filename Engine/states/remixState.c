@@ -4,6 +4,8 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+#include "../ram.h"
+#include "../songPlayer.h"
 
 #include "../database/microgameData.h"
 #include "../res/sprites/engineCartArts.h"
@@ -31,6 +33,9 @@ extern UINT8 animFrame;
 UINT8 highlightedMG;
 #define CARTS_X_ANCHOR 3U  // The bkg tile index of the leftmost cart
 #define CARTS_Y_ANCHOR 1U  // The bkg tile index of the topmost cart
+#define BKGTILE_CARTS 0x40U
+
+unsigned char bkgTile[16U];
 
 
 /* SUBSTATE METHODS */
@@ -43,6 +48,7 @@ void phaseRemixLoop();
 
 /* DISPLAY METHODS */
 static void animateCursor();
+static void setVisualToggleStatus(UINT8, UINT8);
 static void updateCursorLocation();
 static void updateMicrogameText();
 
@@ -91,21 +97,34 @@ void phaseRemixInit()
     for (i = 0U; i != 20U; ++i)
     {
         set_bkg_tile_xy(i, 13U, 0xF1U);
-        // set_bkg_tile_xy(i, 12, 0xF6U);
     }
 
     // Grid
-    set_bkg_data(0x40, engineCartArts_TILE_COUNT, engineCartArts_tiles);
-    for (i = 0U; i != 5U; ++i)
+    set_bkg_data(BKGTILE_CARTS, engineCartArts_TILE_COUNT, engineCartArts_tiles);
+    k = 0;
+    for (j = 0U; j != 4U; ++j)
     {
-        for (j = 0U; j != 4U; ++j)
-            set_bkg_tiles(3U + i * 3U, 1U + j * 3U, 2U, 2U, engineCartArts_map + (i+j*5U) *4U);
+        for (i = 0U; i != 5U; ++i)
+        {
+            set_bkg_tiles(CARTS_X_ANCHOR + i * 3U, CARTS_Y_ANCHOR + j * 3U, 2U, 2U, engineCartArts_map + (k << 2U));
+            
+            // Cart toggled status
+            ENABLE_RAM;
+            l = loadMGToggle(k);
+            DISABLE_RAM;
+            setVisualToggleStatus(k, l);
+
+            ++k;
+        }
     }
 
     updateMicrogameText();
 
     substate = SUB_LOOP;
+    
+    
     fadein();
+    playOutsideSong(BOOGIE_WOOGIE);
 }
 
 void phaseRemixLoop()
@@ -129,16 +148,12 @@ void phaseRemixLoop()
     {
         if (m-- == 0U)
             m = 4U;
-        // highlightedMG += 19U;
-        // highlightedMG %= 20U;
         updateCursorLocation();
     }
     else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
         if (++m == 5U)
             m = 0U;
-        // highlightedMG += 1U;
-        // highlightedMG %= 20U;
         updateCursorLocation();
     }
     
@@ -146,16 +161,12 @@ void phaseRemixLoop()
     {
         if (n-- == 0U)
             n = 3U;
-        // highlightedMG += 15U;
-        // highlightedMG %= 20U;
         updateCursorLocation();
     }
     else if (curJoypad & J_DOWN && !(prevJoypad & J_DOWN))
     {
         if (++n == 4U)
             n = 0U;
-        // highlightedMG += 5U;
-        // highlightedMG %= 20U;
         updateCursorLocation();
     }
 
@@ -164,8 +175,6 @@ void phaseRemixLoop()
         highlightedMG = n * 5U + m;
         updateMicrogameText();
     }
-
-
 
     if (curJoypad & J_A && !(prevJoypad & J_A))
     {
@@ -189,17 +198,27 @@ void phaseRemixLoop()
 
     if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
     {
-        // Read value from SRAM
-        // if white, blacken
-        // else whiten
-        // Write to SRAM
+        if (highlightedMG == 19U) {} // Instructions cart
+        else if (m == 5U) {} // Play mix button        
+        else
+        {
+            // Read value from SRAM
+            ENABLE_RAM;
+            k = loadMGToggle(highlightedMG);
+
+            // Toggle and save
+            k = (k + 1U) % 2U;
+            saveMGToggle(highlightedMG, k);  // Write to SRAM
+            DISABLE_RAM;
+
+            setVisualToggleStatus(highlightedMG, k);
+        }
     }
 
     if (curJoypad & J_START && !(prevJoypad & J_START))
     {
         fadeout();
         initrand(DIV_REG);
-        // move_bkg(0U, 0U);
 
         gamestate = STATE_MICROGAME_MANAGER;
         substate = SUB_INIT;
@@ -223,13 +242,43 @@ static void animateCursor()
     set_sprite_tile(0U, animFrame);
 }
 
+static void setVisualToggleStatus(UINT8 cartId, UINT8 status)
+{
+    // Blacken or whiten as approriate
+    if (status == 0U)  // Whiten
+    {
+        get_bkg_data(BKGTILE_CARTS + (cartId << 2U), 1U, bkgTile);
+        bkgTile[3U] = 0x80U;
+        bkgTile[5U] = 0x80U;
+        set_bkg_data(BKGTILE_CARTS + (cartId << 2U), 1U, bkgTile);
+        get_bkg_data(BKGTILE_CARTS + (cartId << 2U) + 1U, 1U, bkgTile);
+        bkgTile[3U] = 0x03U;
+        bkgTile[5U] = 0x01U;
+        set_bkg_data(BKGTILE_CARTS + (cartId << 2U) + 1U, 1U, bkgTile);
+    }
+    else  // Blacken
+    {
+        get_bkg_data(BKGTILE_CARTS + (cartId << 2U), 1U, bkgTile);
+        bkgTile[3U] = 0xFFU;
+        bkgTile[5U] = 0xFFU;
+        set_bkg_data(BKGTILE_CARTS + (cartId << 2U), 1U, bkgTile);
+        get_bkg_data(BKGTILE_CARTS + (cartId << 2U) + 1U, 1U, bkgTile);
+        bkgTile[3U] = 0xFFU;
+        bkgTile[5U] = 0xFFU;
+        set_bkg_data(BKGTILE_CARTS + (cartId << 2U) + 1U, 1U, bkgTile);
+    }
+}
+
 static void updateCursorLocation()
 {
-    // CARTS_X_ANCHOR's unit of measurement is tiles, sprites operate on the unit of pixels
-    // The "<< 3U" is there to convert from tiles to pixels
-    // The "+ 13U" and "+ 9U" are to center the cursor over the carts
-    i = ((CARTS_X_ANCHOR + (m * 3U)) << 3U) + 13U;
-    j = ((CARTS_Y_ANCHOR + (n * 3U)) << 3U) + 9U;
+    if (m != 5U)
+    {
+        // CARTS_X_ANCHOR's unit of measurement is tiles, sprites operate on the unit of pixels
+        // The "<< 3U" is there to convert from tiles to pixels
+        // The "+ 13U" and "+ 9U" are to center the cursor over the carts
+        i = ((CARTS_X_ANCHOR + (m * 3U)) << 3U) + 13U;
+        j = ((CARTS_Y_ANCHOR + (n * 3U)) << 3U) + 9U;        
+    }
 
     move_sprite(0U, i, j);
 }
@@ -242,8 +291,13 @@ static void updateMicrogameText()
     {
         printLine(2U, 14U, "INSTRUCTIONS", FALSE);
         printLine(2U, 15U, "A: PLAY MICROGAME", FALSE);
-        printLine(2U, 16U, "SELECT: TOGGLE MG", FALSE);
-        printLine(2U, 17U, "HAVE FUN!", FALSE);
+        printLine(2U, 16U, "SELECT: TOGGLE A", FALSE);
+        printLine(2U, 17U, " MICROGAME ON/OFF", FALSE);
+    }
+    else if (m == 5U)  // Play mix button
+    {
+        printLine(2U, 14U, "PLAY YOUR OWN", FALSE);
+        printLine(2U, 15U, "CUSTOM MIX", FALSE);
     }
     else
     {
@@ -251,9 +305,15 @@ static void updateMicrogameText()
 
         printLine(2U, 15U, microgameDex[highlightedMG].namePtr, FALSE);
         printLine(2U, 16U, microgameDex[highlightedMG].bylinePtr, FALSE);
-        // mgCurrentMG.bylinePtr = microgameDex[r].bylinePtr;
 
         // Fetch high score data
+        ENABLE_RAM;
+        k = loadMGScore(highlightedMG);
+        DISABLE_RAM;
+
         // Update high score text
+        set_bkg_tile_xy(13U, 14U, k / 100U);
+        set_bkg_tile_xy(14U, 14U, (k / 10U) % 10U);
+        set_bkg_tile_xy(15U, 14U, k % 10U);
     }
 }

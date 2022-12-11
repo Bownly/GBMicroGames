@@ -52,6 +52,8 @@ void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line, UINT8 printToWin
             diff = 0x21;
         else if (*line == '.')
             diff = 0x0A;
+        else if (*line == '/')
+            diff = 0x08;
         else if (*line == ',')
             diff = 0x06;
         else if (*line == '?')

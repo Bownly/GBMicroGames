@@ -33,6 +33,7 @@ typedef enum {
 } MGSTATUS;
 
 typedef enum {
+    BOOGIE_WOOGIE,
     WON_JINGLE_1,
     LOST_JINGLE_1,
     PRE_MG_JINGLE_1

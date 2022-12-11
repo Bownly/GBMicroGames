@@ -25,6 +25,7 @@ $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat2Map.o Engine/res/map
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat3Map.o Engine/res/maps/engineDMGBat3Map.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat4Map.o Engine/res/maps/engineDMGBat4Map.c
 
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o Engine/res/audio/engineSloopygoopBoogieWoogieEx.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c
@@ -40,7 +41,7 @@ $GBDK_DIR/bin/png2asset Engine/res/sprites/engineDMGBezel.png -spr8x8 -sw 8 -sh 
 
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineGBPrinter.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 64 -noflip
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineGBPrintout.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 144 -noflip
-$GBDK_DIR/bin/png2asset Engine/res/sprites/engineCartArts.png -spr8x8 -sw 16 -sh 16 -b 4 -map -tile_origin 64 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineCartArts.png -spr8x8 -sw 16 -sh 16 -b 4 -map -tile_origin 64 -noflip -keep_duplicate_tiles
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo0 -c -o Engine/o/microgameManagerState.o Engine/states/microgameManagerState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/titleState.o Engine/states/titleState.c

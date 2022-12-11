@@ -90,6 +90,7 @@ void main()
             case STATE_REMIX:
                 SWITCH_ROM(4U);
                 remixStateMain();
+                SWITCH_ROM(5U);  // The song data lies in bank 5
                 break;
             case STATE_GAMEOVER:
                 SWITCH_ROM(4U);

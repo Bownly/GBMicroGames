@@ -30,6 +30,7 @@ C:\gbdk\bin\png2asset Engine/res/sprites/engineDMGBezel.png -spr8x8 -sw 8 -sh 8 
 
 C:\gbdk\bin\png2asset Engine/res/sprites/engineGBPrinter.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 64 -noflip
 C:\gbdk\bin\png2asset Engine/res/sprites/engineGBPrintout.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 144 -noflip
+C:\gbdk\bin\png2asset Engine/res/sprites/engineCartArts.png -spr8x8 -sw 16 -sh 16 -b 4 -map -tile_origin 64 -noflip -keep_duplicate_tiles
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo0 -c -o Engine/o/microgameManagerState.o Engine/states/microgameManagerState.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/titleState.o Engine/states/titleState.c
@@ -44,30 +45,31 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Main play mode
 @REM    ✖️ Custom play
 @REM    ✖️ Credits
-@REM ✖️ Lobby screen
+@REM △ Lobby screen
 @REM    ✖️ Add score increment animation
 @REM    ✖️ Add speed up/difficulty up animations
 @REM    ✖️ Make all of the above faster for higher mgSpeed levels
 @REM    ✖️ Multiple random options for pre MG jingle
 @REM    ✖️ Refine algorithm for increasing speed/difficulty
-@REM    ✖️ Factor out microgameManagerGameLoop and other stuff
-@REM    ✖️ Change palette on instruction test
+@REM    ✖️ Change palette on instruction text
 @REM    ◯ Add algorithm to avoid the same MG twice in a row (history queue of microgame_count/2 size)
 @REM    ✖️ Change the level up algorithm for individual MG play sessions
-@REM ✖️ Saving/loading
+@REM △ Saving/loading
 @REM    △ Main play mode high score
-@REM    ✖️ Individual MG scores
+@REM    △ Individual MG scores
+@REM    ◯ Individual MG toggles
 @REM    ✖️ Add option to wipe all save data
-@REM ✖️ Custom mix screen
-@REM    ✖️ Microgames grid
+@REM △ Custom mix screen
+@REM    △ Microgames grid
 @REM        ◯ 5 x 4 grid
 @REM        ◯ Cursor movement + wrapping
 @REM        ✖️ Play remix button will be to the right and will remember vert index 
 @REM    ◯ A to play individual MG
-@REM    ✖️ Select to toggle an individual MG on/off
+@REM    ◯ Select to toggle an individual MG on/off
 @REM    ✖️ Play remix button
-@REM    △ Hover over MG -> display name, author, info, score
-@REM    ✖️ ? game shows instructions, but doubles as a random pick
+@REM    ◯ Hover over MG -> display name, author, info, score
+@REM    △ ? game shows instructions, but doubles as a random pick
+@REM    ◯ Music
 @REM ✖️ Game over screen
 @REM    ✖️ Pretty up the art/presentation
 @REM    ✖️ Score score and high score

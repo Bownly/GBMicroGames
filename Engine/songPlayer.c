@@ -4,11 +4,13 @@
 #include "common.h"
 #include "enums.h"
 
+extern const hUGESong_t engineSloopygoopBoogieWoogieEx;
 extern const hUGESong_t premgJingle;
 extern const hUGESong_t wonJingle;
 extern const hUGESong_t lostJingle;
 
 extern UINT8 mgSpeed;
+extern UINT8 oldBank;
 
 void playSong(const hUGESong_t * song)
 {
@@ -38,6 +40,12 @@ void playOutsideSong(UINT8 songName)
     switch (songName)
     {
         default:
+        case BOOGIE_WOOGIE:
+            oldBank = CURRENT_BANK;
+            SWITCH_ROM(5U);
+            playSong(&engineSloopygoopBoogieWoogieEx);
+            SWITCH_ROM(oldBank);
+            break;
         case WON_JINGLE_1:
             SWITCH_ROM(14U);
             playSong(&wonJingle);
