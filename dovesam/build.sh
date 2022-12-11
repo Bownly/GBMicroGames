@@ -19,6 +19,7 @@ BANK=7
 ASSETS=dovesam/res/assets
 SPRITES=dovesam/res/sprites
 MAPS=dovesam/res/raw_maps
+AUDIO=dovesam/res/audio
 
 $GBDK_DIR/bin/png2asset $SPRITES/dovesamPaddleSpriteSheet.png -spr8x8 -sw 32 -sh 8 -b $BANK -c $ASSETS/dovesamPaddleSpriteSheet.c
 $GBDK_DIR/bin/png2asset $SPRITES/dovesamBallSprite.png -spr8x8 -sw 8 -sh 8 -b $BANK -c $ASSETS/dovesamBallSprite.c
@@ -27,6 +28,7 @@ $GBDK_DIR/bin/png2asset $MAPS/dovesamPaddleArena.png -map -noflip -bpp 2 -max_pa
     $ASSETS/dovesamPaddleArena.c
 $GBDK_DIR/bin/png2asset $MAPS/dovesamButtons.png -map -noflip -bpp 2 -max_palettes 1 -pack_mode gb -b $BANK -c $ASSETS/dovesamButtons.c
 
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo$BANK -c -o dovesam/o/SloopygoopTrickyStartSong.o $AUDIO/SloopygoopTrickyStartSong.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo$BANK -c -o dovesam/o/dovesamPaddleMicrogame.o dovesam/states/dovesamPaddleMicrogame.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo$BANK -c -o dovesam/o/dovesamCodeCrackMicrogame.o dovesam/states/dovesamCodeCrackMicrogame.c
 
