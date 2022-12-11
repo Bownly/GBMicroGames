@@ -75,6 +75,7 @@ void phaseGameoverInit()
     set_bkg_data(0x40, engineGBPrinter_TILE_COUNT, engineGBPrinter_tiles);
     set_win_tiles(0U, 0U, 20U, 4U, engineGBPrinter_map);
     move_win(7U, 112U);
+    move_bkg(0U, 0U);
 
     // init_bkg(0xFFU);
     move_bkg(4U, 0U);  // For centering purposes
