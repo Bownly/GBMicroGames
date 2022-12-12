@@ -60,7 +60,7 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    △ Individual MG scores
 @REM    ◯ Individual MG toggles
 @REM    ✖️ Add option to wipe all save data
-@REM △ Custom mix screen
+@REM ◯ Custom mix screen
 @REM    ◯ Microgames grid
 @REM        ◯ 5 x 4 grid
 @REM        ◯ Cursor movement + wrapping
@@ -75,9 +75,10 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Pretty up the art/presentation
 @REM    ✖️ Score score and high score
 @REM ✖️ Add pausing
-@REM ✖️ Fix bugs and stuff
+@REM △ Fix bugs and stuff
 @REM    ✖️ Music glitches out again (after 24 points?)
-@REM    △ Remix state MG select glitches out (time based?)
+@REM    ◯(?) Remix state MG select glitches out (due to bank shenanigans)
+@REM    ✖️ Janken -> gameover results in tile glitch
 
 @REM ◯ = done
 @REM △ = wip or next in line

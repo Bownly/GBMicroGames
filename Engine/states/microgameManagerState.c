@@ -497,6 +497,7 @@ static void setupLobbyInstructions()
 {
     // Audio
     stopSong();
+    playOutsideSong(PRE_MG_JINGLE_1);
 
     // Erase stats text
     init_bkg(0xFFU);

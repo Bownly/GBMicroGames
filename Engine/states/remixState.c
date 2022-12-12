@@ -153,11 +153,6 @@ void phaseRemixLoop()
     animateCursor();
     scrollBkg();
     inputsRemix();
-
-    set_bkg_tile_xy(0,0,m);
-    set_bkg_tile_xy(1,0,n);
-    set_bkg_tile_xy(0,1,highlightedMG/10);
-    set_bkg_tile_xy(1,1,highlightedMG%10);
 }
 
 /******************************** INPUT METHODS *********************************/
@@ -212,6 +207,7 @@ static void inputsRemix()
             gamestate = STATE_MICROGAME_MANAGER;
             substate = MGM_INIT_REMIX;
             mgStatus = PLAYING;
+            stopSong();
         }
         else
         {
@@ -233,6 +229,7 @@ static void inputsRemix()
             gamestate = STATE_MICROGAME_MANAGER;
             substate = MGM_INIT_SINGLE;
             mgStatus = PLAYING;
+            stopSong();
         }
     }
 
@@ -263,6 +260,7 @@ static void inputsRemix()
         gamestate = STATE_MICROGAME_MANAGER;
         substate = SUB_INIT;
         mgStatus = PLAYING;
+        stopSong();
     }
 }
 

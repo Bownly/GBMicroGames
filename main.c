@@ -34,6 +34,7 @@ UINT8 r;  // Used for randomization stuff
 UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
 UINT8 oldBank;
+UINT8 curSongBank;
 UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
