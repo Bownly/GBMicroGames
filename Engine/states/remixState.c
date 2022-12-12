@@ -1,5 +1,6 @@
 #include <gb/gb.h>
 #include <rand.h>
+#include <string.h>
 
 #include "../common.h"
 #include "../enums.h"
@@ -10,6 +11,9 @@
 #include "../database/microgameData.h"
 #include "../res/sprites/engineCartArts.h"
 #include "../res/tiles/engineCursorTiles.h"
+#include "../res/tiles/engineMixBorderTiles.h"
+#include "../res/tiles/engineScrollBkgTiles.h"
+#include "../res/tiles/fontTiles.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -34,6 +38,8 @@ UINT8 highlightedMG;
 #define CARTS_X_ANCHOR 3U  // The bkg tile index of the leftmost cart
 #define CARTS_Y_ANCHOR 1U  // The bkg tile index of the topmost cart
 #define BKGTILE_CARTS 0x40U
+#define BKGTILE_SCROLL 0xF9U
+#define SPRTILE_MIX_BORDER 0x10U
 
 unsigned char bkgTile[16U];
 
@@ -43,11 +49,14 @@ void phaseRemixInit();
 void phaseRemixLoop();
 
 /* INPUT METHODS */
+static void inputsRemix();
 
 /* HELPER METHODS */
 
 /* DISPLAY METHODS */
 static void animateCursor();
+static void drawPlayMixButton();
+static void scrollBkg();
 static void setVisualToggleStatus(UINT8, UINT8);
 static void updateCursorLocation();
 static void updateMicrogameText();
@@ -78,10 +87,10 @@ void remixStateMain()
 void phaseRemixInit()
 {
     // Initializations
-    init_bkg(0xFFU);
+    init_bkg(BKGTILE_SCROLL);
     animTick = 0U;
     HIDE_WIN;
-    mgCurrentMG.id = 0xFF;
+    mgCurrentMG.id = 0x00;
     m = 0U;
     n = 0U;
     highlightedMG = 0U;
@@ -89,8 +98,16 @@ void phaseRemixInit()
     // Cursor setup
     set_sprite_data(0U, 3U, engineCursorTiles);
     set_sprite_tile(0U, 0U);
+    set_sprite_prop(0U, 0b00010000);
     animateCursor();
     updateCursorLocation();
+
+    // Scrolling background setup
+    set_bkg_data(BKGTILE_SCROLL, 4U, engineScrollBkgTiles);
+
+    // Play remix button border sprites setup
+    set_sprite_data(SPRTILE_MIX_BORDER, 16U, engineMixBorderTiles);
+    drawPlayMixButton();
 
     // Outlines
     drawPopupWindow(2U, 0U, 15U, 12U);
@@ -98,6 +115,7 @@ void phaseRemixInit()
     {
         set_bkg_tile_xy(i, 13U, 0xF1U);
     }
+    fill_bkg_rect(0U, 14U, 20U, 5U, 0xFFU);
 
     // Grid
     set_bkg_data(BKGTILE_CARTS, engineCartArts_TILE_COUNT, engineCartArts_tiles);
@@ -121,9 +139,10 @@ void phaseRemixInit()
     updateMicrogameText();
 
     substate = SUB_LOOP;
-    
-    
+        
     fadein();
+    OBP0_REG = 0x81;  // Light-ish
+
     playOutsideSong(BOOGIE_WOOGIE);
 }
 
@@ -131,28 +150,28 @@ void phaseRemixLoop()
 {
     ++animTick;
     
-    // if ((animTick % 64U) / 48U == 0U)
-    // {
-    //     printLine(4U, 13U, "PRESS START", FALSE);
-    // }
-    // else
-    // {
-    //     for (i = 4U; i != 15U; ++i)
-    //         set_bkg_tile_xy(i, 13U, 0xFFU);
-    // }
-
-    // inputsRemix();
     animateCursor();
+    scrollBkg();
+    inputsRemix();
 
+    set_bkg_tile_xy(0,0,m);
+    set_bkg_tile_xy(1,0,n);
+    set_bkg_tile_xy(0,1,highlightedMG/10);
+    set_bkg_tile_xy(1,1,highlightedMG%10);
+}
+
+/******************************** INPUT METHODS *********************************/
+static void inputsRemix()
+{
     if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
         if (m-- == 0U)
-            m = 4U;
+            m = 5U;
         updateCursorLocation();
     }
     else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
-        if (++m == 5U)
+        if (++m == 6U)
             m = 0U;
         updateCursorLocation();
     }
@@ -170,25 +189,46 @@ void phaseRemixLoop()
         updateCursorLocation();
     }
 
-    if (curJoypad & (0b00001111))  // And dpad direction
+    if (curJoypad & (0b00001111))  // Any dpad direction
     {
-        highlightedMG = n * 5U + m;
+        if (m == 5U)
+        {
+            OBP0_REG = 0xD2;  // 11 10 01 00
+        }
+        else
+        {
+            OBP0_REG = 0x81;  // Light-ish
+            highlightedMG = n * 5U + m;
+        }
         updateMicrogameText();
     }
 
     if (curJoypad & J_A && !(prevJoypad & J_A))
     {
-        if (highlightedMG != 19U)
+        if (m == 5U)  // Play mix
         {
+            fadeout();
+            initrand(DIV_REG);
+            gamestate = STATE_MICROGAME_MANAGER;
+            substate = MGM_INIT_REMIX;
+            mgStatus = PLAYING;
+        }
+        else
+        {
+            if (highlightedMG == 19U)
+            {
+                highlightedMG = getRandUint8(19U);
+            }
+
             fadeout();
             initrand(DIV_REG);
 
             mgCurrentMG.id = highlightedMG;
-            mgCurrentMG.bankId = microgameDex[r].bankId;
-            mgCurrentMG.namePtr = microgameDex[r].namePtr;
-            mgCurrentMG.bylinePtr = microgameDex[r].bylinePtr;
-            mgCurrentMG.instructionsPtr = microgameDex[r].instructionsPtr;
-            mgCurrentMG.duration = microgameDex[r].duration;
+            mgCurrentMG.bankId = microgameDex[highlightedMG].bankId;
+            mgCurrentMG.namePtr = microgameDex[highlightedMG].namePtr;
+            mgCurrentMG.bylinePtr = microgameDex[highlightedMG].bylinePtr;
+            mgCurrentMG.instructionsPtr = microgameDex[highlightedMG].instructionsPtr;
+            mgCurrentMG.duration = microgameDex[highlightedMG].duration;
             
             gamestate = STATE_MICROGAME_MANAGER;
             substate = MGM_INIT_SINGLE;
@@ -226,8 +266,6 @@ void phaseRemixLoop()
     }
 }
 
-/******************************** INPUT METHODS *********************************/
-
 
 /******************************** HELPER METHODS *********************************/
 
@@ -240,6 +278,50 @@ static void animateCursor()
         animFrame = 1U;  // We want the pattern to be 0, 1, 2, 1, ad infinitum
 
     set_sprite_tile(0U, animFrame);
+}
+
+static void drawPlayMixButton()
+{
+    #define BUTTON_X_COORD 144U
+    #define BUTTON_Y_COORD 32U
+
+    // Draw top row
+    set_sprite_tile(1U, SPRTILE_MIX_BORDER);
+    set_sprite_tile(2U, SPRTILE_MIX_BORDER + 1U);
+    set_sprite_tile(3U, SPRTILE_MIX_BORDER + 2U);
+    move_sprite(1U, BUTTON_X_COORD, BUTTON_Y_COORD - 8U);
+    move_sprite(2U, BUTTON_X_COORD + 8U, BUTTON_Y_COORD - 8U);
+    move_sprite(3U, BUTTON_X_COORD + 16U, BUTTON_Y_COORD - 8U);
+
+    // Draw walls
+    for (j = 0U; j != 8U; ++j)
+    {
+        set_sprite_tile(4U + j, SPRTILE_MIX_BORDER + 3U);
+        set_sprite_tile(12U + j, SPRTILE_MIX_BORDER + 4U);
+        move_sprite(4U + j, BUTTON_X_COORD, BUTTON_Y_COORD + (j << 3U));
+        move_sprite(12U + j, BUTTON_X_COORD + 16U, BUTTON_Y_COORD + (j << 3U));
+    }
+
+    // Draw bottom row
+    set_sprite_tile(20U, SPRTILE_MIX_BORDER + 5);
+    set_sprite_tile(21U, SPRTILE_MIX_BORDER + 6U);
+    set_sprite_tile(22U, SPRTILE_MIX_BORDER + 7U);
+    move_sprite(20U, BUTTON_X_COORD, BUTTON_Y_COORD + 64U);
+    move_sprite(21U, BUTTON_X_COORD + 8U, BUTTON_Y_COORD + 64U);
+    move_sprite(22U, BUTTON_X_COORD + 16U, BUTTON_Y_COORD + 64U);
+
+    // Text
+    for (j = 0U; j != 9; ++j)
+    {
+        set_sprite_tile(23U + j, SPRTILE_MIX_BORDER + 8U + j);
+        move_sprite(23U + j, BUTTON_X_COORD + 8U, BUTTON_Y_COORD + (j << 3U));
+    }
+}
+
+
+static void scrollBkg()
+{
+    set_bkg_data(BKGTILE_SCROLL, 1U, engineScrollBkgTiles + ((animTick % 32U) >> 3U) * 16);
 }
 
 static void setVisualToggleStatus(UINT8 cartId, UINT8 status)
@@ -279,7 +361,11 @@ static void updateCursorLocation()
         i = ((CARTS_X_ANCHOR + (m * 3U)) << 3U) + 13U;
         j = ((CARTS_Y_ANCHOR + (n * 3U)) << 3U) + 9U;        
     }
-
+    else 
+    {
+        i = 0U;
+        j = 0U;
+    }
     move_sprite(0U, i, j);
 }
 
@@ -296,8 +382,8 @@ static void updateMicrogameText()
     }
     else if (m == 5U)  // Play mix button
     {
-        printLine(2U, 14U, "PLAY YOUR OWN", FALSE);
-        printLine(2U, 15U, "CUSTOM MIX", FALSE);
+        printLine(2U, 15U, "PLAY YOUR OWN", FALSE);
+        printLine(2U, 16U, "CUSTOM MIX", FALSE);
     }
     else
     {

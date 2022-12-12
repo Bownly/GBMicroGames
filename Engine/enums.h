@@ -22,7 +22,10 @@ typedef enum {
     MGM_INIT_SINGLE,
     MGM_INIT_ALL,
     MGM_INIT_REMIX,
-    MGM_INIT_LOBBY  // The transition screen between microgames
+    MGM_INIT_LOBBY,  // The transition screen between microgames
+    MGM_LOBBY_LOOP,
+    MGM_LOBBY_LOOP_LEVELUP,
+    MGM_LOBBY_LOOP_INSTRUCTIONS
 } SUBSTATE;
 
 typedef enum {

@@ -168,7 +168,7 @@ static void phaseFlappyBeronInit()
 
             break;
         case 1U:
-            if (r % 2U == 1U)
+            if (r % 2U == 0U)
             {
                 set_bkg_tiles(27U, 8U, 4U, 3U, bownlyBeronCapUpMap);
                 set_bkg_tiles(28U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
@@ -246,7 +246,6 @@ static void phaseFlappyBeronLoop()
 
             sfxCollision();
         }
-
     }
     else
     {

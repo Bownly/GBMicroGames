@@ -9,7 +9,7 @@
 BANKREF(engineGBPrinter)
 
 const palette_color_t engineGBPrinter_palettes[4] = {
-	RGB8(255,255,255), RGB8( 55,148,110), RGB8( 34, 32, 52), RGB8(249,  7,  0)
+	RGB8(255,255,255), RGB8( 55,148,110), RGB8( 34, 32, 52), RGB8(  0,  0,  0)
 	
 };
 
