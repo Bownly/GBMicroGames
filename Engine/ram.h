@@ -10,9 +10,14 @@ extern UBYTE ram_data[];
 
 void saveHighScore(UINT8);
 UINT8 loadHighScore();
+void wipeHighScore();
+
 void saveMGScore(UINT8, UINT8);
 UINT8 loadMGScore(UINT8);
+void wipeAllMGScores();
+
 void saveMGToggle(UINT8, UINT8);
 UINT8 loadMGToggle(UINT8);
+void wipeAllMGToggles();
 
 #endif

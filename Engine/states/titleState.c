@@ -104,6 +104,12 @@ void phaseTitleLoop()
         mgStatus = PLAYING;
     }  
     // TODO DELETE ME TEMP TEST STUFF
+    else if (curJoypad & J_SELECT && curJoypad & J_B)
+    {
+        fadeout();
+        gamestate = STATE_DELETE_SAVE;
+        substate = SUB_INIT;
+    }
     else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
     {
         fadeout();
@@ -111,7 +117,8 @@ void phaseTitleLoop()
 
         gamestate = STATE_REMIX;
         substate = SUB_INIT;
-    }  
+    }
+
 }
 
 /******************************** INPUT METHODS *********************************/

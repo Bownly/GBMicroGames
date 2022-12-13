@@ -8,6 +8,7 @@
 
 #include "Engine/structs/Microgame.h"
 
+#include "Engine/states/deleteSaveState.h"
 #include "Engine/states/gameoverState.h"
 #include "Engine/states/microgameManagerState.h"
 #include "Engine/states/remixState.h"
@@ -81,6 +82,10 @@ void main()
                 titleStateMain();
                 break;
             case STATE_MAIN_MENU:
+                break;
+            case STATE_DELETE_SAVE:
+                SWITCH_ROM(4U);
+                deleteSaveStateMain();
                 break;
             case STATE_MICROGAME_MANAGER:
                 // SWITCH_ROM(0U);

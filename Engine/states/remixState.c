@@ -11,7 +11,6 @@
 #include "../res/sprites/engineCartArts.h"
 #include "../res/tiles/engineCursorTiles.h"
 #include "../res/tiles/engineMixBorderTiles.h"
-#include "../res/tiles/engineScrollBkgTiles.h"
 #include "../res/tiles/fontTiles.h"
 
 extern UINT8 curJoypad;
@@ -55,7 +54,6 @@ static void inputsRemix();
 /* DISPLAY METHODS */
 static void animateCursor();
 static void drawPlayMixButton();
-static void scrollBkg();
 static void setVisualToggleStatus(UINT8, UINT8);
 static void updateCursorLocation();
 static void updateMicrogameText();
@@ -100,9 +98,6 @@ void phaseRemixInit()
     set_sprite_prop(0U, 0b00010000);
     animateCursor();
     updateCursorLocation();
-
-    // Scrolling background setup
-    set_bkg_data(BKGTILE_SCROLL, 4U, engineScrollBkgTiles);
 
     // Play remix button border sprites setup
     set_sprite_data(SPRTILE_MIX_BORDER, 16U, engineMixBorderTiles);
@@ -150,7 +145,7 @@ void phaseRemixLoop()
     ++animTick;
     
     animateCursor();
-    scrollBkg();
+    animateBkg();
     inputsRemix();
 }
 
@@ -313,12 +308,6 @@ static void drawPlayMixButton()
         set_sprite_tile(23U + j, SPRTILE_MIX_BORDER + 8U + j);
         move_sprite(23U + j, BUTTON_X_COORD + 8U, BUTTON_Y_COORD + (j << 3U));
     }
-}
-
-
-static void scrollBkg()
-{
-    set_bkg_data(BKGTILE_SCROLL, 1U, engineScrollBkgTiles + ((animTick % 32U) >> 3U) * 16);
 }
 
 static void setVisualToggleStatus(UINT8 cartId, UINT8 status)

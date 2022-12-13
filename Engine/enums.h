@@ -3,6 +3,7 @@
 
 typedef enum {
     STATE_TITLE,
+    STATE_DELETE_SAVE,
     STATE_MAIN_MENU,
     STATE_MICROGAME_MANAGER,
     STATE_MICROGAME,
@@ -19,6 +20,7 @@ typedef enum {
 typedef enum {
     SUB_INIT,
     SUB_LOOP,
+    DS_MESSAGE_LOOP,
     MGM_INIT_SINGLE,
     MGM_INIT_ALL,
     MGM_INIT_REMIX,

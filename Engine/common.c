@@ -1,15 +1,22 @@
 #include <gb/gb.h>
 #include <rand.h>
-
+#include "common.h"
+#include "res/tiles/engineScrollBkgTiles.h"
 
 extern UINT8 i;
 extern UINT8 j;
 extern UINT8 r;
+extern UINT8 animTick;
 
 UINT8 getRandUint8(UINT8 modulo)
 {
     r = rand() % modulo;
     return r;
+}
+
+void animateBkg()
+{
+    set_bkg_data(BKGTILE_SCROLL, 1U, engineScrollBkgTiles + ((animTick % 32U) >> 3U) * 16);
 }
 
 void drawPopupWindow(UINT8 xCoord, UINT8 yCoord, UINT8 xDim, UINT8 yDim)
@@ -57,7 +64,7 @@ void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line, UINT8 printToWin
         else if (*line == ',')
             diff = 0x06;
         else if (*line == '?')
-            diff = 0x1A;
+            diff = 0x19;
         else if (*line == ':')
             diff = 0x0F;
         else if (*line == '!')

@@ -9,7 +9,7 @@ C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/timerTiles.o Engine/res/tiles/timerTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGTiles.o Engine/res/tiles/engineDMGTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineCursorTiles.o Engine/res/tiles/engineCursorTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineMixBorderTiles.o Engine/res/tiles/engineMixBorderTiles.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineScrollBkgTiles.o Engine/res/tiles/engineScrollBkgTiles.c
+C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/engineScrollBkgTiles.o Engine/res/tiles/engineScrollBkgTiles.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat0Map.o Engine/res/maps/engineDMGBat0Map.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat1Map.o Engine/res/maps/engineDMGBat1Map.c
@@ -36,7 +36,9 @@ C:\gbdk\bin\png2asset Engine/res/sprites/engineCartArts.png -spr8x8 -sw 16 -sh 1
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo0 -c -o Engine/o/microgameManagerState.o Engine/states/microgameManagerState.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/titleState.o Engine/states/titleState.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/deleteSaveState.o Engine/states/deleteSaveState.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/gameoverState.o Engine/states/gameoverState.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/remixState.o Engine/states/remixState.c
 
 c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 
@@ -56,25 +58,12 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Change palette on instruction text
 @REM    ◯ Add algorithm to avoid the same MG twice in a row (history queue of microgame_count/2 size)
 @REM    ◯ Max out score at 255
-@REM △ Saving/loading
-@REM    ◯ Main play mode high score
-@REM    ◯ Individual MG scores
-@REM    ◯ Individual MG toggles
-@REM    ✖️ Add option to wipe all save data
+@REM ◯ Saving/loading
+@REM ◯ Delete save data screen
 @REM ◯ Custom mix screen
-@REM    ◯ Microgames grid
-@REM        ◯ 5 x 4 grid
-@REM        ◯ Cursor movement + wrapping
-@REM        ◯ Play remix button will be to the right and will remember vert index 
-@REM    ◯ A to play individual MG
-@REM    ◯ Select to toggle an individual MG on/off
-@REM    ◯ Play remix button
-@REM    ◯ Hover over MG -> display name, author, info, score
-@REM    ◯ ? game shows instructions, but doubles as a random pick
-@REM    ◯ Music
-@REM ✖️ Game over screen
+@REM △ Game over screen
 @REM    ✖️ Pretty up the art/presentation
-@REM    ✖️ Score score and high score
+@REM    ◯ Score score and high score
 @REM ✖️ Add pausing
 @REM △ Fix bugs and stuff
 @REM    ✖️ Music glitches out again (after 24 points?)
