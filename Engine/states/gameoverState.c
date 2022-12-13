@@ -4,10 +4,13 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+#include "../ram.h"
 #include "../songPlayer.h"
 
 #include "../res/sprites/engineGBPrinter.h"
 #include "../res/sprites/engineGBPrintout.h"
+
+#include "../structs/Microgame.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -23,6 +26,8 @@ extern UINT8 substate;
 extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
+extern Microgame mgCurrentMG;
+extern MGPOOLTYPE mgPoolType;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -81,13 +86,51 @@ void phaseGameoverInit()
     set_bkg_data(0x90, engineGBPrintout_TILE_COUNT, engineGBPrintout_tiles);
     set_bkg_tiles(0U, 0U, 21U, 32U, engineGBPrintout_map);
 
-    printLine(6U, 22U, "GAME OVER", FALSE);
-    printLine(6U, 23U, "SCORE:", FALSE);
+    printLine(6U, 19U, "GAME OVER", FALSE);
+
+    if (mgPoolType != REMIX)
+    {
+        printLine(6U, 21U, "HIGH", FALSE);
+        printLine(6U, 22U, "SCORE:", FALSE);
+
+        // Check for new high score
+        ENABLE_RAM;
+        if (mgPoolType == ALL)
+        {
+            i = loadHighScore();
+            if (k > i)
+            {
+                saveHighScore(k);
+                i = k;
+            }
+        }
+        else
+        {
+            i = loadMGScore(mgCurrentMG.id);
+            if (k > i)
+            {
+                saveMGScore(mgCurrentMG.id, k);
+                i = k;
+            }
+        }
+        DISABLE_RAM;
+
+        // High score
+        set_bkg_tile_xy(12U, 22U, i/100U);
+        set_bkg_tile_xy(13U, 22U, (i/10U)%10U);
+        set_bkg_tile_xy(14U, 22U, i%10U);
+
+        j = 24U;
+    }
+    else
+        j = 23U;
+
+    printLine(6U, j, "SCORE:", FALSE);
 
     // k is a stand-in for the score
-    set_bkg_tile_xy(12U, 23U, k/100U);
-    set_bkg_tile_xy(13U, 23U, (k/10U)%10U);
-    set_bkg_tile_xy(14U, 23U, k%10U);
+    set_bkg_tile_xy(12U, j, k/100U);
+    set_bkg_tile_xy(13U, j, (k/10U)%10U);
+    set_bkg_tile_xy(14U, j, k%10U);
     
     stopSong();
     substate = SUB_LOOP;

@@ -5,6 +5,7 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+#include "../ram.h"
 #include "../songPlayer.h"
 #include "../database/microgameData.h"
 #include "../structs/Microgame.h"
@@ -56,7 +57,7 @@ UINT8 currentScore;
 UINT16 mgTimeRemaining;  // 160px * 16 (big number)
 UINT8 mgTimerTickSpeed;
 
-MGPOOLTYPE mgPoolType;
+extern MGPOOLTYPE mgPoolType;
 UINT8 mgPoolSize;
 UINT8 mgPool[MICROGAME_COUNT];
 UINT8 mgHistoryLog[MICROGAME_COUNT];
@@ -145,7 +146,8 @@ void microgameManagerGameLoop()
         }
         else
         {
-            ++currentScore;
+            if (currentScore != 255U)
+                ++currentScore;
             gamestate = STATE_MICROGAME_MANAGER;
             substate = MGM_INIT_LOBBY;
             fadeout();
@@ -195,9 +197,22 @@ static void phaseInitMicrogameManager()
             mgPoolSize = 1U;
             mgPool[0U] = mgCurrentMG.id;
             break;
-        // case CUSTOM:
-        //     mgHistoryLogSize = get val from RAM >> 1U;
-        //     break;
+        case REMIX:
+            k = 0U;
+            ENABLE_RAM;
+            for (i = 0U; i != MICROGAME_COUNT; ++i)
+            {
+                l = loadMGToggle(i);
+                if (l == 0U)
+                {
+                    mgPool[k++] = i;
+                }
+            }
+            DISABLE_RAM;
+
+            mgPoolSize = k;
+            mgHistoryLogSize = k >> 1U;
+            break;
     }
     mgHistoryLogInit();
 

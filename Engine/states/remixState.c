@@ -1,6 +1,5 @@
 #include <gb/gb.h>
 #include <rand.h>
-#include <string.h>
 
 #include "../common.h"
 #include "../enums.h"

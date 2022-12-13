@@ -47,17 +47,18 @@ c:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Main play mode
 @REM    ✖️ Custom play
 @REM    ✖️ Credits
-@REM △ Lobby screen
+@REM △ Lobby screen/microgame manager
 @REM    ◯ Add level up animations
-@REM    ✖️ Add level up song
+@REM    ✖️ Add level up jingle
 @REM    ◯ Change the level up algorithm for individual MG play sessions
 @REM    ✖️ Multiple random options for pre MG jingle
 @REM    ◯ Refine algorithm for increasing speed/difficulty
 @REM    ✖️ Change palette on instruction text
 @REM    ◯ Add algorithm to avoid the same MG twice in a row (history queue of microgame_count/2 size)
+@REM    ◯ Max out score at 255
 @REM △ Saving/loading
-@REM    △ Main play mode high score
-@REM    △ Individual MG scores
+@REM    ◯ Main play mode high score
+@REM    ◯ Individual MG scores
 @REM    ◯ Individual MG toggles
 @REM    ✖️ Add option to wipe all save data
 @REM ◯ Custom mix screen

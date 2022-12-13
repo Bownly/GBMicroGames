@@ -39,6 +39,7 @@ UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
 Microgame mgCurrentMG;
+MGPOOLTYPE mgPoolType;
 
 UINT8 animFrame = 0U;
 UINT8 animTick = 0U;
