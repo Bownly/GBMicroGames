@@ -6,11 +6,11 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define engineWordRemix_TILE_ORIGIN 144
+#define engineWordRemix_TILE_ORIGIN 80
 #define engineWordRemix_TILE_W 8
 #define engineWordRemix_TILE_H 8
 #define engineWordRemix_WIDTH 8
-#define engineWordRemix_HEIGHT 8
+#define engineWordRemix_HEIGHT 16
 #define engineWordRemix_TILE_COUNT 40
 #define engineWordRemix_PALETTE_COUNT 1
 #define engineWordRemix_COLORS_PER_PALETTE 4

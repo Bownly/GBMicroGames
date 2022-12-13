@@ -6,11 +6,11 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define engineWordPlay_TILE_ORIGIN 144
+#define engineWordPlay_TILE_ORIGIN 48
 #define engineWordPlay_TILE_W 8
 #define engineWordPlay_TILE_H 8
 #define engineWordPlay_WIDTH 8
-#define engineWordPlay_HEIGHT 8
+#define engineWordPlay_HEIGHT 16
 #define engineWordPlay_TILE_COUNT 30
 #define engineWordPlay_PALETTE_COUNT 1
 #define engineWordPlay_COLORS_PER_PALETTE 4

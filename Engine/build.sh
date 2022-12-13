@@ -17,6 +17,7 @@ $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/borderTiles.o Engine/res/tiles/borderTile
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/fontTiles.o Engine/res/tiles/fontTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/timerTiles.o Engine/res/tiles/timerTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/engineScrollBkgTiles.o Engine/res/tiles/engineScrollBkgTiles.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/darkBorderTiles.o Engine/res/tiles/darkBorderTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGTiles.o Engine/res/tiles/engineDMGTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineCursorTiles.o Engine/res/tiles/engineCursorTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineMixBorderTiles.o Engine/res/tiles/engineMixBorderTiles.c
@@ -44,14 +45,15 @@ $GBDK_DIR/bin/png2asset Engine/res/sprites/engineDMGBezel.png -spr8x8 -sw 8 -sh 
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineGBPrinter.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 64 -noflip
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineGBPrintout.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 144 -noflip
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineCartArts.png -spr8x8 -sw 16 -sh 16 -b 4 -map -tile_origin 64 -noflip -keep_duplicate_tiles
-$GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordPlay.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 144 -noflip
-$GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordRemix.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 144 -noflip
-$GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordCredits.png -spr8x8 -sw 8 -sh 8 -b 4 -map -tile_origin 144 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordPlay.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 48 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordRemix.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 80 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordCredits.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 128 -noflip
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo0 -c -o Engine/o/microgameManagerState.o Engine/states/microgameManagerState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/titleState.o Engine/states/titleState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/deleteSaveState.o Engine/states/deleteSaveState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/gameoverState.o Engine/states/gameoverState.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/mainMenuState.o Engine/states/mainMenuState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/remixState.o Engine/states/remixState.c
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c

@@ -99,10 +99,9 @@ void phaseTitleLoop()
         initrand(DIV_REG);
         move_bkg(0U, 0U);
 
-        gamestate = STATE_MICROGAME_MANAGER;
-        substate = MGM_INIT_ALL;
-        mgStatus = PLAYING;
-    }  
+        gamestate = STATE_MAIN_MENU;
+        substate = SUB_INIT;
+    }
     // TODO DELETE ME TEMP TEST STUFF
     else if (curJoypad & J_SELECT && curJoypad & J_B)
     {

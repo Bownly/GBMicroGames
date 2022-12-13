@@ -6,11 +6,11 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define engineWordCredits_TILE_ORIGIN 144
+#define engineWordCredits_TILE_ORIGIN 128
 #define engineWordCredits_TILE_W 8
 #define engineWordCredits_TILE_H 8
 #define engineWordCredits_WIDTH 8
-#define engineWordCredits_HEIGHT 8
+#define engineWordCredits_HEIGHT 16
 #define engineWordCredits_TILE_COUNT 48
 #define engineWordCredits_PALETTE_COUNT 1
 #define engineWordCredits_COLORS_PER_PALETTE 4
