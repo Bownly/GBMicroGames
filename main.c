@@ -8,6 +8,7 @@
 
 #include "Engine/structs/Microgame.h"
 
+#include "Engine/states/creditsState.h"
 #include "Engine/states/deleteSaveState.h"
 #include "Engine/states/gameoverState.h"
 #include "Engine/states/mainMenuState.h"
@@ -103,8 +104,12 @@ void main()
                 SWITCH_ROM(5U);  // The song data lies in bank 5
                 break;
             case STATE_GAMEOVER:
-                SWITCH_ROM(4U);
+                SWITCH_ROM(1U);
                 gameoverStateMain();
+                break;
+            case STATE_CREDITS:
+                SWITCH_ROM(4U);
+                creditsStateMain();
                 break;
         }
     }

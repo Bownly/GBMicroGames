@@ -7,10 +7,13 @@
 #include "../ram.h"
 #include "../songPlayer.h"
 
+#include "../res/tiles/fontTiles.h"
 #include "../res/sprites/engineGBPrinter.h"
 #include "../res/sprites/engineGBPrintout.h"
 
 #include "../structs/Microgame.h"
+
+extern const hUGESong_t engineSloopygoopResults;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -46,6 +49,9 @@ static void phaseGameoverLoop();
 
 /* DISPLAY METHODS */
 
+/* SFX METHODS */
+static void sfxPrint();
+
 
 void gameoverStateMain()
 {
@@ -71,17 +77,19 @@ void gameoverStateMain()
 /******************************** SUBSTATE METHODS *******************************/
 void phaseGameoverInit()
 {
+    stopSong();
     // Initializations
     animTick = 0U;
     scrollTimer = 0U;
   
     SHOW_WIN;
     init_win(0xFFU);
+    set_bkg_data(0U, 46U, fontTiles);
+
     set_bkg_data(0x40, engineGBPrinter_TILE_COUNT, engineGBPrinter_tiles);
     set_win_tiles(0U, 0U, 20U, 4U, engineGBPrinter_map);
     move_win(7U, 112U);
 
-    // init_bkg(0xFFU);
     move_bkg(4U, 0U);  // For centering purposes
     set_bkg_data(0x90, engineGBPrintout_TILE_COUNT, engineGBPrintout_tiles);
     set_bkg_tiles(0U, 0U, 21U, 32U, engineGBPrintout_map);
@@ -132,7 +140,6 @@ void phaseGameoverInit()
     set_bkg_tile_xy(13U, j, (k/10U)%10U);
     set_bkg_tile_xy(14U, j, k%10U);
     
-    stopSong();
     substate = SUB_LOOP;
     fadein();
 }
@@ -141,12 +148,18 @@ void phaseGameoverLoop()
 {
     ++animTick;
 
-    if (scrollTimer != SCROLL_DURATION)
+    if (scrollTimer < SCROLL_DURATION)
     {
         if (scrollTimer++ % 8U == 0U)  // Scroll every 8 frames
         {
             scroll_bkg(0U, 8U);
+            sfxPrint();
         }
+    }
+    else if (scrollTimer == SCROLL_DURATION)
+    {
+        ++scrollTimer;
+        playSong(&engineSloopygoopResults);
     }
     else
     {
@@ -182,3 +195,13 @@ void phaseGameoverLoop()
 
 
 /******************************** DISPLAY METHODS ********************************/
+
+
+/********************************** SFX METHODS **********************************/
+static void sfxPrint()
+{
+    NR41_REG = 0x1FU;
+    NR42_REG = 0xF1U;
+    NR43_REG = 0x20U;
+    NR44_REG = 0xC0U;
+}

@@ -168,6 +168,8 @@ static void phaseInitMicrogameManager()
     currentScore = 0U;
     mgDifficulty = 0U;
     mgSpeed = 0U;
+    r = getRandUint8(2U);
+    levelSpeedNext = r % 2U;
 
     switch (substate)
     {
@@ -215,7 +217,6 @@ static void phaseInitMicrogameManager()
             break;
     }
     mgHistoryLogInit();
-
 
     stopSong();
 
@@ -279,8 +280,6 @@ static void phaseMicrogameManagerInitLobby()
     set_bkg_tile_xy(12U, 8U, mgSpeed + 1U);
     set_bkg_tile_xy(12U, 9U, mgDifficulty + 1U);
 
-    r = getRandUint8(2U);
-    levelSpeedNext = r % 2U;
     isLeveling = FALSE;
     handleLevelUps();
 
@@ -329,7 +328,7 @@ static void phaseMicrogameManagerLobbyLevelUp()
         }
         else
         {
-            if (levelSpeedNext == 0U)
+            if (levelSpeedNext == FALSE)
             {
                 printLine(6U, 8U, "SPEED:", FALSE);
                 set_bkg_tile_xy(12U, 8U, mgSpeed + 1U);
@@ -416,20 +415,23 @@ static void handleLevelUps()
                 if (currentScore % 8U == 0U)
                     levelUpSpeed();
             }
+
+            // Putting this here because there's no level up animation for difficulty in SINGLE mode
+            set_bkg_tile_xy(12U, 9U, mgDifficulty + 1U);
         }
         else  // ALL/REMIX
         {
             if (currentScore % 8U == 0U)
             {
-                if (levelSpeedNext == 0U)
+                if (levelSpeedNext == FALSE)
                 {
                     levelUpDifficulty();
-                    levelSpeedNext = 1U;
+                    levelSpeedNext = TRUE;
                 }
                 else
                 {
                     levelUpSpeed();
-                    levelSpeedNext = 0U;
+                    levelSpeedNext = FALSE;
                 }
             }
         }

@@ -8,7 +8,8 @@ typedef enum {
     STATE_MICROGAME_MANAGER,
     STATE_MICROGAME,
     STATE_REMIX,
-    STATE_GAMEOVER
+    STATE_GAMEOVER,
+    STATE_CREDITS
 } GAMESTATE;
 
 typedef enum {

@@ -158,6 +158,8 @@ static void inputsMainMenu()
                 break;
             case 2U:  // Credits
                 fadeout();
+                gamestate = STATE_CREDITS;
+                substate = SUB_INIT;
                 break;
         }
     }
