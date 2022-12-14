@@ -75,6 +75,7 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Music glitches out again (after 24 points?)
 @REM    ◯(?) Remix state MG select glitches out (due to bank shenanigans)
 @REM    ✖️ Janken -> gameover results in tile glitch
+@REM    ✖️ SINGLE mode lobby shows previous difficulty
 @REM ✖️ Credits screen
 
 @REM ◯ = done

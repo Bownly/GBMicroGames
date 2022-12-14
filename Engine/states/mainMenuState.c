@@ -5,6 +5,7 @@
 #include "../enums.h"
 #include "../fade.h"
 #include "../ram.h"
+#include "../songPlayer.h"
 
 #include "../res/tiles/borderTiles.h"
 #include "../res/tiles/darkBorderTiles.h"
@@ -12,6 +13,8 @@
 #include "../res/sprites/engineWordPlay.h"
 #include "../res/sprites/engineWordRemix.h"
 #include "../res/sprites/engineWordCredits.h"
+
+extern const hUGESong_t engineSloopygoopPartyTheme;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -82,6 +85,7 @@ void mainMenuStateMain()
 static void phaseMainMenuInit()
 {
     // Initializations
+    stopSong();
     init_bkg(BKGTILE_SCROLL);
     move_bkg(0U, 0U);
     animTick = 0U;
@@ -105,6 +109,8 @@ static void phaseMainMenuInit()
 
     substate = SUB_LOOP;
     fadein();
+
+    playSong(&engineSloopygoopPartyTheme);
 }
 
 static void phaseMainMenuLoop()
@@ -137,6 +143,7 @@ static void inputsMainMenu()
         switch (n)
         {
             case 0U:  // Play
+                stopSong();
                 fadeout();
                 initrand(DIV_REG);
                 gamestate = STATE_MICROGAME_MANAGER;
@@ -144,11 +151,13 @@ static void inputsMainMenu()
                 mgStatus = PLAYING;
                 break;
             case 1U:  // Remix
+                stopSong();
                 fadeout();
                 gamestate = STATE_REMIX;
                 substate = SUB_INIT;
                 break;
             case 2U:  // Credits
+                fadeout();
                 break;
         }
     }

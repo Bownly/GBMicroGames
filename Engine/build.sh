@@ -29,6 +29,7 @@ $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat3Map.o Engine/res/map
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat4Map.o Engine/res/maps/engineDMGBat4Map.c
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o Engine/res/audio/engineSloopygoopBoogieWoogieEx.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineSloopygoopPartyTheme.o Engine/res/audio/engineSloopygoopPartyTheme.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c

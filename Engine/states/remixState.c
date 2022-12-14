@@ -226,8 +226,14 @@ static void inputsRemix()
             stopSong();
         }
     }
-
-    if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
+    else if (curJoypad & J_B && !(prevJoypad & J_B))
+    {
+        gamestate = STATE_MAIN_MENU;
+        substate = SUB_INIT;
+        stopSong();
+        fadeout();
+    }
+    else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
     {
         if (highlightedMG == 19U) {} // Instructions cart
         else if (m == 5U) {} // Play mix button        
@@ -244,17 +250,6 @@ static void inputsRemix()
 
             setVisualToggleStatus(highlightedMG, k);
         }
-    }
-
-    if (curJoypad & J_START && !(prevJoypad & J_START))
-    {
-        fadeout();
-        initrand(DIV_REG);
-
-        gamestate = STATE_MICROGAME_MANAGER;
-        substate = SUB_INIT;
-        mgStatus = PLAYING;
-        stopSong();
     }
 }
 
