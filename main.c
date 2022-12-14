@@ -16,8 +16,9 @@
 #include "Engine/states/remixState.h"
 #include "Engine/states/titleState.h"
 
-extern const unsigned char borderTiles[];
-extern const unsigned char fontTiles[];
+#include "Engine/res/tiles/borderTiles.h"
+#include "Engine/res/tiles/fontTiles.h"
+#include "Engine/res/tiles/alBhedFontTiles.h"
 
 // Save data stuff
 const UBYTE RAM_SIG[4U] = {'G','B','M','G'};
@@ -61,7 +62,14 @@ void main()
     set_interrupts(LCD_IFLAG | TIM_IFLAG | VBL_IFLAG);
  
     set_bkg_data(0xF0U, 8U, borderTiles);
-    set_bkg_data(0U, 46U, fontTiles);
+
+    ENABLE_RAM;
+    i = loadLanguageSetting();
+    if (i == 1U)
+        set_bkg_data(0U, 46U, alBhedFontTiles);
+    else
+        set_bkg_data(0U, 46U, fontTiles);
+    DISABLE_RAM;
 
     init_bkg(0xFFU);
     DISPLAY_ON;

@@ -15,6 +15,7 @@ rm -f Engine/o/*.sym
 
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/borderTiles.o Engine/res/tiles/borderTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/fontTiles.o Engine/res/tiles/fontTiles.c
+$GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/alBhedFontTiles.o Engine/res/tiles/alBhedFontTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/timerTiles.o Engine/res/tiles/timerTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/engineScrollBkgTiles.o Engine/res/tiles/engineScrollBkgTiles.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/darkBorderTiles.o Engine/res/tiles/darkBorderTiles.c
@@ -31,8 +32,9 @@ $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat4Map.o Engine/res/map
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineSloopygoopResults.o Engine/res/audio/engineSloopygoopResults.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o Engine/res/audio/engineSloopygoopBoogieWoogieEx.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineSloopygoopPartyTheme.o Engine/res/audio/engineSloopygoopPartyTheme.c
-$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/engineLevelUpJingle.o Engine/res/audio/engineLevelUpJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c
 
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/common.o Engine/common.c

@@ -41,6 +41,7 @@ typedef enum {
 typedef enum {
     BOOGIE_WOOGIE,
     WON_JINGLE_1,
+    LEVEL_UP_JINGLE,
     LOST_JINGLE_1,
     PRE_MG_JINGLE_1
 } SONGNAME;

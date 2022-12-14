@@ -4,10 +4,11 @@
 #include "common.h"
 #include "enums.h"
 
+extern const hUGESong_t engineLevelUpJingle;
 extern const hUGESong_t engineSloopygoopBoogieWoogieEx;
+extern const hUGESong_t lostJingle;
 extern const hUGESong_t premgJingle;
 extern const hUGESong_t wonJingle;
-extern const hUGESong_t lostJingle;
 
 extern UINT8 mgSpeed;
 extern UINT8 oldBank;
@@ -63,6 +64,11 @@ void playOutsideSong(UINT8 songName)
             curSongBank = 14U;
             SWITCH_ROM(14U);
             playSong(&wonJingle);
+            break;
+        case LEVEL_UP_JINGLE:
+            curSongBank = 14U;
+            SWITCH_ROM(14U);
+            playSong(&engineLevelUpJingle);
             break;
         case LOST_JINGLE_1:
             curSongBank = 14U;

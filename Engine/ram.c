@@ -8,6 +8,27 @@ UBYTE ram_data[16U];
 extern UBYTE *data;
 extern UINT8 i;
 
+
+void saveLanguageSetting(UINT8 lang)
+{
+    SWITCH_RAM(0U);
+    data = &ram_data[RAM_LANGUAGE_ADDR];
+    *data = lang;
+}
+
+UINT8 loadLanguageSetting()
+{
+    SWITCH_RAM(0U);
+    return ram_data[RAM_LANGUAGE_ADDR];
+}
+
+void wipeLanguageSetting()
+{
+    SWITCH_RAM(0U);
+    ram_data[RAM_LANGUAGE_ADDR] = 0U;
+}
+
+
 void saveHighScore(UINT8 score)
 {
     SWITCH_RAM(0U);

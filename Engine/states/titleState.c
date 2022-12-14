@@ -1,10 +1,13 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "../../Engine/common.h"
-#include "../../Engine/enums.h"
-#include "../../Engine/fade.h"
+#include "../common.h"
+#include "../enums.h"
+#include "../fade.h"
+#include "../ram.h"
 #include "../database/microgameData.h"
+#include "../res/tiles/fontTiles.h"
+#include "../res/tiles/alBhedFontTiles.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -107,6 +110,22 @@ void phaseTitleLoop()
         fadeout();
         gamestate = STATE_DELETE_SAVE;
         substate = SUB_INIT;
+    }
+    else if (curJoypad & J_SELECT && curJoypad & J_A)
+    {
+        fadeout();
+        ENABLE_RAM;
+        i = loadLanguageSetting();
+        i = (i + 1U) % 2U;
+        saveLanguageSetting(i);
+        if (i == 1U)
+            set_bkg_data(0U, 46U, alBhedFontTiles);
+        else
+            set_bkg_data(0U, 46U, fontTiles);
+        DISABLE_RAM;
+        fadein();
+
+        
     }
 }
 

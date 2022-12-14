@@ -11,6 +11,7 @@
 #include "../structs/Microgame.h"
 #include "../res/tiles/borderTiles.h"
 #include "../res/tiles/fontTiles.h"
+#include "../res/tiles/alBhedFontTiles.h"
 #include "../res/tiles/timerTiles.h"
 #include "../res/tiles/engineDMGTiles.h"
 #include "../res/maps/engineDMGBat0Map.h"
@@ -231,9 +232,15 @@ static void phaseMicrogameManagerInitLobby()
 
     // Reload graphics
     move_bkg(0U, 0U);
-    set_bkg_data(0U, 46U, fontTiles);
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0xFCU, 3U, timerTiles);
+    ENABLE_RAM;
+    i = loadLanguageSetting();
+    if (i == 1U)
+        set_bkg_data(0U, 46U, alBhedFontTiles);
+    else
+        set_bkg_data(0U, 46U, fontTiles);
+    DISABLE_RAM;
 
     // Draw dmg bezel
     set_bkg_data(0x30, 7U, engineDMGTiles);
@@ -262,7 +269,7 @@ static void phaseMicrogameManagerInitLobby()
 
     lobbyDurationStats = 100U - mgSpeed * 9U;
     lobbyDurationInstructions = 95U - mgSpeed * 9U;
-    lobbyDurationLevelUp = 95U - mgSpeed * 9U;
+    lobbyDurationLevelUp = 120U - mgSpeed * 9U;
     
     HIDE_WIN;
     
@@ -309,7 +316,12 @@ static void phaseMicrogameManagerLobbyLoop()
     {
         animTick = 0U;
         if (isLeveling == TRUE)
+        {
             substate = MGM_LOBBY_LOOP_LEVELUP;
+
+            stopSong();
+            playOutsideSong(LEVEL_UP_JINGLE);
+        }
         else
             setupLobbyInstructions();
     }

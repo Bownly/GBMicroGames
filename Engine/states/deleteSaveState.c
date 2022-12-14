@@ -134,6 +134,7 @@ static void phaseDeleteSaveLoop()
             wipeHighScore();
             wipeAllMGScores();
             wipeAllMGToggles();
+            wipeLanguageSetting();
             DISABLE_RAM;
 
             substate = DS_MESSAGE_LOOP;

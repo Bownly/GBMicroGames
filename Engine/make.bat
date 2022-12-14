@@ -51,9 +51,10 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 
 @REM Post-jam TODO:
 @REM ✖️ Title screen
+@REM    ✖️ Art
 @REM △ Lobby screen/microgame manager
-@REM    ✖️ Add level up jingle
 @REM    ✖️ Multiple random options for pre MG jingle
+@REM    ◯ Add level up jingle
 @REM    ◯ Add level up animations
 @REM    ◯ Change the level up algorithm for individual MG play sessions
 @REM    ◯ Refine algorithm for increasing speed/difficulty
@@ -63,13 +64,19 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Pretty up the art/presentation
 @REM    ◯ Score score and high score
 @REM ✖️ Add pausing
+@REM    ✖️ Dummy bullet point because I keep not seeing this one
 @REM △ Fix bugs and stuff
 @REM    ✖️ Music glitches out again (after 24 points?)
+@REM    ✖️ Play Remix with only 1 MG picks Face Game every time
 @REM    ✖️ Fourth mg loss skips anim and goes right to gameover state
 @REM    ◯ Level ups (at least for ALL) don't alternate if they start on speed up
 @REM    ◯ Janken -> gameover results in tile glitch
 @REM    ◯(?) Remix state MG select glitches out (due to bank shenanigans)
 @REM    ◯ SINGLE mode lobby shows previous difficulty
+@REM △ Al Bhed
+@REM    ✖️ "Play Mix" replacement
+@REM    ✖️ Main menu button text replacement
+@REM    ◯ Font replacement
 @REM ◯ Credits screen
 @REM ◯ Main menu screen
 @REM ◯ Saving/loading
@@ -79,3 +86,4 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM ◯ = done
 @REM △ = wip or next in line
 @REM ✖️ = not yet started
+

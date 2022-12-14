@@ -8,6 +8,7 @@
 #include "../songPlayer.h"
 
 #include "../res/tiles/fontTiles.h"
+#include "../res/tiles/alBhedFontTiles.h"
 #include "../res/sprites/engineGBPrinter.h"
 #include "../res/sprites/engineGBPrintout.h"
 
@@ -84,7 +85,14 @@ void phaseGameoverInit()
   
     SHOW_WIN;
     init_win(0xFFU);
-    set_bkg_data(0U, 46U, fontTiles);
+    ENABLE_RAM;
+    i = loadLanguageSetting();
+    if (i == 1U)
+        set_bkg_data(0U, 46U, alBhedFontTiles);
+    else
+        set_bkg_data(0U, 46U, fontTiles);
+    DISABLE_RAM;
+
 
     set_bkg_data(0x40, engineGBPrinter_TILE_COUNT, engineGBPrinter_tiles);
     set_win_tiles(0U, 0U, 20U, 4U, engineGBPrinter_map);

@@ -11,7 +11,6 @@
 #include "../res/sprites/engineCartArts.h"
 #include "../res/tiles/engineCursorTiles.h"
 #include "../res/tiles/engineMixBorderTiles.h"
-#include "../res/tiles/fontTiles.h"
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
