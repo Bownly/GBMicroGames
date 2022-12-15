@@ -24,6 +24,7 @@ extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
+extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -115,10 +116,10 @@ void phaseTitleLoop()
     {
         fadeout();
         ENABLE_RAM;
-        i = loadLanguageSetting();
-        i = (i + 1U) % 2U;
-        saveLanguageSetting(i);
-        if (i == 1U)
+        // language = loadLanguageSetting();
+        language = (language + 1U) % 2U;
+        saveLanguageSetting(language);
+        if (language == 1U)
             set_bkg_data(0U, 46U, alBhedFontTiles);
         else
             set_bkg_data(0U, 46U, fontTiles);

@@ -44,6 +44,7 @@ UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
 Microgame mgCurrentMG;
 MGPOOLTYPE mgPoolType;
+UINT8 language;
 
 UINT8 animFrame = 0U;
 UINT8 animTick = 0U;
@@ -64,8 +65,8 @@ void main()
     set_bkg_data(0xF0U, 8U, borderTiles);
 
     ENABLE_RAM;
-    i = loadLanguageSetting();
-    if (i == 1U)
+    language = loadLanguageSetting();
+    if (language == 1U)
         set_bkg_data(0U, 46U, alBhedFontTiles);
     else
         set_bkg_data(0U, 46U, fontTiles);

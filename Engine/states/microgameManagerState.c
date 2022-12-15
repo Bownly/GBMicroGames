@@ -42,6 +42,7 @@ extern UINT8 mgDifficulty;
 extern UINT8 mgSpeed;
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
+extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -234,13 +235,11 @@ static void phaseMicrogameManagerInitLobby()
     move_bkg(0U, 0U);
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0xFCU, 3U, timerTiles);
-    ENABLE_RAM;
-    i = loadLanguageSetting();
-    if (i == 1U)
+    
+    if (language == 1U)
         set_bkg_data(0U, 46U, alBhedFontTiles);
     else
         set_bkg_data(0U, 46U, fontTiles);
-    DISABLE_RAM;
 
     // Draw dmg bezel
     set_bkg_data(0x30, 7U, engineDMGTiles);

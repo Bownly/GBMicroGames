@@ -27,6 +27,7 @@ extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
+extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -99,7 +100,7 @@ void phaseRemixInit()
     updateCursorLocation();
 
     // Play remix button border sprites setup
-    set_sprite_data(SPRTILE_MIX_BORDER, 16U, engineMixBorderTiles);
+    set_sprite_data(SPRTILE_MIX_BORDER, 24U, engineMixBorderTiles);
     drawPlayMixButton();
 
     // Outlines
@@ -297,9 +298,10 @@ static void drawPlayMixButton()
     move_sprite(22U, BUTTON_X_COORD + 16U, BUTTON_Y_COORD + 64U);
 
     // Text
-    for (j = 0U; j != 9; ++j)
+    l = language << 3U;
+    for (j = 0U; j != 9U; ++j)
     {
-        set_sprite_tile(23U + j, SPRTILE_MIX_BORDER + 8U + j);
+        set_sprite_tile(23U + j, SPRTILE_MIX_BORDER + 8U + j + l);
         move_sprite(23U + j, BUTTON_X_COORD + 8U, BUTTON_Y_COORD + (j << 3U));
     }
 }

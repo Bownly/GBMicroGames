@@ -32,6 +32,7 @@ extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
 extern MGPOOLTYPE mgPoolType;
+extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -85,14 +86,10 @@ void phaseGameoverInit()
   
     SHOW_WIN;
     init_win(0xFFU);
-    ENABLE_RAM;
-    i = loadLanguageSetting();
-    if (i == 1U)
+    if (language == 1U)
         set_bkg_data(0U, 46U, alBhedFontTiles);
     else
         set_bkg_data(0U, 46U, fontTiles);
-    DISABLE_RAM;
-
 
     set_bkg_data(0x40, engineGBPrinter_TILE_COUNT, engineGBPrinter_tiles);
     set_win_tiles(0U, 0U, 20U, 4U, engineGBPrinter_map);

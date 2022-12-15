@@ -13,6 +13,9 @@
 #include "../res/sprites/engineWordPlay.h"
 #include "../res/sprites/engineWordRemix.h"
 #include "../res/sprites/engineWordCredits.h"
+#include "../res/sprites/engineABWordPlay.h"
+#include "../res/sprites/engineABWordRemix.h"
+#include "../res/sprites/engineABWordCredits.h"
 
 extern const hUGESong_t engineSloopygoopPartyTheme;
 
@@ -30,6 +33,7 @@ extern UINT8 substate;
 extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
+extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -97,12 +101,25 @@ static void phaseMainMenuInit()
     drawPopupWindow(2U,  7U, 13U, 3U);
     drawPopupWindow(2U, 12U, 13U, 3U);
     set_bkg_data(0xE0U, 9U, darkBorderTiles);
-    set_bkg_data(BKGTILE_PLAY, engineWordPlay_TILE_COUNT, engineWordPlay_tiles);
-    set_bkg_data(BKGTILE_REMIX, engineWordRemix_TILE_COUNT, engineWordRemix_tiles);
-    set_bkg_data(BKGTILE_CREDITS, engineWordCredits_TILE_COUNT, engineWordCredits_tiles);
-    set_bkg_tiles(5U,  3U,  8U, 2U, engineWordPlay_map);
-    set_bkg_tiles(4U,  8U, 10U, 2U, engineWordRemix_map);
-    set_bkg_tiles(3U, 13U, 12U, 2U, engineWordCredits_map);
+
+    if (language == 0U)
+    {
+        set_bkg_data(BKGTILE_PLAY, engineWordPlay_TILE_COUNT, engineWordPlay_tiles);
+        set_bkg_data(BKGTILE_REMIX, engineWordRemix_TILE_COUNT, engineWordRemix_tiles);
+        set_bkg_data(BKGTILE_CREDITS, engineWordCredits_TILE_COUNT, engineWordCredits_tiles);
+        set_bkg_tiles(5U,  3U,  8U, 2U, engineWordPlay_map);
+        set_bkg_tiles(4U,  8U, 10U, 2U, engineWordRemix_map);
+        set_bkg_tiles(3U, 13U, 12U, 2U, engineWordCredits_map);
+    }
+    else
+    {
+        set_bkg_data(BKGTILE_PLAY, engineABWordPlay_TILE_COUNT, engineABWordPlay_tiles);
+        set_bkg_data(BKGTILE_REMIX, engineABWordRemix_TILE_COUNT, engineABWordRemix_tiles);
+        set_bkg_data(BKGTILE_CREDITS, engineABWordCredits_TILE_COUNT, engineABWordCredits_tiles);
+        set_bkg_tiles(5U,  3U,  8U, 2U, engineABWordPlay_map);
+        set_bkg_tiles(4U,  8U, 10U, 2U, engineABWordRemix_map);
+        set_bkg_tiles(3U, 13U, 12U, 2U, engineABWordCredits_map);
+    }
 
     animateBkg();
     selectButton();
@@ -192,13 +209,22 @@ static void deselectButton()
     switch (n)
     {
         case 0U:
-            set_bkg_tiles(5U,  3U,  8U, 2U, engineWordPlay_map);
+            if (language == 0U)
+                set_bkg_tiles(5U,  3U,  8U, 2U, engineWordPlay_map);
+            else
+                set_bkg_tiles(5U,  3U,  8U, 2U, engineABWordPlay_map);
             break;
         case 1U:
-            set_bkg_tiles(4U,  8U, 10U, 2U, engineWordRemix_map);
+            if (language == 0U)
+                set_bkg_tiles(4U,  8U, 10U, 2U, engineWordRemix_map);
+            else
+                set_bkg_tiles(4U,  8U, 10U, 2U, engineABWordRemix_map);
             break;
         case 2U:
-            set_bkg_tiles(3U, 13U, 12U, 2U, engineWordCredits_map);
+            if (language == 0U)
+                set_bkg_tiles(3U, 13U, 12U, 2U, engineWordCredits_map);
+            else
+                set_bkg_tiles(3U, 13U, 12U, 2U, engineABWordCredits_map);
             break;
     }
 
@@ -226,13 +252,22 @@ static void selectButton()
     switch (n)
     {
         case 0U:
-            set_bkg_tiles(7U,  3U,  8U, 2U, engineWordPlay_map + 16U);
+            if (language == 0U)
+                set_bkg_tiles(7U,  3U,  8U, 2U, engineWordPlay_map + 16U);
+            else
+                set_bkg_tiles(7U,  3U,  8U, 2U, engineABWordPlay_map + 16U);
             break;
         case 1U:
-            set_bkg_tiles(6U,  8U, 10U, 2U, engineWordRemix_map + 20U);
+            if (language == 0U)
+                set_bkg_tiles(6U,  8U, 10U, 2U, engineWordRemix_map + 20U);
+            else
+                set_bkg_tiles(6U,  8U, 10U, 2U, engineABWordRemix_map + 20U);
             break;
         case 2U:
-            set_bkg_tiles(5U, 13U, 12U, 2U, engineWordCredits_map + 24U);
+            if (language == 0U)
+                set_bkg_tiles(5U, 13U, 12U, 2U, engineWordCredits_map + 24U);
+            else
+                set_bkg_tiles(5U, 13U, 12U, 2U, engineABWordCredits_map + 24U);
             break;
     }
 }

@@ -52,6 +52,9 @@ $GBDK_DIR/bin/png2asset Engine/res/sprites/engineCartArts.png -spr8x8 -sw 16 -sh
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordPlay.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 48 -noflip
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordRemix.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 80 -noflip
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineWordCredits.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 128 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineABWordPlay.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 48 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineABWordRemix.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 80 -noflip
+$GBDK_DIR/bin/png2asset Engine/res/sprites/engineABWordCredits.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 128 -noflip
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo0 -c -o Engine/o/microgameManagerState.o Engine/states/microgameManagerState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/titleState.o Engine/states/titleState.c
