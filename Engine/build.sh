@@ -34,7 +34,11 @@ $GBDK_DIR/bin/lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineSloopygoopPartyTheme.o Engine/res/audio/engineSloopygoopPartyTheme.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/engineLevelUpJingle.o Engine/res/audio/engineLevelUpJingle.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
-$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle1.o Engine/res/audio/premgJingle1.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle2.o Engine/res/audio/premgJingle2.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle3.o Engine/res/audio/premgJingle3.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle4.o Engine/res/audio/premgJingle4.c
+# $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle5.o Engine/res/audio/premgJingle5.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo14 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c
 
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/common.o Engine/common.c

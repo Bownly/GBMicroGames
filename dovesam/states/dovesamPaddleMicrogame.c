@@ -92,8 +92,6 @@ static void updatePaddlePos();
 
 void dovesamPaddleMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -107,7 +105,6 @@ void dovesamPaddleMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

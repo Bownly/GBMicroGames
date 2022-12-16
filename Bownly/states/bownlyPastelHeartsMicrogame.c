@@ -99,8 +99,6 @@ static void sfxBleep();
 
 void bownlyPastelHeartsMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -114,7 +112,6 @@ void bownlyPastelHeartsMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

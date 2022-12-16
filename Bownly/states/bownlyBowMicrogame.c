@@ -73,8 +73,6 @@ static void spawnTarget();
 
 void bownlyBowMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -88,7 +86,6 @@ void bownlyBowMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

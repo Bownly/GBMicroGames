@@ -19,7 +19,12 @@ void animateBkg()
     set_bkg_data(BKGTILE_SCROLL, 1U, engineScrollBkgTiles + ((animTick % 32U) >> 3U) * 16);
 }
 
-void drawPopupWindow(UINT8 xCoord, UINT8 yCoord, UINT8 xDim, UINT8 yDim)
+void animateWin(UINT8 tickVal)
+{
+    set_win_data(BKGTILE_SCROLL, 1U, engineScrollBkgTiles + ((tickVal % 32U) >> 3U) * 16);
+}
+
+void drawBkgWindow(UINT8 xCoord, UINT8 yCoord, UINT8 xDim, UINT8 yDim)
 {
     // Draw corners
     set_bkg_tile_xy(xCoord, yCoord, 0xF0U);
@@ -43,6 +48,33 @@ void drawPopupWindow(UINT8 xCoord, UINT8 yCoord, UINT8 xDim, UINT8 yDim)
     {
         set_bkg_tile_xy(xCoord, yCoord + j, 0xF3U);
         set_bkg_tile_xy(xCoord + xDim, yCoord + j, 0xF4U);
+    }
+}
+
+void drawWinWindow(UINT8 xCoord, UINT8 yCoord, UINT8 xDim, UINT8 yDim)
+{
+    // Draw corners
+    set_win_tile_xy(xCoord, yCoord, 0xF0U);
+    set_win_tile_xy(xCoord + xDim, yCoord, 0xF2U);
+    set_win_tile_xy(xCoord, yCoord + yDim, 0xF5U);
+    set_win_tile_xy(xCoord + xDim, yCoord + yDim, 0xF7U);
+
+    // Draw walls
+    for (i = 1U; i != xDim; ++i)
+    {
+        set_win_tile_xy(xCoord + i, yCoord, 0xF1U);
+        set_win_tile_xy(xCoord + i, yCoord + yDim, 0xF6U);
+
+        // Fill center
+        for (j = 1U; j != yDim; j++)
+        {
+            set_win_tile_xy(xCoord + i, yCoord + j, 0xF8U);
+        }
+    }
+    for (j = 1U; j != yDim; ++j)
+    {
+        set_win_tile_xy(xCoord, yCoord + j, 0xF3U);
+        set_win_tile_xy(xCoord + xDim, yCoord + j, 0xF4U);
     }
 }
 

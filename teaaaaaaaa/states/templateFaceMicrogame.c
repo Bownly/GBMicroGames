@@ -152,7 +152,6 @@ move_sprite(teaaaSpriteMemory + 5,teaaaStoredSpriteX,teaaaStoredSpriteY + 16);
 
 void whackMolesLoop() BANKED
 {
-curJoypad = joypad();
 animTick --;
 if (teaaaYVelocity < 40)
 {
@@ -324,7 +323,6 @@ move_sprite(6,teaaaPlayableSpriteX + 4,teaaaDownshiftedPlayableSpriteY);
 move_sprite(7,teaaaPlayableSpriteX - 4,teaaaDownshiftedPlayableSpriteY);
 move_sprite(8,teaaaPlayableSpriteX - 12,teaaaDownshiftedPlayableSpriteY);
 }
-prevJoypad = curJoypad;
 }
 
 void whackMolesMicrogameMain() BANKED

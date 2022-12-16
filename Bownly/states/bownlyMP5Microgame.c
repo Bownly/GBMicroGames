@@ -84,8 +84,6 @@ static void updateFlippingPanels();
 
 void bownlyMP5MicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -99,7 +97,6 @@ void bownlyMP5MicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

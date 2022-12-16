@@ -104,7 +104,7 @@ void phaseRemixInit()
     drawPlayMixButton();
 
     // Outlines
-    drawPopupWindow(2U, 0U, 15U, 12U);
+    drawBkgWindow(2U, 0U, 15U, 12U);
     for (i = 0U; i != 20U; ++i)
     {
         set_bkg_tile_xy(i, 13U, 0xF1U);

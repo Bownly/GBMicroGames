@@ -100,8 +100,6 @@ static void updateHitBlockState(const UINT8 eggIndex);
 
 void synchingFeelingEggMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -115,7 +113,6 @@ void synchingFeelingEggMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

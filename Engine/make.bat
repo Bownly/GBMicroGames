@@ -56,24 +56,14 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/remixState.o Engine/states/remixSta
 
 C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 
-
 @REM Post-jam TODO:
 @REM ✖️ Title screen
 @REM    ✖️ Art
-@REM △ Lobby screen/microgame manager
-@REM    ✖️ Multiple random options for pre MG jingle
-@REM    ◯ Add level up jingle
-@REM    ◯ Add level up animations
-@REM    ◯ Change the level up algorithm for individual MG play sessions
-@REM    ◯ Refine algorithm for increasing speed/difficulty
-@REM    ◯ Add algorithm to avoid the same MG twice in a row (history queue of microgame_count/2 size)
-@REM    ◯ Max out score at 255
 @REM △ Game over screen
 @REM    ✖️ Pretty up the art/presentation
 @REM    ◯ Score score and high score
-@REM ✖️ Add pausing
-@REM    ✖️ Dummy bullet point because I keep not seeing this one
 @REM △ Fix bugs and stuff
+@REM    ✖️ Playtest every MG and make final tweaks if needed
 @REM    ✖️ Music glitches out again (after 24 points?)
 @REM    ✖️ Play Remix with only 1 MG picks Face Game every time
 @REM    ✖️ Fourth mg loss skips anim and goes right to gameover state
@@ -81,6 +71,8 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ◯ Janken -> gameover results in tile glitch
 @REM    ◯(?) Remix state MG select glitches out (due to bank shenanigans)
 @REM    ◯ SINGLE mode lobby shows previous difficulty
+@REM ◯ Add pausing
+@REM ◯ Lobby screen/microgame manager
 @REM ◯ Al Bhed
 @REM ◯ Credits screen
 @REM ◯ Main menu screen
@@ -92,3 +84,8 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM △ = wip or next in line
 @REM ✖️ = not yet started
 
+
+@REM Possible names:
+@REM Microbrew Pocket Collection
+@REM Microbrew Games
+@REM Microbrew Pocket Games

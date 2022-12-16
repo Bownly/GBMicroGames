@@ -99,8 +99,8 @@ static void phaseCreditsInit()
     set_sprite_data(0U, 6U, engineCursorTiles);
     set_sprite_tile(0U, 0U);
 
-    drawPopupWindow(1U, 1U, 17U, 15U);
-    drawPopupWindow(3U, 0U, 13U, 2U);
+    drawBkgWindow(1U, 1U, 17U, 15U);
+    drawBkgWindow(3U, 0U, 13U, 2U);
 
     // Randomize contributors
     for (k = 32U; k != 0U; --k)

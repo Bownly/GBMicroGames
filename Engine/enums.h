@@ -28,7 +28,8 @@ typedef enum {
     MGM_INIT_LOBBY,  // The transition screen between microgames
     MGM_LOBBY_LOOP,
     MGM_LOBBY_LOOP_LEVELUP,
-    MGM_LOBBY_LOOP_INSTRUCTIONS
+    MGM_LOBBY_LOOP_INSTRUCTIONS,
+    MGM_PAUSED
 } SUBSTATE;
 
 typedef enum {
@@ -43,7 +44,11 @@ typedef enum {
     WON_JINGLE_1,
     LEVEL_UP_JINGLE,
     LOST_JINGLE_1,
-    PRE_MG_JINGLE_1
+    PRE_MG_JINGLE_1,
+    PRE_MG_JINGLE_2,
+    PRE_MG_JINGLE_3,
+    PRE_MG_JINGLE_4,
+    PRE_MG_JINGLE_5
 } SONGNAME;
 
 typedef enum {

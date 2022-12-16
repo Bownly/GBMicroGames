@@ -97,9 +97,9 @@ static void phaseMainMenuInit()
     n = 0U;
 
     // Menu buttons setup
-    drawPopupWindow(2U,  2U, 13U, 3U);
-    drawPopupWindow(2U,  7U, 13U, 3U);
-    drawPopupWindow(2U, 12U, 13U, 3U);
+    drawBkgWindow(2U,  2U, 13U, 3U);
+    drawBkgWindow(2U,  7U, 13U, 3U);
+    drawBkgWindow(2U, 12U, 13U, 3U);
     set_bkg_data(0xE0U, 9U, darkBorderTiles);
 
     if (language == 0U)

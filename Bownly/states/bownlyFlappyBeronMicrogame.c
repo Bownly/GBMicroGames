@@ -85,8 +85,6 @@ static void sfxFlap();
 
 void bownlyFlappyBeronMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -100,7 +98,6 @@ void bownlyFlappyBeronMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

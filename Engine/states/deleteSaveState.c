@@ -94,7 +94,7 @@ static void phaseDeleteSaveInit()
     animateCursor();
     updateCursorLocation();
 
-    drawPopupWindow(4U, 5U, 11U, 5U);
+    drawBkgWindow(4U, 5U, 11U, 5U);
 
     printLine(5U, 6U, "DELETE ALL", FALSE);
     printLine(5U, 7U, "SAVE DATA?", FALSE);
@@ -144,7 +144,7 @@ static void phaseDeleteSaveLoop()
             // Setup inital graphics for the message loop
             move_sprite(0U, 0U, 0U);
             fill_bkg_rect(4U, 5U, 12U, 6U, BKGTILE_SCROLL);  // Cover up old window
-            drawPopupWindow(4U, 6U, 11U, 3U);  // Draw new window
+            drawBkgWindow(4U, 6U, 11U, 3U);  // Draw new window
             printLine(5U, 7U, "SAVE  DATA", FALSE);
             printLine(6U, 8U, "DELETED!", FALSE);
         }

@@ -7,7 +7,11 @@
 extern const hUGESong_t engineLevelUpJingle;
 extern const hUGESong_t engineSloopygoopBoogieWoogieEx;
 extern const hUGESong_t lostJingle;
-extern const hUGESong_t premgJingle;
+extern const hUGESong_t premgJingle1;
+extern const hUGESong_t premgJingle2;
+extern const hUGESong_t premgJingle3;
+extern const hUGESong_t premgJingle4;
+// extern const hUGESong_t premgJingle5;
 extern const hUGESong_t wonJingle;
 
 extern UINT8 mgSpeed;
@@ -78,8 +82,28 @@ void playOutsideSong(UINT8 songName)
         case PRE_MG_JINGLE_1:
             curSongBank = 14U;
             SWITCH_ROM(14U);
-            playSong(&premgJingle);
+            playSong(&premgJingle1);
             break;
+        case PRE_MG_JINGLE_2:
+            curSongBank = 14U;
+            SWITCH_ROM(14U);
+            playSong(&premgJingle2);
+            break;
+        case PRE_MG_JINGLE_3:
+            curSongBank = 14U;
+            SWITCH_ROM(14U);
+            playSong(&premgJingle3);
+            break;
+        case PRE_MG_JINGLE_4:
+            curSongBank = 14U;
+            SWITCH_ROM(14U);
+            playSong(&premgJingle4);
+            break;
+        // case PRE_MG_JINGLE_5:
+        //     curSongBank = 14U;
+        //     SWITCH_ROM(14U);
+        //     playSong(&premgJingle5);
+        //     break;
     }
 }
 

@@ -84,8 +84,6 @@ static void playCollisionSfx();
 
 void bownlyKillerDrillerMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -99,7 +97,6 @@ void bownlyKillerDrillerMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

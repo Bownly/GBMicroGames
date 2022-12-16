@@ -66,8 +66,6 @@ static void animateArrow();
 static void updateRPS();
 
 void oshfRPSMicrogameMain() {
-  curJoypad = joypad();
-
   switch (substate) {
   case SUB_INIT:
     phaseRPSInit();
@@ -80,7 +78,6 @@ void oshfRPSMicrogameMain() {
     substate = SUB_INIT;
     break;
   }
-  prevJoypad = curJoypad;
 }
 
 /******************************** SUBSTATE METHODS *******************************/

@@ -71,8 +71,6 @@ static UINT8 buttonToJoypad( BUTTONS b );
 
 void dovesamCodeCrackMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -86,7 +84,6 @@ void dovesamCodeCrackMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 
@@ -171,7 +168,8 @@ static void inputsCode()
             printLine( 2U, 12U, "UNLOCKED", FALSE );
         }
     }
-    else if( ( curJoypad > 0 ) && ( curJoypad != prevJoypad ) && !( curJoypad & GET_CODE ) )
+    else if( ( curJoypad > 0 ) && ( curJoypad != prevJoypad ) && !( curJoypad & GET_CODE ) 
+            && (!(curJoypad & J_START)))
     {
         /* Fill in an attempt, then check if we have lost */
         buttonDraw( 12U + ( 2 * n ), 12U, BUTTON_SMALL_FAIL );

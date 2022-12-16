@@ -46,6 +46,7 @@ extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
+UINT8 pauseAnimTick;
 
 UINT8 lobbyDurationStats;
 UINT8 lobbyDurationLevelUp;
@@ -72,8 +73,11 @@ static void phaseMicrogameManagerInitLobby();
 static void phaseMicrogameManagerLobbyLoop();
 static void phaseMicrogameManagerLobbyLevelUp();
 static void phaseMicrogameManagerLobbyInstructions();
+static void phaseMicrogameManagerPaused();
 
 /* INPUT METHODS */
+static void inputsGameLoop();
+static void inputsPaused();
 
 /* HELPER METHODS */
 static void callMicrogameFunction();
@@ -117,6 +121,9 @@ void microgameManagerStateMain()
         case MGM_LOBBY_LOOP_INSTRUCTIONS:
             phaseMicrogameManagerLobbyInstructions();
             break;
+        case MGM_PAUSED:
+            phaseMicrogameManagerPaused();
+            break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
             substate = SUB_INIT;
@@ -125,40 +132,60 @@ void microgameManagerStateMain()
     prevJoypad = curJoypad;
 }
 
+// This kinda grew out of hand to where it should be refactored into its own state.
+// And even though that'd only take like 5 minutes to do, I'm not going to do it.
+// I won't be touching this file much more until I start a possible sequel project.
+// Therefore, I'm going to leave it as-is.
 void microgameManagerGameLoop()
 {
-    updateTimer();
-    if (mgTimeRemaining <= mgTimerTickSpeed)
+    curJoypad = joypad();
+
+    if (substate == MGM_PAUSED)
     {
-        stopSong();
-        if (mgStatus != WON)
-            mgStatus = LOST;
-
-        if (mgStatus == LOST)
+        ++pauseAnimTick;
+        inputsPaused();
+        animateWin(pauseAnimTick);
+    }
+    else
+    {
+        updateTimer();
+        if (mgTimeRemaining <= mgTimerTickSpeed)
         {
-            --currentLives;
-        }
+            stopSong();
+            if (mgStatus != WON)
+                mgStatus = LOST;
 
-        if (currentLives == 0U)
-        {
-            k = currentScore;  // Using k for this because I am irresponsible and reckless
-            gamestate = STATE_GAMEOVER;
-            substate = SUB_INIT;
-            fadeout();
+            if (mgStatus == LOST)
+            {
+                --currentLives;
+            }
+
+            if (currentLives == 0U)
+            {
+                k = currentScore;  // Using k for this because I am irresponsible and reckless
+                gamestate = STATE_GAMEOVER;
+                substate = SUB_INIT;
+                fadeout();
+            }
+            else
+            {
+                if (currentScore != 255U)
+                    ++currentScore;
+                gamestate = STATE_MICROGAME_MANAGER;
+                substate = MGM_INIT_LOBBY;
+                fadeout();
+
+                loadNewMG();
+            }
         }
         else
         {
-            if (currentScore != 255U)
-                ++currentScore;
-            gamestate = STATE_MICROGAME_MANAGER;
-            substate = MGM_INIT_LOBBY;
-            fadeout();
-
-            loadNewMG();
+            callMicrogameFunction();
+            inputsGameLoop();
         }
     }
-    else
-        callMicrogameFunction();
+
+    prevJoypad = curJoypad;
 }
 
 
@@ -371,27 +398,41 @@ static void phaseMicrogameManagerLobbyInstructions()
 {
     if (++animTick == lobbyDurationInstructions)
         startMG();
+    animateBkg();
 }
 
+static void phaseMicrogameManagerPaused()
+{
+    set_bkg_tile_xy(1,1,0x0A);
+}
 
 /******************************** INPUT METHODS *********************************/
 static void inputsGameLoop()
 {
-    // If pressed start
-    //   Redraw top row of window
-    //   Write "Paused\nContinue\nExit"
-    //   Show full window
-    //   Enter paused substate
+    if (curJoypad & J_START && !(prevJoypad & J_START))
+    {
+        init_win(BKGTILE_SCROLL);
+        drawWinWindow(6U, 7U, 7U, 2U);  // Draw new window
+        printLine(7U, 8U, "PAUSED", TRUE);
+
+        HIDE_SPRITES;
+        move_win(7U, 0U);
+        substate = MGM_PAUSED;
+    }
+
+
 }
 
 static void inputsPaused()
 {
-    // Up/Down to select menu options
-    // If continue or start
-    // //   Redraw timer line, move window to appropriate position (handled by below line?)
-    //   state = STATE_MICROGAME
-    // If exit
-    //   state = main menu
+    if ((curJoypad & J_START && !(prevJoypad & J_START))
+        || (curJoypad & J_B && !(prevJoypad & J_B)))
+    {
+        SHOW_SPRITES;
+        drawTimer();
+        updateTimer();
+        substate = SUB_LOOP;
+    }
 }
 
 /******************************** HELPER METHODS *********************************/
@@ -525,16 +566,18 @@ static void setupLobbyInstructions()
 {
     // Audio
     stopSong();
-    playOutsideSong(PRE_MG_JINGLE_1);
+    r = getRandUint8(4U);
+    playOutsideSong(PRE_MG_JINGLE_1 + r);
 
     // Erase stats text
-    init_bkg(0xFFU);
+    init_bkg(BKGTILE_SCROLL);
 
     // Draw gb cart
     oldBank = CURRENT_BANK;
     SWITCH_ROM(1U);
     set_bkg_data(0x40, engineGBCart_TILE_COUNT, engineGBCart_tiles);
     set_bkg_tiles(2U, 0U, 16U, 18U, engineGBCart_map);
+    set_bkg_tile_xy(17U, 0U, BKGTILE_SCROLL);  // The top right corner notch
     SWITCH_ROM(oldBank);
 
     // Show new instructions

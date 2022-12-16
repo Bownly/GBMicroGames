@@ -69,8 +69,6 @@ static void lostSfx();
 
 void templateFaceMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -84,7 +82,6 @@ void templateFaceMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 
