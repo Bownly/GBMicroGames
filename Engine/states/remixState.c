@@ -28,6 +28,7 @@ extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
 extern UINT8 language;
+extern UINT8 shouldRestartSong;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -230,6 +231,7 @@ static void inputsRemix()
     {
         gamestate = STATE_MAIN_MENU;
         substate = SUB_INIT;
+        shouldRestartSong = TRUE;
         stopSong();
         fadeout();
     }

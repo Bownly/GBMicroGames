@@ -5,9 +5,13 @@
 #include "../enums.h"
 #include "../fade.h"
 #include "../ram.h"
+#include "../songPlayer.h"
+
 #include "../database/microgameData.h"
 #include "../res/tiles/fontTiles.h"
 #include "../res/tiles/alBhedFontTiles.h"
+
+extern const hUGESong_t engineSloopygoopPartyTheme;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -25,6 +29,7 @@ extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
 extern UINT8 language;
+extern UINT8 shouldRestartSong;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -66,11 +71,12 @@ void titleStateMain()
 void phaseTitleInit()
 {
     // Initializations
+    stopSong();
     init_bkg(0xFFU);
     animTick = 0U;
     HIDE_WIN;
     mgCurrentMG.id = 0xFF;
-  
+
     scroll_bkg(-4, 0U);  // For centering the text
 
     printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
@@ -81,6 +87,7 @@ void phaseTitleInit()
 
     substate = SUB_LOOP;
     // fadein();
+    playSong(&engineSloopygoopPartyTheme);
 }
 
 void phaseTitleLoop()
@@ -105,6 +112,7 @@ void phaseTitleLoop()
 
         gamestate = STATE_MAIN_MENU;
         substate = SUB_INIT;
+        shouldRestartSong = FALSE;
     }
     else if (curJoypad & J_SELECT && curJoypad & J_B)
     {

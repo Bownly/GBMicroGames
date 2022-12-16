@@ -8,8 +8,8 @@ C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/fontTiles.o Engine/res/tiles/fontTiles.c
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/alBhedFontTiles.o Engine/res/tiles/alBhedFontTiles.c
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/timerTiles.o Engine/res/tiles/timerTiles.c
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/engineScrollBkgTiles.o Engine/res/tiles/engineScrollBkgTiles.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/darkBorderTiles.o Engine/res/tiles/darkBorderTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGTiles.o Engine/res/tiles/engineDMGTiles.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/darkBorderTiles.o Engine/res/tiles/darkBorderTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineCursorTiles.o Engine/res/tiles/engineCursorTiles.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineMixBorderTiles.o Engine/res/tiles/engineMixBorderTiles.c
 
@@ -20,8 +20,8 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat3Map.o Engine/res/maps/
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineDMGBat4Map.o Engine/res/maps/engineDMGBat4Map.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-bo1 -c -o Engine/o/engineSloopygoopResults.o Engine/res/audio/engineSloopygoopResults.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o Engine/res/audio/engineSloopygoopBoogieWoogieEx.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineSloopygoopPartyTheme.o Engine/res/audio/engineSloopygoopPartyTheme.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o Engine/res/audio/engineSloopygoopBoogieWoogieEx.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/engineLevelUpJingle.o Engine/res/audio/engineLevelUpJingle.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle1.o Engine/res/audio/premgJingle1.c
@@ -60,16 +60,17 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/remixState.o Engine/states/remixSta
 C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 
 @REM Post-jam TODO:
-@REM ✖️ Title screen
+@REM △ Title screen
 @REM    ✖️ Art
+@REM    ◯ Music
 @REM △ Game over screen
 @REM    ✖️ Pretty up the art/presentation
 @REM    ◯ Score score and high score
 @REM △ Fix bugs and stuff
 @REM    ✖️ Playtest every MG and make final tweaks if needed
 @REM    ✖️ Music glitches out again (after 24 points?)
-@REM    ✖️ Play Remix with only 1 MG picks Face Game every time
-@REM    ✖️ Fourth mg loss skips anim and goes right to gameover state
+@REM    ◯ Play Remix with only 1 MG picks Face Game every time
+@REM    ◯ Fourth mg loss skips anim and goes right to gameover state
 @REM    ◯ Level ups (at least for ALL) don't alternate if they start on speed up
 @REM    ◯ Janken -> gameover results in tile glitch
 @REM    ◯(?) Remix state MG select glitches out (due to bank shenanigans)

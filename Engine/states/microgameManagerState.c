@@ -163,20 +163,16 @@ void microgameManagerGameLoop()
             if (currentLives == 0U)
             {
                 k = currentScore;  // Using k for this because I am irresponsible and reckless
-                gamestate = STATE_GAMEOVER;
-                substate = SUB_INIT;
-                fadeout();
             }
             else
             {
                 if (currentScore != 255U)
                     ++currentScore;
-                gamestate = STATE_MICROGAME_MANAGER;
-                substate = MGM_INIT_LOBBY;
-                fadeout();
-
-                loadNewMG();
             }
+
+            gamestate = STATE_MICROGAME_MANAGER;
+            substate = MGM_INIT_LOBBY;
+            fadeout();
         }
         else
         {
@@ -202,10 +198,10 @@ static void phaseInitMicrogameManager()
 
     switch (substate)
     {
-        default:
         case MGM_INIT_SINGLE:
             mgPoolType = SINGLE;
             break;
+        default:
         case MGM_INIT_ALL:
             mgPoolType = ALL;
             break;
@@ -229,20 +225,31 @@ static void phaseInitMicrogameManager()
             mgPool[0U] = mgCurrentMG.id;
             break;
         case REMIX:
-            k = 0U;
+            mgPoolSize = 0U;
             ENABLE_RAM;
             for (i = 0U; i != MICROGAME_COUNT; ++i)
             {
                 l = loadMGToggle(i);
                 if (l == 0U)
                 {
-                    mgPool[k++] = i;
+                    mgPool[mgPoolSize++] = i;
                 }
             }
             DISABLE_RAM;
+            mgHistoryLogSize = mgPoolSize >> 1U;
 
-            mgPoolSize = k;
-            mgHistoryLogSize = k >> 1U;
+            // Switch to ALL if the player tries to get cheeky
+            if (mgPoolSize == 0U)
+            {
+                substate = MGM_INIT_ALL;
+                return;
+            }
+            else if (mgPoolSize == 1U)  // Switch to SINGLE if appropriate
+            {
+                mgCurrentMG.id = mgPool[0U];
+                substate = MGM_INIT_SINGLE;
+                return;
+            }
             break;
     }
     mgHistoryLogInit();
@@ -349,7 +356,20 @@ static void phaseMicrogameManagerLobbyLoop()
             playOutsideSong(LEVEL_UP_JINGLE);
         }
         else
-            setupLobbyInstructions();
+        {
+            if (currentLives == 0U)
+            {
+                k = currentScore;  // Using k for this because I am irresponsible and reckless
+                gamestate = STATE_GAMEOVER;
+                substate = SUB_INIT;
+                fadeout();
+            }
+            else
+            {
+                loadNewMG();
+                setupLobbyInstructions();
+            }
+        }
     }
 }
 
@@ -419,8 +439,6 @@ static void inputsGameLoop()
         move_win(7U, 0U);
         substate = MGM_PAUSED;
     }
-
-
 }
 
 static void inputsPaused()

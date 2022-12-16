@@ -34,6 +34,7 @@ extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
 extern UINT8 language;
+extern UINT8 shouldRestartSong;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -89,7 +90,6 @@ void mainMenuStateMain()
 static void phaseMainMenuInit()
 {
     // Initializations
-    stopSong();
     init_bkg(BKGTILE_SCROLL);
     move_bkg(0U, 0U);
     animTick = 0U;
@@ -127,7 +127,11 @@ static void phaseMainMenuInit()
     substate = SUB_LOOP;
     fadein();
 
-    playSong(&engineSloopygoopPartyTheme);
+    if (shouldRestartSong == TRUE)
+    {
+        stopSong();
+        playSong(&engineSloopygoopPartyTheme);
+    }
 }
 
 static void phaseMainMenuLoop()

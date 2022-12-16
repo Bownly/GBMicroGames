@@ -22,6 +22,7 @@ extern UINT8 substate;
 extern UINT8 mgDifficulty;  // Readonly!
 extern UINT8 mgSpeed;  // Readonly!
 extern UINT8 mgStatus;
+extern UINT8 shouldRestartSong;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
@@ -139,6 +140,7 @@ static void inputsCredits()
         fadeout();
         gamestate = STATE_MAIN_MENU;
         substate = SUB_INIT;
+        shouldRestartSong = FALSE;
     }
 }
 

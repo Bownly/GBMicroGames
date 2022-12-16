@@ -60,7 +60,7 @@ $GBDK_DIR/bin/png2asset Engine/res/sprites/engineABWordRemix.png -spr8x8 -sw 8 -
 $GBDK_DIR/bin/png2asset Engine/res/sprites/engineABWordCredits.png -spr8x8 -sw 8 -sh 16 -b 4 -map -tile_origin 128 -noflip
 
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo0 -c -o Engine/o/microgameManagerState.o Engine/states/microgameManagerState.c
-$GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/titleState.o Engine/states/titleState.c
+$GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/titleState.o Engine/states/titleState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo1 -c -o Engine/o/gameoverState.o Engine/states/gameoverState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/creditsState.o Engine/states/creditsState.c
 $GBDK_DIR/bin/lcc -Wa-l -Wf-bo4 -c -o Engine/o/deleteSaveState.o Engine/states/deleteSaveState.c
