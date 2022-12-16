@@ -24,7 +24,10 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo5 -c -o Engine/o/engineSloopygoopBoogieWoogieEx.o En
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/engineSloopygoopPartyTheme.o Engine/res/audio/engineSloopygoopPartyTheme.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/engineLevelUpJingle.o Engine/res/audio/engineLevelUpJingle.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/lostJingle.o Engine/res/audio/lostJingle.c
-C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle.o Engine/res/audio/premgJingle.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle1.o Engine/res/audio/premgJingle1.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle2.o Engine/res/audio/premgJingle2.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle3.o Engine/res/audio/premgJingle3.c
+C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/premgJingle4.o Engine/res/audio/premgJingle4.c
 C:\gbdk\bin\lcc -Wa-l -Wf-bo14 -c -o Engine/o/wonJingle.o Engine/res/audio/wonJingle.c
 
 C:\gbdk\bin\lcc -Wa-l -c -o Engine/o/common.o Engine/common.c
