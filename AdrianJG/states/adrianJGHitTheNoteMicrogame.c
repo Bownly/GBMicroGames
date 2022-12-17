@@ -44,7 +44,6 @@ static void phaseHitTheNoteInit();
 static void phaseHitTheNoteLoop();
 
 void adrianJGHitTheNoteMicrogameMain() {
-    curJoypad = joypad();
 
     switch (substate)
     {
@@ -60,7 +59,6 @@ void adrianJGHitTheNoteMicrogameMain() {
             break;
     }
 
-    prevJoypad = curJoypad;
 }
 
 /******************************** SUBSTATE METHODS *******************************/

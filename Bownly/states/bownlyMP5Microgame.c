@@ -84,8 +84,6 @@ static void updateFlippingPanels();
 
 void bownlyMP5MicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -99,7 +97,6 @@ void bownlyMP5MicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 
@@ -356,9 +353,7 @@ static void animatePreston()
         animFrame = 6U;
     else if (flipAnimTick != 0U)  // Attack anims
     {
-        // TODO: spot for potential efficiency improvemnt
         if (flipAnimTick == 1U)
-            // animTick = 0U;  // Reset start frame for the idle anim
             animFrame = 3U;
         else if (flipAnimTick == 2U || flipAnimTick == 3U)
             animFrame = 3U;

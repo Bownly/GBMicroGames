@@ -7,12 +7,15 @@
 #include <gbdk/metasprites.h>
 
 #define dovesamPaddleArena_TILE_ORIGIN 0
+#define dovesamPaddleArena_TILE_W 8
 #define dovesamPaddleArena_TILE_H 8
 #define dovesamPaddleArena_WIDTH 160
 #define dovesamPaddleArena_HEIGHT 144
 #define dovesamPaddleArena_TILE_COUNT 6
+#define dovesamPaddleArena_PALETTE_COUNT 1
+#define dovesamPaddleArena_COLORS_PER_PALETTE 4
+#define dovesamPaddleArena_TOTAL_COLORS 4
 #define dovesamPaddleArena_MAP_ATTRIBUTES 0
-#define dovesamPaddleArena_TILE_PALS dovesamPaddleArena_tile_pals
 
 BANKREF_EXTERN(dovesamPaddleArena)
 
@@ -20,6 +23,5 @@ extern const palette_color_t dovesamPaddleArena_palettes[4];
 extern const uint8_t dovesamPaddleArena_tiles[96];
 
 extern const unsigned char dovesamPaddleArena_map[360];
-extern const unsigned char* dovesamPaddleArena_tile_pals[6];
 
 #endif

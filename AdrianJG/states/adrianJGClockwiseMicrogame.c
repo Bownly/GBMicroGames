@@ -76,7 +76,6 @@ static void moveArms(UINT8 characterIndex, DIRECTIONS direction);
 static void playerControl(DIRECTIONS direction);
 
 void adrianJGClockwiseMicrogameMain() {
-    curJoypad = joypad();
 
     switch (substate)
     {
@@ -92,7 +91,6 @@ void adrianJGClockwiseMicrogameMain() {
             break;
     }
 
-    prevJoypad = curJoypad;
 }
 
 /******************************** SUBSTATE METHODS *******************************/

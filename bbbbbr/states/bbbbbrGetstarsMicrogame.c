@@ -217,7 +217,6 @@ inline void setLevelWon(void) {
 
 void bbbbbrGetStarsMicrogameMain()
 {
-    curJoypad = joypad();
 
     switch (substate)
     {
@@ -232,7 +231,6 @@ void bbbbbrGetStarsMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
     // TODO: Cleanup
     // Restore previous sprite mode
     // LCDC_REG |= sprite_mode_save;

@@ -89,8 +89,6 @@ static void respawnGhost();
 
 void synchingFeelingGhostMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -104,7 +102,6 @@ void synchingFeelingGhostMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    //prevJoypad = curJoypad;
 }
 
 

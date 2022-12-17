@@ -111,8 +111,6 @@ static void sfxHurt();
 
 void bownlyPastelDodgeMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -126,7 +124,6 @@ void bownlyPastelDodgeMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

@@ -44,7 +44,7 @@ Link to the jam page on Itch: [https://itch.io/jam/gb-microgames-jam](https://it
 
 
 ## Misc guidelines and tips
-- If you end up getting errors to the effect of "missing file: Engine/o/whatever", create a folder called "o" inside the Bownly, Engine, and Template folders.
+- By the way, though the project is built using GBDK 4.0.6, it uses the png2asset exe from a later GBDK version (4.1.0). Using a 4.0.6 or older version of png2asset have no effect on the development on any individual microgame, and will only result in a visual glitch on the remix screen when toggling a microgame on or off.
 - Look for *actual template cart art.png* inside */Template/cart art*. For each microgame you make, include an edit of that pic. Don't worry about putting it into the rom or anything. I'll do all of that during the post-jam compilation steps. The only restrictions are that you keep the outline intact, and don't touch the two rows of white pixels towards the top.
 - Preface as many files and variables as possible with your username to avoid multiple definition errors. And/or make your variables static when appropriate, for similar reasons.
 - Use any and all of the code in the codebase as reference material as much as you'd like. Heck, that's exactly what the entire Template folder is there for.

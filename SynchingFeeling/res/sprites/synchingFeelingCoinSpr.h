@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define synchingFeelingCoinSpr_TILE_ORIGIN 0
+#define synchingFeelingCoinSpr_TILE_W 8
 #define synchingFeelingCoinSpr_TILE_H 8
 #define synchingFeelingCoinSpr_WIDTH 16
 #define synchingFeelingCoinSpr_HEIGHT 16
 #define synchingFeelingCoinSpr_TILE_COUNT 8
+#define synchingFeelingCoinSpr_PALETTE_COUNT 1
+#define synchingFeelingCoinSpr_COLORS_PER_PALETTE 4
+#define synchingFeelingCoinSpr_TOTAL_COLORS 4
 #define synchingFeelingCoinSpr_PIVOT_X 8
 #define synchingFeelingCoinSpr_PIVOT_Y 8
 #define synchingFeelingCoinSpr_PIVOT_W 16

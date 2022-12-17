@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprBee_TILE_ORIGIN 0
+#define bownlySprBee_TILE_W 8
 #define bownlySprBee_TILE_H 8
 #define bownlySprBee_WIDTH 16
 #define bownlySprBee_HEIGHT 16
 #define bownlySprBee_TILE_COUNT 8
+#define bownlySprBee_PALETTE_COUNT 1
+#define bownlySprBee_COLORS_PER_PALETTE 4
+#define bownlySprBee_TOTAL_COLORS 4
 #define bownlySprBee_PIVOT_X 8
 #define bownlySprBee_PIVOT_Y 0
 #define bownlySprBee_PIVOT_W 16

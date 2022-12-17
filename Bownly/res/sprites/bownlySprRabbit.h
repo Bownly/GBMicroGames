@@ -7,12 +7,15 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprRabbit_TILE_ORIGIN 48
+#define bownlySprRabbit_TILE_W 8
 #define bownlySprRabbit_TILE_H 8
 #define bownlySprRabbit_WIDTH 32
 #define bownlySprRabbit_HEIGHT 160
 #define bownlySprRabbit_TILE_COUNT 62
+#define bownlySprRabbit_PALETTE_COUNT 1
+#define bownlySprRabbit_COLORS_PER_PALETTE 4
+#define bownlySprRabbit_TOTAL_COLORS 4
 #define bownlySprRabbit_MAP_ATTRIBUTES 0
-#define bownlySprRabbit_TILE_PALS bownlySprRabbit_tile_pals
 
 BANKREF_EXTERN(bownlySprRabbit)
 
@@ -20,6 +23,5 @@ extern const palette_color_t bownlySprRabbit_palettes[4];
 extern const uint8_t bownlySprRabbit_tiles[992];
 
 extern const unsigned char bownlySprRabbit_map[80];
-extern const unsigned char* bownlySprRabbit_tile_pals[62];
 
 #endif

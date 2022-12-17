@@ -61,8 +61,6 @@ static void sfxNibble();
 
 void bownlyCarrotMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -76,7 +74,6 @@ void bownlyCarrotMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

@@ -80,8 +80,6 @@ static void playCollisionSfx();
 
 void bownlyThingyMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -95,7 +93,6 @@ void bownlyThingyMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

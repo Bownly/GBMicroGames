@@ -63,8 +63,6 @@ static void checkCollision();
 /*DISPLAY METHODS */
 
 void oshfHBMicrogameMain() {
-  curJoypad = joypad();
-
   switch (substate) {
   case SUB_INIT:
     phaseHBInit();
@@ -77,8 +75,6 @@ void oshfHBMicrogameMain() {
     substate = SUB_INIT;
     break;
   }
-
-  prevJoypad = curJoypad;
 }
 
 /********************************SUBSTATE METHODS *******************************/

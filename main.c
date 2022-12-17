@@ -7,12 +7,18 @@
 #include "Engine/ram.h"
 
 #include "Engine/structs/Microgame.h"
-#include "Engine/states/microgameManagerState.h"
-#include "Engine/states/titleState.h"
-#include "Engine/states/gameoverState.h"
 
-extern const unsigned char borderTiles[];
-extern const unsigned char fontTiles[];
+#include "Engine/states/creditsState.h"
+#include "Engine/states/deleteSaveState.h"
+#include "Engine/states/gameoverState.h"
+#include "Engine/states/mainMenuState.h"
+#include "Engine/states/microgameManagerState.h"
+#include "Engine/states/remixState.h"
+#include "Engine/states/titleState.h"
+
+#include "Engine/res/tiles/borderTiles.h"
+#include "Engine/res/tiles/fontTiles.h"
+#include "Engine/res/tiles/alBhedFontTiles.h"
 
 // Save data stuff
 const UBYTE RAM_SIG[4U] = {'G','B','M','G'};
@@ -31,10 +37,15 @@ UINT8 r;  // Used for randomization stuff
 
 UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
+UINT8 oldBank;
+UINT8 curSongBank;
 UINT8 mgDifficulty = 0U;
 UINT8 mgSpeed = 0U;
 UINT8 mgStatus;
 Microgame mgCurrentMG;
+MGPOOLTYPE mgPoolType;
+UINT8 language;
+UINT8 shouldRestartSong;
 
 UINT8 animFrame = 0U;
 UINT8 animTick = 0U;
@@ -50,10 +61,18 @@ void main()
     NR52_REG = 0x80; // is 1000 0000 in binary and turns on sound
     NR50_REG = 0x77; // sets the volume for both left and right channel just set to max 0x77
     NR51_REG = 0xFF; // is 1111 1111 in binary, select which chanels we want to use in this case all of them. One bit for the L one bit for the R of all four channels
-    set_interrupts(TIM_IFLAG | VBL_IFLAG);
- 
+    set_interrupts(LCD_IFLAG | TIM_IFLAG | VBL_IFLAG);
+    shouldRestartSong = TRUE;
+    
     set_bkg_data(0xF0U, 8U, borderTiles);
-    set_bkg_data(0U, 46U, fontTiles);
+
+    ENABLE_RAM;
+    language = loadLanguageSetting();
+    if (language == 1U)
+        set_bkg_data(0U, 46U, alBhedFontTiles);
+    else
+        set_bkg_data(0U, 46U, fontTiles);
+    DISABLE_RAM;
 
     init_bkg(0xFFU);
     DISPLAY_ON;
@@ -72,20 +91,36 @@ void main()
         switch(gamestate)
         {
             case STATE_TITLE:
-                SWITCH_ROM(1U);
+                SWITCH_ROM(4U);
                 titleStateMain();
                 break;
             case STATE_MAIN_MENU:
+                SWITCH_ROM(4U);
+                mainMenuStateMain();
+                break;
+            case STATE_DELETE_SAVE:
+                SWITCH_ROM(4U);
+                deleteSaveStateMain();
                 break;
             case STATE_MICROGAME_MANAGER:
+                // SWITCH_ROM(0U);
                 microgameManagerStateMain();
                 break;
             case STATE_MICROGAME:
                 microgameManagerGameLoop();
                 break;
-            case STATE_GAMEOVER:
+            case STATE_REMIX:
                 SWITCH_ROM(4U);
+                remixStateMain();
+                SWITCH_ROM(5U);  // The song data lies in bank 5
+                break;
+            case STATE_GAMEOVER:
+                SWITCH_ROM(1U);
                 gameoverStateMain();
+                break;
+            case STATE_CREDITS:
+                SWITCH_ROM(4U);
+                creditsStateMain();
                 break;
         }
     }

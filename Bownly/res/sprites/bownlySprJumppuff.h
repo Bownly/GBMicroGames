@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprJumppuff_TILE_ORIGIN 0
+#define bownlySprJumppuff_TILE_W 8
 #define bownlySprJumppuff_TILE_H 8
 #define bownlySprJumppuff_WIDTH 16
 #define bownlySprJumppuff_HEIGHT 8
 #define bownlySprJumppuff_TILE_COUNT 8
+#define bownlySprJumppuff_PALETTE_COUNT 1
+#define bownlySprJumppuff_COLORS_PER_PALETTE 4
+#define bownlySprJumppuff_TOTAL_COLORS 4
 #define bownlySprJumppuff_PIVOT_X 8
 #define bownlySprJumppuff_PIVOT_Y 0
 #define bownlySprJumppuff_PIVOT_W 16

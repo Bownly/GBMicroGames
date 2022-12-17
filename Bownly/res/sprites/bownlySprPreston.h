@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define bownlySprPreston_TILE_ORIGIN 0
+#define bownlySprPreston_TILE_W 8
 #define bownlySprPreston_TILE_H 8
 #define bownlySprPreston_WIDTH 16
 #define bownlySprPreston_HEIGHT 16
 #define bownlySprPreston_TILE_COUNT 52
+#define bownlySprPreston_PALETTE_COUNT 1
+#define bownlySprPreston_COLORS_PER_PALETTE 4
+#define bownlySprPreston_TOTAL_COLORS 4
 #define bownlySprPreston_PIVOT_X 0
 #define bownlySprPreston_PIVOT_Y 0
 #define bownlySprPreston_PIVOT_W 16

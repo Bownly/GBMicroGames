@@ -5,11 +5,13 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+#include "../ram.h"
 #include "../songPlayer.h"
 #include "../database/microgameData.h"
 #include "../structs/Microgame.h"
 #include "../res/tiles/borderTiles.h"
 #include "../res/tiles/fontTiles.h"
+#include "../res/tiles/alBhedFontTiles.h"
 #include "../res/tiles/timerTiles.h"
 #include "../res/tiles/engineDMGTiles.h"
 #include "../res/maps/engineDMGBat0Map.h"
@@ -22,9 +24,6 @@
 
 #include "../../Template/states/templateFaceMicrogame.h"
 
-extern const hUGESong_t premgJingle;
-extern const hUGESong_t wonJingle;
-extern const hUGESong_t lostJingle;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -38,42 +37,63 @@ extern UINT8 r;  // Used for randomization stuff
 
 extern UINT8 gamestate;
 extern UINT8 substate;
+extern UINT8 oldBank;
 extern UINT8 mgDifficulty;
 extern UINT8 mgSpeed;
 extern UINT8 mgStatus;
 extern Microgame mgCurrentMG;
+extern UINT8 language;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
+UINT8 pauseAnimTick;
 
-UINT8 lobbyDurationStats = 90U;
-UINT8 lobbyDurationInstructions = 90U;
+UINT8 lobbyDurationStats;
+UINT8 lobbyDurationLevelUp;
+UINT8 lobbyDurationInstructions;
+
+UINT8 isLeveling;
+UINT8 levelSpeedNext;
 
 UINT8 currentLives;
 UINT8 currentScore;
 UINT16 mgTimeRemaining;  // 160px * 16 (big number)
 UINT8 mgTimerTickSpeed;
 
-UINT8 transitionTimer;
-#define TRANSITION_DURATION 60U
+extern MGPOOLTYPE mgPoolType;
+UINT8 mgPoolSize;
+UINT8 mgPool[MICROGAME_COUNT];
+UINT8 mgHistoryLog[MICROGAME_COUNT];
+UINT8 mgHistoryLogSize;
 
 
 /* SUBSTATE METHODS */
-void phaseInitMicrogameManager();
-void phaseMicrogameManagerInitLobby();
-void phaseMicrogameManagerLobbyLoop();
+static void phaseInitMicrogameManager();
+static void phaseMicrogameManagerInitLobby();
+static void phaseMicrogameManagerLobbyLoop();
+static void phaseMicrogameManagerLobbyLevelUp();
+static void phaseMicrogameManagerLobbyInstructions();
+static void phaseMicrogameManagerPaused();
 
 /* INPUT METHODS */
+static void inputsGameLoop();
+static void inputsPaused();
 
 /* HELPER METHODS */
-void callMicrogameFunction();
-void loadNewMG(MICROGAME);
-void startMG();
+static void callMicrogameFunction();
+static void handleLevelUps();
+static void levelUpDifficulty();
+static void levelUpSpeed();
+static void loadNewMG();
+static void mgHistoryLogInit();
+static void mgHistoryLogPush(UINT8);
+static void setupLobbyInstructions();
+static void startMG();
 
 /* DISPLAY METHODS */
-void drawBattery(UINT8);
-void drawTimer();
-void updateTimer();
+static void drawBattery(UINT8);
+static void drawTimer();
+static void updateTimer();
 
 
 /******************************** PUBLIC METHODS *********************************/
@@ -84,12 +104,25 @@ void microgameManagerStateMain()
     switch (substate)
     {
         case SUB_INIT:
-            phaseInitMicrogameManager();
+        case MGM_INIT_SINGLE:
+        case MGM_INIT_ALL:
+        case MGM_INIT_REMIX:
+             phaseInitMicrogameManager();
             break;
         case MGM_INIT_LOBBY:
             phaseMicrogameManagerInitLobby();
-        case SUB_LOOP:
+            break;
+        case MGM_LOBBY_LOOP:
             phaseMicrogameManagerLobbyLoop();
+            break;
+        case MGM_LOBBY_LOOP_LEVELUP:
+            phaseMicrogameManagerLobbyLevelUp();
+            break;
+        case MGM_LOBBY_LOOP_INSTRUCTIONS:
+            phaseMicrogameManagerLobbyInstructions();
+            break;
+        case MGM_PAUSED:
+            phaseMicrogameManagerPaused();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -99,75 +132,150 @@ void microgameManagerStateMain()
     prevJoypad = curJoypad;
 }
 
+// This kinda grew out of hand to where it should be refactored into its own state.
+// And even though that'd only take like 5 minutes to do, I'm not going to do it.
+// I won't be touching this file much more until I start a possible sequel project.
+// Therefore, I'm going to leave it as-is.
 void microgameManagerGameLoop()
 {
-    updateTimer();
-    if (mgTimeRemaining <= mgTimerTickSpeed)
+    curJoypad = joypad();
+
+    if (substate == MGM_PAUSED)
     {
-        stopSong();
-        if (mgStatus != WON)
-            mgStatus = LOST;
-
-        if (mgStatus == LOST)
+        ++pauseAnimTick;
+        inputsPaused();
+        animateWin(pauseAnimTick);
+    }
+    else
+    {
+        updateTimer();
+        if (mgTimeRemaining <= mgTimerTickSpeed)
         {
-            --currentLives;
-        }
+            stopSong();
+            if (mgStatus != WON)
+                mgStatus = LOST;
 
-        if (currentLives == 0U)
-        {
-            k = currentScore;  // Using k for this because I am irresponsible and reckless
-            gamestate = STATE_GAMEOVER;
-            substate = SUB_INIT;
+            if (mgStatus == LOST)
+            {
+                --currentLives;
+            }
+
+            if (currentLives == 0U)
+            {
+                k = currentScore;  // Using k for this because I am irresponsible and reckless
+            }
+            else
+            {
+                if (currentScore != 255U)
+                    ++currentScore;
+            }
+
+            gamestate = STATE_MICROGAME_MANAGER;
+            substate = MGM_INIT_LOBBY;
             fadeout();
         }
         else
         {
-            ++currentScore;
-        gamestate = STATE_MICROGAME_MANAGER;
-        substate = MGM_INIT_LOBBY;
-        fadeout();
-
-        // TEST stuff
-        mgDifficulty = currentScore % 3U;
-        // mgDifficulty = (currentScore / 3U) % 3U;
-        mgSpeed = (currentScore / 3U) % 3U;
-        // mgSpeed = currentScore % 3U;
-            // loadNewMG(getRandUint8(4U));
+            callMicrogameFunction();
+            inputsGameLoop();
         }
     }
-    else
-        callMicrogameFunction();
+
+    prevJoypad = curJoypad;
 }
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseInitMicrogameManager()
+static void phaseInitMicrogameManager()
 {
     // Initializations
     currentLives = 4U;
     currentScore = 0U;
     mgDifficulty = 0U;
     mgSpeed = 0U;
+    r = getRandUint8(2U);
+    levelSpeedNext = r % 2U;
+
+    switch (substate)
+    {
+        case MGM_INIT_SINGLE:
+            mgPoolType = SINGLE;
+            break;
+        default:
+        case MGM_INIT_ALL:
+            mgPoolType = ALL;
+            break;
+        case MGM_INIT_REMIX:
+            mgPoolType = REMIX;
+            break;
+    }
+
+    switch (mgPoolType)
+    {
+        default:
+        case ALL:
+            mgHistoryLogSize = MICROGAME_COUNT >> 1U;
+            mgPoolSize = MICROGAME_COUNT;
+            for (i = 0U; i != MICROGAME_COUNT; ++i)
+                mgPool[i] = i;
+            break;
+        case SINGLE:
+            mgHistoryLogSize = 1U;
+            mgPoolSize = 1U;
+            mgPool[0U] = mgCurrentMG.id;
+            break;
+        case REMIX:
+            mgPoolSize = 0U;
+            ENABLE_RAM;
+            for (i = 0U; i != MICROGAME_COUNT; ++i)
+            {
+                l = loadMGToggle(i);
+                if (l == 0U)
+                {
+                    mgPool[mgPoolSize++] = i;
+                }
+            }
+            DISABLE_RAM;
+            mgHistoryLogSize = mgPoolSize >> 1U;
+
+            // Switch to ALL if the player tries to get cheeky
+            if (mgPoolSize == 0U)
+            {
+                substate = MGM_INIT_ALL;
+                return;
+            }
+            else if (mgPoolSize == 1U)  // Switch to SINGLE if appropriate
+            {
+                mgCurrentMG.id = mgPool[0U];
+                substate = MGM_INIT_SINGLE;
+                return;
+            }
+            break;
+    }
+    mgHistoryLogInit();
 
     stopSong();
 
-    loadNewMG(MG_TEMPLATE_FACE);  // Edit this line with your MG's enum for testing purposes
+    loadNewMG();  // Edit this line with your MG's enum for testing purposes
     
     substate = MGM_INIT_LOBBY;
 }
 
-void phaseMicrogameManagerInitLobby()
+static void phaseMicrogameManagerInitLobby()
 {
     SWITCH_ROM(1U);
 
     // Reload graphics
     move_bkg(0U, 0U);
-    set_bkg_data(0U, 46U, fontTiles);
     set_bkg_data(0xF0U, 8U, borderTiles);
     set_bkg_data(0xFCU, 3U, timerTiles);
+    
+    if (language == 1U)
+        set_bkg_data(0U, 46U, alBhedFontTiles);
+    else
+        set_bkg_data(0U, 46U, fontTiles);
 
     // Draw dmg bezel
-    // init_bkg(0xFFU);
     set_bkg_data(0x30, 7U, engineDMGTiles);
     set_bkg_data(0x90, engineDMGBezel_TILE_COUNT, engineDMGBezel_tiles);
     set_bkg_tiles(0U, 0U, 20U, 18U, engineDMGBezel_map);
@@ -179,11 +287,11 @@ void phaseMicrogameManagerInitLobby()
             break;
         case WON:
             printLine(6U, 4U, "NICE ONE!", FALSE);
-            playSong(&wonJingle);
+            playOutsideSong(WON_JINGLE_1);
             break;
         case LOST:
             printLine(6U, 4U, "BUMMER!", FALSE);
-            playSong(&lostJingle);
+            playOutsideSong(LOST_JINGLE_1);
             break;
     }
 
@@ -194,28 +302,36 @@ void phaseMicrogameManagerInitLobby()
 
     lobbyDurationStats = 100U - mgSpeed * 9U;
     lobbyDurationInstructions = 95U - mgSpeed * 9U;
+    lobbyDurationLevelUp = 120U - mgSpeed * 9U;
     
     HIDE_WIN;
     
-    substate = SUB_LOOP;
+    substate = MGM_LOBBY_LOOP;
 
     drawBattery(currentLives);
 
-    // TEMP STUFF TODO: delete me
+    // Print stats
     printLine(6U, 7U, "SCORE:", FALSE);
-    // printLine(6U, 8U, "LIVES:", FALSE);
     printLine(6U, 8U, "SPEED:", FALSE);
     printLine(6U, 9U, "LEVEL:", FALSE);
+    set_bkg_tile_xy(12U, 7U, currentScore/100U);
+    set_bkg_tile_xy(13U, 7U, (currentScore/10U)%10U);
+    set_bkg_tile_xy(14U, 7U, currentScore%10U);
+    set_bkg_tile_xy(12U, 8U, mgSpeed + 1U);
+    set_bkg_tile_xy(12U, 9U, mgDifficulty + 1U);
+
+    isLeveling = FALSE;
+    handleLevelUps();
 
     fadein();
 }
 
-void phaseMicrogameManagerLobbyLoop()
+static void phaseMicrogameManagerLobbyLoop()
 {
     ++animTick;
 
     // TODO: Animate score increase visuals
-    if (animTick < lobbyDurationStats)
+    if (animTick != lobbyDurationStats)
     {
         if (mgStatus == LOST)
         {
@@ -228,19 +344,61 @@ void phaseMicrogameManagerLobbyLoop()
                     drawBattery(currentLives + 1U);
             }
         }
-
-        set_bkg_tile_xy(12U, 7U, currentScore/100U);
-        set_bkg_tile_xy(13U, 7U, (currentScore/10U)%10U);
-        set_bkg_tile_xy(14U, 7U, currentScore%10U);
-
-        // set_bkg_tile_xy(12U, 8U, currentLives);
-        // set_bkg_tile_xy(12U, 8U, currentLives);
-        
-        set_bkg_tile_xy(12U, 8U, mgSpeed);
-        set_bkg_tile_xy(12U, 9U, mgDifficulty);
-
     }
-    else if (animTick == lobbyDurationStats)
+    else
+    {
+        animTick = 0U;
+        if (isLeveling == TRUE)
+        {
+            substate = MGM_LOBBY_LOOP_LEVELUP;
+
+            stopSong();
+            playOutsideSong(LEVEL_UP_JINGLE);
+        }
+        else
+        {
+            if (currentLives == 0U)
+            {
+                k = currentScore;  // Using k for this because I am irresponsible and reckless
+                gamestate = STATE_GAMEOVER;
+                substate = SUB_INIT;
+                fadeout();
+            }
+            else
+            {
+                loadNewMG();
+                setupLobbyInstructions();
+            }
+        }
+    }
+}
+
+static void phaseMicrogameManagerLobbyLevelUp()
+{
+    ++animTick;
+    if (animTick != lobbyDurationLevelUp)
+    {
+        // Make text blink
+        if ((animTick % 16U) >> 3U == 0U)
+        {
+            for (i = 6U; i != 13U; ++i)
+                set_bkg_tile_xy(i, 8U + levelSpeedNext, 0xFFU);
+        }
+        else
+        {
+            if (levelSpeedNext == FALSE)
+            {
+                printLine(6U, 8U, "SPEED:", FALSE);
+                set_bkg_tile_xy(12U, 8U, mgSpeed + 1U);
+            }
+            else
+            {
+                printLine(6U, 9U, "LEVEL:", FALSE);
+                set_bkg_tile_xy(12U, 9U, mgDifficulty + 1U);
+            }
+        }
+    }
+    else
     {
         if (currentLives == 0U)  // If we need to gameover
         {
@@ -251,38 +409,52 @@ void phaseMicrogameManagerLobbyLoop()
         }
         else
         {
-            stopSong();
-            playSong(&premgJingle);
-
-            // Erase stats text
-            init_bkg(0xFFU);
-
-            // Draw gb cart
-            set_bkg_data(0x40, engineGBCart_TILE_COUNT, engineGBCart_tiles);
-            set_bkg_tiles(2U, 0U, 16U, 18U, engineGBCart_map);
-
-            // Show new instructions
-            k = 0U;
-            while (mgCurrentMG.instructionsPtr[k] != 0U)
-                ++k;
-            l = (20U - k) >> 1U;
-            // drawPopupWindow(l-1U, 7U, k+1U, 2U);
-            printLine(l, 10U, mgCurrentMG.instructionsPtr, FALSE);
+            setupLobbyInstructions();
         }
     }
-    else if (animTick == (lobbyDurationStats + lobbyDurationInstructions))
-    {
-        startMG();
-    }
-
 }
 
+static void phaseMicrogameManagerLobbyInstructions()
+{
+    if (++animTick == lobbyDurationInstructions)
+        startMG();
+    animateBkg();
+}
+
+static void phaseMicrogameManagerPaused()
+{
+    set_bkg_tile_xy(1,1,0x0A);
+}
 
 /******************************** INPUT METHODS *********************************/
+static void inputsGameLoop()
+{
+    if (curJoypad & J_START && !(prevJoypad & J_START))
+    {
+        init_win(BKGTILE_SCROLL);
+        drawWinWindow(6U, 7U, 7U, 2U);  // Draw new window
+        printLine(7U, 8U, "PAUSED", TRUE);
 
+        HIDE_SPRITES;
+        move_win(7U, 0U);
+        substate = MGM_PAUSED;
+    }
+}
+
+static void inputsPaused()
+{
+    if ((curJoypad & J_START && !(prevJoypad & J_START))
+        || (curJoypad & J_B && !(prevJoypad & J_B)))
+    {
+        SHOW_SPRITES;
+        drawTimer();
+        updateTimer();
+        substate = SUB_LOOP;
+    }
+}
 
 /******************************** HELPER METHODS *********************************/
-void callMicrogameFunction()
+static void callMicrogameFunction()
 {
     SWITCH_ROM(mgCurrentMG.bankId);
     switch (mgCurrentMG.id)
@@ -301,23 +473,148 @@ void callMicrogameFunction()
     }
 }
 
-void loadNewMG(MICROGAME newMicrogame)
+static void handleLevelUps()
 {
-    mgCurrentMG.id = newMicrogame;
-    mgCurrentMG.bankId = microgameDex[newMicrogame].bankId;
-    mgCurrentMG.namePtr = microgameDex[newMicrogame].namePtr;
-    mgCurrentMG.bylinePtr = microgameDex[newMicrogame].bylinePtr;
-    mgCurrentMG.instructionsPtr = microgameDex[newMicrogame].instructionsPtr;
-    mgCurrentMG.duration = microgameDex[newMicrogame].duration;
+    if (currentScore != 0U)
+    {
+        if (mgPoolType == SINGLE)
+        {
+            mgDifficulty = currentScore % 3U;
+            if (mgSpeed != 2U)
+            {
+                if (currentScore % 8U == 0U)
+                    levelUpSpeed();
+            }
+
+            // Putting this here because there's no level up animation for difficulty in SINGLE mode
+            set_bkg_tile_xy(12U, 9U, mgDifficulty + 1U);
+        }
+        else  // ALL/REMIX
+        {
+            if (currentScore % 8U == 0U)
+            {
+                if (levelSpeedNext == FALSE)
+                {
+                    levelUpDifficulty();
+                    levelSpeedNext = TRUE;
+                }
+                else
+                {
+                    levelUpSpeed();
+                    levelSpeedNext = FALSE;
+                }
+            }
+        }
+    }
 }
 
-void startMG()
+static void levelUpDifficulty()
+{
+    if (mgDifficulty != 2U)
+    {
+        ++mgDifficulty;
+        isLeveling = TRUE;
+    }
+    else
+        isLeveling = FALSE;
+}
+
+static void levelUpSpeed()
+{
+    if (mgSpeed != 2U)
+    {
+        ++mgSpeed;
+        isLeveling = TRUE;
+    }
+    else
+        isLeveling = FALSE;
+}
+
+static void loadNewMG()
+{
+    if (mgPoolSize != 1U)
+    {
+        l = FALSE;
+        while (l == FALSE)
+        {
+            r = getRandUint8(mgPoolSize);
+            r = mgPool[r];
+
+            l = TRUE;
+            for (i = 0U; i != mgHistoryLogSize; ++i)
+            {
+                if (mgHistoryLog[i] == r)
+                    l = FALSE;
+            }
+        }
+        mgHistoryLogPush(r);
+    }
+    else
+        r = mgCurrentMG.id;
+
+    mgCurrentMG.id = r;
+    mgCurrentMG.bankId = microgameDex[r].bankId;
+    mgCurrentMG.namePtr = microgameDex[r].namePtr;
+    mgCurrentMG.bylinePtr = microgameDex[r].bylinePtr;
+    mgCurrentMG.instructionsPtr = microgameDex[r].instructionsPtr;
+    mgCurrentMG.duration = microgameDex[r].duration;
+}
+
+static void mgHistoryLogInit()
+{
+    for (i = 0U; i != mgHistoryLogSize; ++i)
+    {
+        mgHistoryLog[i] = 0xFF;
+    }
+}
+
+static void mgHistoryLogPush(UINT8 mgId)
+{
+    // Shift existing entries to the right
+    for (i = 0U; i != mgHistoryLogSize - 1U; ++i)
+    {
+        mgHistoryLog[i] = mgHistoryLog[i + 1U];
+    }
+
+    // Add new entry
+    mgHistoryLog[mgHistoryLogSize - 1U] = mgId;
+}
+
+static void setupLobbyInstructions()
+{
+    // Audio
+    stopSong();
+    r = getRandUint8(4U);
+    playOutsideSong(PRE_MG_JINGLE_1 + r);
+
+    // Erase stats text
+    init_bkg(BKGTILE_SCROLL);
+
+    // Draw gb cart
+    oldBank = CURRENT_BANK;
+    SWITCH_ROM(1U);
+    set_bkg_data(0x40, engineGBCart_TILE_COUNT, engineGBCart_tiles);
+    set_bkg_tiles(2U, 0U, 16U, 18U, engineGBCart_map);
+    set_bkg_tile_xy(17U, 0U, BKGTILE_SCROLL);  // The top right corner notch
+    SWITCH_ROM(oldBank);
+
+    // Show new instructions
+    k = 0U;
+    while (mgCurrentMG.instructionsPtr[k] != 0U)
+        ++k;
+    l = (20U - k) >> 1U;
+    printLine(l, 10U, mgCurrentMG.instructionsPtr, FALSE);
+
+    animTick = 0U;
+    substate = MGM_LOBBY_LOOP_INSTRUCTIONS;
+}
+
+static void startMG()
 {
     fadeout();
     stopSong();
     SHOW_WIN;
     drawTimer();
-    transitionTimer = 0U;
     gamestate = STATE_MICROGAME;
     substate = SUB_INIT;
     mgStatus = PLAYING;
@@ -325,9 +622,11 @@ void startMG()
 
 
 /******************************** DISPLAY METHODS ********************************/
-void drawBattery(UINT8 lives)
+static void drawBattery(UINT8 lives)
 {
-    // unsigned char engineDMGBat0Map[];
+    oldBank = CURRENT_BANK;
+    SWITCH_ROM(1U);
+
     switch (lives)
     {
         default:
@@ -347,9 +646,12 @@ void drawBattery(UINT8 lives)
             set_bkg_tiles(1U, 4U, 1U, 5U, engineDMGBat4Map);
             break;
     }
+    
+    SWITCH_ROM(oldBank);
+
 }
 
-void drawTimer()
+static void drawTimer()
 {
     set_win_tile_xy(0U, 0U, 0xFCU);  // Left end
     for (i = 1U; i != 21U; ++i)
@@ -359,7 +661,7 @@ void drawTimer()
     move_win(0U, 136U);
 }
 
-void updateTimer()
+static void updateTimer()
 {
     mgTimeRemaining -= mgTimerTickSpeed;
     move_win((160U - (mgTimeRemaining >> 4U)), 136U);

@@ -7,10 +7,14 @@
 #include <gbdk/metasprites.h>
 
 #define synchingFeelingGhostSpr_TILE_ORIGIN 0
+#define synchingFeelingGhostSpr_TILE_W 8
 #define synchingFeelingGhostSpr_TILE_H 8
 #define synchingFeelingGhostSpr_WIDTH 16
 #define synchingFeelingGhostSpr_HEIGHT 16
 #define synchingFeelingGhostSpr_TILE_COUNT 25
+#define synchingFeelingGhostSpr_PALETTE_COUNT 1
+#define synchingFeelingGhostSpr_COLORS_PER_PALETTE 4
+#define synchingFeelingGhostSpr_TOTAL_COLORS 4
 #define synchingFeelingGhostSpr_PIVOT_X 8
 #define synchingFeelingGhostSpr_PIVOT_Y 8
 #define synchingFeelingGhostSpr_PIVOT_W 16

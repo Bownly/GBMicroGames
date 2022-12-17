@@ -78,8 +78,6 @@ static void j_animateThumbs(UINT8 i);
 
 void joaoSaveTheKidsMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -93,7 +91,6 @@ void joaoSaveTheKidsMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 

@@ -85,8 +85,6 @@ static void sfxFlap();
 
 void bownlyFlappyBeronMicrogameMain()
 {
-    curJoypad = joypad();
-
     switch (substate)
     {
         case SUB_INIT:
@@ -100,7 +98,6 @@ void bownlyFlappyBeronMicrogameMain()
             substate = SUB_INIT;
             break;
     }
-    prevJoypad = curJoypad;
 }
 
 
@@ -148,7 +145,7 @@ static void phaseFlappyBeronInit()
     {
         case 2U:
             // First mushroom
-            if (r == 0U)
+            if (r % 2U == 0U)
             {
                 set_bkg_tiles(14U, 8U, 4U, 3U, bownlyBeronCapUpMap);
                 set_bkg_tiles(15U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
@@ -168,7 +165,7 @@ static void phaseFlappyBeronInit()
 
             break;
         case 1U:
-            if (r == 1U)
+            if (r % 2U == 0U)
             {
                 set_bkg_tiles(27U, 8U, 4U, 3U, bownlyBeronCapUpMap);
                 set_bkg_tiles(28U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
@@ -179,15 +176,15 @@ static void phaseFlappyBeronInit()
                 set_bkg_tiles(28U, 31U, 2U, 9U, bownlyBeronStalkDownMap);
             }
         case 0U:
-            if (r == 0U)
-            {
-                set_bkg_tiles(14U, 8U, 4U, 3U, bownlyBeronCapUpMap);
-                set_bkg_tiles(15U, 11U, 2U, 9U, bownlyBeronStalkUpMap);
-            }
-            else
+            if (r % 2U == 0U)
             {
                 set_bkg_tiles(14U, 8U, 4U, 3U, bownlyBeronCapDownMap);
                 set_bkg_tiles(15U, 31U, 2U, 9U, bownlyBeronStalkDownMap);
+            }
+            else
+            {
+                set_bkg_tiles(14U, 9U, 4U, 3U, bownlyBeronCapUpMap);
+                set_bkg_tiles(15U, 12U, 2U, 9U, bownlyBeronStalkUpMap);
             }
 
         default:
@@ -246,7 +243,6 @@ static void phaseFlappyBeronLoop()
 
             sfxCollision();
         }
-
     }
     else
     {
