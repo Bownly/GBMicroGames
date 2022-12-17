@@ -64,6 +64,8 @@ static void inputsCode();
 /* HELPER METHODS */
 static void buttonDraw( UINT8 x, UINT8 y, BUTTONS b );
 static UINT8 buttonToJoypad( BUTTONS b );
+static void playError( void );
+static void playCorrect( void );
 
 /* DISPLAY METHODS */
 
@@ -165,6 +167,8 @@ static void inputsCode()
         /* Increment our position in the code, check if we have won */
         k++;
 
+        playCorrect();
+
         if( k == MAX_CODE_INPUTS )
         {
             mgStatus = WON;
@@ -176,6 +180,8 @@ static void inputsCode()
         /* Fill in an attempt, then check if we have lost */
         buttonDraw( 12U + ( 2 * n ), 12U, BUTTON_SMALL_FAIL );
         n++;
+
+        playError();
 
         if( n >= m + 1 )
         {
@@ -246,5 +252,23 @@ static UINT8 buttonToJoypad( BUTTONS b )
         default: return 0;
     }
 } /* buttonToJoypad */
+
+
+static void playError( void )
+{
+    NR41_REG = 0x04U;
+    NR42_REG = 0xE3U;
+    NR43_REG = 0x49U;
+    NR44_REG = 0xC0U;
+}
+
+static void playCorrect( void )
+{
+    NR10_REG = 0x45;
+    NR11_REG = 0x84;
+    NR12_REG = 0x63;
+    NR13_REG = 0x75;
+    NR14_REG = 0x86;
+}
 
 /******************************** DISPLAY METHODS ********************************/
