@@ -214,9 +214,9 @@ static void phasePastelInit()
             break;
     }
 
+    fadein();
     playSong(&bownlyTenseBossBattleSong);
 
-    fadein();
     substate = SUB_LOOP;
 }
 

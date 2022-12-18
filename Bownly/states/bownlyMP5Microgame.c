@@ -137,11 +137,10 @@ static void phaseMagipanels5Init()
 
     initGrid();
 
+    fadein();
     playSong(&bownlyTheWhiteSong);
 
-    fadein();
     substate = SUB_LOOP;
-
 }
 
 static void phaseMagipanels5Loop()

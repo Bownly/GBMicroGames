@@ -67,8 +67,13 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM    ✖️ Pretty up the art/presentation
 @REM    ◯ Score score and high score
 @REM △ Fix bugs and stuff
-@REM    ✖️ Playtest every MG and make final tweaks if needed
-@REM    ✖️ Music glitches out again (after 24 points?)
+@REM    △ Playtest every MG and make final tweaks if needed
+@REM    ✖️ Battery light ends on wrong frame when leveling up and mgSpeed = 1U
+@REM    ◯ Leveling up blinks diff instead of speed for SINGLE play (sometimes)
+@REM    ◯ Face game's song can't handle speed 3
+@REM    ◯ Sound speed isn't resetting after playing a round
+@REM    ◯ In ALL play, a new MG isn't getting loaded after a level up
+@REM    ◯ Music glitches out again (after 24 points?)
 @REM    ◯ Play Remix with only 1 MG picks Face Game every time
 @REM    ◯ Fourth mg loss skips anim and goes right to gameover state
 @REM    ◯ Level ups (at least for ALL) don't alternate if they start on speed up
@@ -93,3 +98,7 @@ C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
 @REM Microbrew Pocket Collection
 @REM Microbrew Games
 @REM Microbrew Pocket Games
+@REM Microbrews Jam Pack
+@REM Pocket 'Brews: Jam Pak
+@REM Microgames Jam Pak
+

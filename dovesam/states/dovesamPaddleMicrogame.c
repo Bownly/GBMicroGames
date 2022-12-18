@@ -152,10 +152,10 @@ static void phaseTestInit()
         case 2: paddleWidth = 14U << 4; break;
     }
 
+    fadein();
     // Play music
     playSong(&SloopygoopTrickyStartSong);
 
-    fadein();
     substate = SUB_LOOP;
 }
 

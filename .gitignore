@@ -7,3 +7,4 @@
 *.ihx
 .vscode
 .DS_Store
+*.sgm

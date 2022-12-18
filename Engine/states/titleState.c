@@ -79,10 +79,10 @@ void phaseTitleInit()
 
     scroll_bkg(-4, 0U);  // For centering the text
 
-    printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
-    printLine(4U, 4U, "TOTALLY NOT", FALSE);
-    printLine(5U, 6U, "WARIOWARE", FALSE);
-    printLine(1U, 8U, "COMMUNITY EDITION", FALSE);
+    // printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
+    printLine(5U, 6U, "MICROGAMES", FALSE);
+    printLine(5U, 7U, " JAM PAK", FALSE);
+    // printLine(1U, 8U, "COMMUNITY EDITION", FALSE);
     printLine(4U, 13U, "PRESS START", FALSE);
 
     substate = SUB_LOOP;

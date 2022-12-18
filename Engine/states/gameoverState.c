@@ -83,6 +83,7 @@ void phaseGameoverInit()
     // Initializations
     animTick = 0U;
     scrollTimer = 0U;
+    mgSpeed = 0U;
   
     SHOW_WIN;
     init_win(0xFFU);

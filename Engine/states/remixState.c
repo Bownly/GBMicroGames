@@ -301,7 +301,7 @@ static void drawPlayMixButton()
 
     // Text
     l = language << 3U;
-    for (j = 0U; j != 9U; ++j)
+    for (j = 0U; j != 8U; ++j)
     {
         set_sprite_tile(23U + j, SPRTILE_MIX_BORDER + 8U + j + l);
         move_sprite(23U + j, BUTTON_X_COORD + 8U, BUTTON_Y_COORD + (j << 3U));

@@ -205,9 +205,9 @@ static void phasePastelInit()
             break;
     }
 
+    fadein();
     playSong(&bownlyKnotAnywhere2Song);
 
-    fadein();
     substate = SUB_LOOP;
 }
 
