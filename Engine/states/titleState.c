@@ -8,8 +8,11 @@
 #include "../songPlayer.h"
 
 #include "../database/microgameData.h"
+#include "../res/tiles/borderTiles.h"
 #include "../res/tiles/fontTiles.h"
 #include "../res/tiles/alBhedFontTiles.h"
+#include "../res/sprites/engineTitleLogo.h"
+#include "../res/sprites/engineTitleCornerGarnish.h"
 
 extern const hUGESong_t engineSloopygoopPartyTheme;
 
@@ -77,16 +80,26 @@ void phaseTitleInit()
     HIDE_WIN;
     mgCurrentMG.id = 0xFF;
 
-    scroll_bkg(-4, 0U);  // For centering the text
+    scroll_bkg(4, 0U);  // For centering the screen
 
-    printLine(2U, 3U, "LEGALLY DISTINCT", FALSE);
-    printLine(4U, 4U, "TOTALLY NOT", FALSE);
-    printLine(5U, 6U, "WARIOWARE", FALSE);
-    printLine(1U, 8U, "COMMUNITY EDITION", FALSE);
-    printLine(4U, 13U, "PRESS START", FALSE);
+    set_bkg_data(0x30U, engineTitleLogo_TILE_COUNT, engineTitleLogo_tiles);
+    set_bkg_tiles(0U, 5U, 21U, 6U, engineTitleLogo_map);
+    set_bkg_data(0xF0U, 8U, borderTiles);
+
+    // Corners
+    set_sprite_data(0U, engineTitleCornerGarnish_TILE_COUNT, engineTitleCornerGarnish_tiles);
+    move_metasprite(       engineTitleCornerGarnish_metasprites[0U], 0U,  0U,   8U,  16U);
+    move_metasprite_hflip( engineTitleCornerGarnish_metasprites[0U], 0U, 10U,   8U, 160U);
+    move_metasprite_vflip( engineTitleCornerGarnish_metasprites[0U], 0U, 20U, 168U,  16U);
+    move_metasprite_hvflip(engineTitleCornerGarnish_metasprites[0U], 0U, 30U, 168U, 160U);
+    for (i = 0U; i != 40U; ++i)
+    {
+        set_sprite_prop(i, get_sprite_prop(i) | 0b00010000);
+    }
 
     substate = SUB_LOOP;
-    // fadein();
+
+    OBP1_REG = DMG_PALETTE(DMG_WHITE, DMG_LITE_GRAY, DMG_DARK_GRAY, DMG_BLACK);
     playSong(&engineSloopygoopPartyTheme);
 }
 
@@ -96,11 +109,11 @@ void phaseTitleLoop()
     
     if ((animTick % 64U) / 48U == 0U)
     {
-        printLine(4U, 13U, "PRESS START", FALSE);
+        printLine(5U, 13U, "PRESS START", FALSE);
     }
     else
     {
-        for (i = 4U; i != 15U; ++i)
+        for (i = 5U; i != 16U; ++i)
             set_bkg_tile_xy(i, 13U, 0xFFU);
     }
 

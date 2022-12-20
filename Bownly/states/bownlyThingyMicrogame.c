@@ -189,9 +189,9 @@ static void phaseThingyInit()
     bananaY = 100U + (j * 400U);
     move_metasprite(bownlySprBanana_metasprites[0U], SPRTILE_BANANA, SPRID_BANANA, bananaX >> 2U, bananaY >> 2U);
 
+    fadein();
     playSong(&bownlySloopygoopBallerinaSong);
 
-    fadein();
     OBP0_REG = 0xE4;  // 11 10 01 00
 
     substate = SUB_LOOP;

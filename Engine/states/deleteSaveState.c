@@ -5,6 +5,7 @@
 #include "../enums.h"
 #include "../fade.h"
 #include "../ram.h"
+#include "../songPlayer.h"
 
 #include "../res/tiles/engineCursorTiles.h"
 
@@ -77,6 +78,7 @@ void deleteSaveStateMain()
 static void phaseDeleteSaveInit()
 {
     // Initializations
+    stopSong();
     init_bkg(BKGTILE_SCROLL);
     move_bkg(0U, 0U);
 
@@ -192,7 +194,6 @@ static void animateCursor()
         animFrame = 1U;
 
     set_sprite_tile(0U, animFrame + 3U);
-    // set_sprite_tile(0U, animFrame);
 }
 
 static void tryShakeScreen()

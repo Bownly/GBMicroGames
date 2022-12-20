@@ -20,7 +20,7 @@ source SynchingFeeling/build.sh
 source bbbbbr/build.sh
 
 $GBDK_DIR/bin/lcc -Wa-l -c -o Engine/o/main.o main.c
-$GBDK_DIR/bin/lcc -Wl-yt3 -Wl-yoA -Wl-ya4 -o GBMicroGames.gb \
+$GBDK_DIR/bin/lcc -Wl-yt0x1B -Wl-yoA -Wl-ya4 -o "Microgames Jam Pak.gb" \
 	hUGETracker/hUGEDriver.obj.o                          \
 	Engine/o/*.o Engine/res/sprites/*.c                   \
 	Bownly/o/*.o Bownly/res/sprites/*.c                   \

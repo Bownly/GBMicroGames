@@ -223,6 +223,7 @@ static void phaseInitMicrogameManager()
             mgHistoryLogSize = 1U;
             mgPoolSize = 1U;
             mgPool[0U] = mgCurrentMG.id;
+            levelSpeedNext = FALSE;
             break;
         case REMIX:
             mgPoolSize = 0U;
@@ -298,7 +299,6 @@ static void phaseMicrogameManagerInitLobby()
     // Initializations
     animTick = 0U;
     mgTimeRemaining = 2560U;  // 2560 = 160px * 16
-    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 
     lobbyDurationStats = 100U - mgSpeed * 9U;
     lobbyDurationInstructions = 95U - mgSpeed * 9U;
@@ -348,25 +348,26 @@ static void phaseMicrogameManagerLobbyLoop()
     else
     {
         animTick = 0U;
-        if (isLeveling == TRUE)
+        if (currentLives == 0U)
         {
-            substate = MGM_LOBBY_LOOP_LEVELUP;
-
-            stopSong();
-            playOutsideSong(LEVEL_UP_JINGLE);
+            k = currentScore;  // Using k for this because I am irresponsible and reckless
+            gamestate = STATE_GAMEOVER;
+            substate = SUB_INIT;
+            fadeout();
         }
         else
         {
-            if (currentLives == 0U)
+            drawBattery(currentLives);
+            loadNewMG();
+            if (isLeveling == TRUE)
             {
-                k = currentScore;  // Using k for this because I am irresponsible and reckless
-                gamestate = STATE_GAMEOVER;
-                substate = SUB_INIT;
-                fadeout();
+                substate = MGM_LOBBY_LOOP_LEVELUP;
+
+                stopSong();
+                playOutsideSong(LEVEL_UP_JINGLE);
             }
             else
             {
-                loadNewMG();
                 setupLobbyInstructions();
             }
         }
@@ -402,6 +403,7 @@ static void phaseMicrogameManagerLobbyLevelUp()
     {
         if (currentLives == 0U)  // If we need to gameover
         {
+            mgSpeed = 0U;
             k = currentScore;  // Using k for this because I am irresponsible and reckless
             gamestate = STATE_GAMEOVER;
             substate = SUB_INIT;
@@ -558,6 +560,7 @@ static void loadNewMG()
     mgCurrentMG.bylinePtr = microgameDex[r].bylinePtr;
     mgCurrentMG.instructionsPtr = microgameDex[r].instructionsPtr;
     mgCurrentMG.duration = microgameDex[r].duration;
+    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 }
 
 static void mgHistoryLogInit()

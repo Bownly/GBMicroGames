@@ -176,11 +176,10 @@ static void phaseRPSInit() {
 
   k = 0U;
 
+  fadein();
   playSong(&oshfTwilightDriveSong);
 
-  fadein();
   substate = SUB_LOOP;
-
 }
 
 static void phaseRPSLoop() {

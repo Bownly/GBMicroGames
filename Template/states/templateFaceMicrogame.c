@@ -137,10 +137,11 @@ static void phaseFaceInit()
         }
     }
 
-    // Play music
-    playSong(&templateSloopygoopMinuteWaltz);
-
     fadein();
+
+    // Play music
+    playSong(&templateSloopygoopMinuteWaltz);  // Goes after fadein() for vsync safety or something... I think
+    
     substate = SUB_LOOP;
 }
 

@@ -114,8 +114,8 @@ static void phaseClockwiseInit()
     spawnCharacters();
 
     substate = SUB_LOOP;
-    playSong(&adrianJGClockwiseSong);
     fadein();
+    playSong(&adrianJGClockwiseSong);
 }
 
 static void phaseClockwiseLoop()

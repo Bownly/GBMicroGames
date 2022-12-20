@@ -113,11 +113,10 @@ static void phaseHBInit() {
   move_sprite(2U, bX, bY + 8U);
   move_sprite(3U, bX + 8U, bY + 8U);
 
+  fadein();
   playSong(&oshfTwilightDriveSong);
 
-  fadein();
   substate = SUB_LOOP;
-
 }
 
 static void phaseHBLoop() {

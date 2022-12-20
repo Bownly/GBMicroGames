@@ -1316,4 +1316,4 @@ static const unsigned char waves[] = {
     26,39,50,119,120,93,228,138,174,65,156,83,131,87,23,5,
 };
 
-const hUGESong_t templateSloopygoopMinuteWaltz = {2, &order_cnt, order1, order2, order3,order4, duty_instruments, wave_instruments, noise_instruments, NULL, waves};
+const hUGESong_t templateSloopygoopMinuteWaltz = {3, &order_cnt, order1, order2, order3,order4, duty_instruments, wave_instruments, noise_instruments, NULL, waves};

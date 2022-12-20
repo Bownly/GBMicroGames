@@ -234,7 +234,7 @@ teaaaPlayableSpriteY += teaaaYVelocity;
 teaaaDownshiftedPlayableSpriteY = teaaaPlayableSpriteY >> 4;
 if (teaaaDownshiftedPlayableSpriteY > 144)
 {
-mgTimeRemaining = mgTimerTickSpeed;
+teaaaDownshiftedPlayableSpriteY = 180;
 }
 if (animTick == 0)
 {

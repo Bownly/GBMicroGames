@@ -155,10 +155,10 @@ static void phaseGhostInit()
 
     substate = SUB_LOOP;
 
+    fadein();
     // Song by SloopyGoop - "Singing Mushroom"
     playSong(&sloopyGoopSingingMushroomSong);
 
-    fadein();
     // fadein() sets the sprites to a palette that I don't want to use here
     OBP0_REG = 0xE4;  // 11 10 01 00
 }
