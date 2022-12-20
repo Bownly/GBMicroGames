@@ -27,7 +27,7 @@ MICROGAME(MG_ADRIANG_CLOCKWISE,     adrianJGClockwiseMicrogameMain,     6U, 5U, 
 MICROGAME(MG_ADRIANG_HITTHENOTE,    adrianJGHitTheNoteMicrogameMain,    6U, 3U, "HIT THE NOTE",    "ADRIANJG",        "HIT THE NOTE!")
 MICROGAME(MG_DOVESAM_PADDLE,        dovesamPaddleMicrogameMain,         7U, 5U, "PADDLE",          "DOVESAM",         "BOUNCE THE BALL!")
 MICROGAME(MG_DOVESAM_CODE,          dovesamCodeCrackMicrogameMain,      7U, 4U, "CODECRACK",       "DOVESAM",         "CRACK THE CODE!")
-MICROGAME(MG_TEAAA_WHACKMOLES,      whackMolesMicrogameMain,            8U, 4U, "WHACK THE MOLES", "TEAAA",           "HAMMER!")
+MICROGAME(MG_TEAAA_WHACKMOLES,      whackMolesMicrogameMain,            8U, 3U, "WHACK THE MOLES", "TEAAA",           "HAMMER!")
 // MICROGAME(MG_BOWNLY_KILLLER_DRILLER, bownlyKillerDrillerMicrogameMain, 9U, 12U, "KILLER DRILLER", "BOWNLY", "DEFEND EARTH!")
 MICROGAME(MG_BOWNLY_CARROT,         bownlyCarrotMicrogameMain,          9U, 3U, "CARROT",          "BOWNLY",          "EAT!")
 MICROGAME(MG_BOWNLY_FLAPPY_BERON,   bownlyFlappyBeronMicrogameMain,     9U, 4U, "FLAPPY BERON",    "BOWNLY",          "FLAP!")

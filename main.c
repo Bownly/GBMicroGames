@@ -55,6 +55,7 @@ void initRAM(UBYTE);
 
 void main()
 {
+    init_bkg(0xFFU);
  	initRAM(0U);
 
     // Sound stuff
@@ -63,7 +64,7 @@ void main()
     NR51_REG = 0xFF; // is 1111 1111 in binary, select which chanels we want to use in this case all of them. One bit for the L one bit for the R of all four channels
     set_interrupts(LCD_IFLAG | TIM_IFLAG | VBL_IFLAG);
     shouldRestartSong = TRUE;
-    
+
     set_bkg_data(0xF0U, 8U, borderTiles);
 
     ENABLE_RAM;
@@ -74,7 +75,6 @@ void main()
         set_bkg_data(0U, 46U, fontTiles);
     DISABLE_RAM;
 
-    init_bkg(0xFFU);
     DISPLAY_ON;
     SHOW_SPRITES;
     SHOW_BKG;

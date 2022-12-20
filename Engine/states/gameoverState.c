@@ -97,7 +97,7 @@ void phaseGameoverInit()
     move_win(7U, 112U);
 
     move_bkg(4U, 0U);  // For centering purposes
-    set_bkg_data(0x90, engineGBPrintout_TILE_COUNT, engineGBPrintout_tiles);
+    set_bkg_data(0x60, engineGBPrintout_TILE_COUNT, engineGBPrintout_tiles);
     set_bkg_tiles(0U, 0U, 21U, 32U, engineGBPrintout_map);
 
     printLine(6U, 19U, "GAME OVER", FALSE);

@@ -299,7 +299,6 @@ static void phaseMicrogameManagerInitLobby()
     // Initializations
     animTick = 0U;
     mgTimeRemaining = 2560U;  // 2560 = 160px * 16
-    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 
     lobbyDurationStats = 100U - mgSpeed * 9U;
     lobbyDurationInstructions = 95U - mgSpeed * 9U;
@@ -358,6 +357,7 @@ static void phaseMicrogameManagerLobbyLoop()
         }
         else
         {
+            drawBattery(currentLives);
             loadNewMG();
             if (isLeveling == TRUE)
             {
@@ -560,6 +560,7 @@ static void loadNewMG()
     mgCurrentMG.bylinePtr = microgameDex[r].bylinePtr;
     mgCurrentMG.instructionsPtr = microgameDex[r].instructionsPtr;
     mgCurrentMG.duration = microgameDex[r].duration;
+    mgTimerTickSpeed = mgTimeRemaining / mgCurrentMG.duration / (60U - mgSpeed * 9U);
 }
 
 static void mgHistoryLogInit()

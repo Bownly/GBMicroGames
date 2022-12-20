@@ -546,12 +546,16 @@ static void animatePastel()
                 animFrame = 11U;
             break;
         case DEAD:
-            if (++deadTimer < 7U)
+            ++deadTimer;
+            if (deadTimer < 7U)
                 animFrame = 14U;
-            else if (++deadTimer < 21U)
+            else if (deadTimer < 21U)
                 animFrame = 15U;
             else
+            {
+                deadTimer = 254U;
                 animFrame = 0xFFU;
+            }
             break;
     }
     if (animFrame == 0xFFU)  // Yeah, this is sloppy. Whatever
