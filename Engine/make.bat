@@ -60,28 +60,3 @@ C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/mainMenuState.o Engine/states/mainM
 C:\gbdk\bin\lcc -Wa-l -Wf-bo4 -c -o Engine/o/remixState.o Engine/states/remixState.c
 
 C:\gbdk\bin\lcc -Wa-l -Wf-ba0 -c -o Engine/o/ram.o Engine/ram.c
-
-@REM Post-jam TODO:
-@REM △ Non-dev tasks
-@REM    ✖️ Loicense stuff
-@REM    ✖️ Setup the itch page
-@REM ◯ Fix bugs and stuff
-@REM ◯ Title screen
-@REM ◯ Game over screen
-@REM ◯ Add pausing
-@REM ◯ Lobby screen/microgame manager
-@REM ◯ Al Bhed
-@REM ◯ Credits screen
-@REM ◯ Main menu screen
-@REM ◯ Saving/loading
-@REM ◯ Delete save data screen
-@REM ◯ Custom mix screen
-
-@REM ◯ = done
-@REM △ = wip or next in line
-@REM ✖️ = not yet started
-
-
-@REM Ideas for next time:
-@REM Make MG duration more granular than seconds
-@REM Solicit submissions for gameover screen art (maybe 1 per MG?)
