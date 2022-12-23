@@ -238,6 +238,7 @@ teaaaPlayableSpriteY += teaaaYVelocity;
 teaaaDownshiftedPlayableSpriteY = teaaaPlayableSpriteY >> 4;
 if (teaaaDownshiftedPlayableSpriteY > 144)
 {
+teaaaDownshiftedPlayableSpriteY = 180;
 isOffScreen = 1;
 }
 if (animTick == 0)
