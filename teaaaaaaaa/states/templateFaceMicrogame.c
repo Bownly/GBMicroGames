@@ -66,6 +66,7 @@ UINT8 getTile2;
 UINT8 getTile3;
 UINT8 getTile4;
 UINT8 numberOfMoles;
+BOOLEAN isOffScreen;
 
 const unsigned char teaaaaSpriteXPositions[] =
 {
@@ -84,6 +85,7 @@ const unsigned char teaaaaSpriteYPositions[] =
 
 void whackMolesinitialize() BANKED
 {
+isOffScreen = 0;
 set_bkg_data(48,21,WMBGgraphics);
 set_bkg_submap(0,0,20,18,whackMolesBG + (mgDifficulty * (18 * 20)),20);
 numberOfMoles = 3;
@@ -153,6 +155,8 @@ move_sprite(teaaaSpriteMemory + 5,teaaaStoredSpriteX,teaaaStoredSpriteY + 16);
 void whackMolesLoop() BANKED
 {
 animTick --;
+if (isOffScreen == 0)
+{
 if (teaaaYVelocity < 40)
 {
 teaaaYVelocity += 3;
@@ -234,7 +238,7 @@ teaaaPlayableSpriteY += teaaaYVelocity;
 teaaaDownshiftedPlayableSpriteY = teaaaPlayableSpriteY >> 4;
 if (teaaaDownshiftedPlayableSpriteY > 144)
 {
-teaaaDownshiftedPlayableSpriteY = 180;
+isOffScreen = 1;
 }
 if (animTick == 0)
 {
@@ -258,6 +262,7 @@ if (teaaaflipSprite == 0)
 teaaaflipSprite = S_FLIPX;
 else
 teaaaflipSprite = 0;
+}
 }
 set_sprite_tile(0,WMTileData[animFrame]);
 set_sprite_tile(1,WMTileData[animFrame + 1]);
